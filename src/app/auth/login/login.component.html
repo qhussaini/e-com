@@ -1,3 +1,66 @@
-<p>
-  login works!
-</p>
+<mat-card class="log-card">
+   <mat-card-header>
+     <mat-card-title>Login</mat-card-title>
+   </mat-card-header>
+   <mat-card-content class="text-center d-flex justify-content-center">
+     <form (ngSubmit)="onLogin(loginForm)"
+     *ngIf="!isLoading"
+     #loginForm="ngForm" class="form-group">
+     <div class="form-row">
+      <div class="form-group col-md">
+        <label for="eId">Email ID</label>
+        <br />
+        <input
+          type="email"
+          class="btn btn-light form-control is-valid"
+          placement="bottom"
+          ngbTooltip="Email Id"
+          placeholder="Email Id"
+          ngModel
+          #emailId="ngModel"
+          [class.wa-valid]="emailId.valid"
+          [class.is-invalid.wa-invalid]="emailId.invalid && emailId.touched"
+          name="eId"
+          id="eId"
+          required
+        />
+        <div [class.invalid-tooltip]="emailId.invalid && emailId.touched">
+          <span *ngIf="emailId.invalid && emailId.touched"> Please enter valid Doc ID. </span>
+        </div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md has-validation">
+        <label for="passDoc">Password</label>
+        <br />
+        <input
+          type="password"
+          class="btn btn-light form-control is-valid"
+          placement="bottom"
+          ngbTooltip="Set Password"
+          placeholder="Password"
+          ngModel
+          #passDoc="ngModel"
+          [class.is-invalid.wa-invalid]="passDoc.invalid && passDoc.touched"
+          name="passDoc"
+          id="passDoc"
+          required
+        />
+      </div>
+    </div>
+    <button
+      type="submit"
+      class="btn-bloack"
+      mat-raised-button
+      color="primary"
+    >Login</button>
+     </form>
+     <!-- <mat-spinner></mat-spinner> -->
+   </mat-card-content>
+   <mat-card-actions>
+    <hr>
+    <div class="text-center">
+      <a routerLink="/signup">click here to sign up</a>
+    </div>
+  </mat-card-actions>
+</mat-card>

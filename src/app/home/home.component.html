@@ -1,3 +1,42 @@
-<p>
-  home works!
-</p>
+
+<div class="container">
+  <div>
+    <ngb-carousel #carousel [interval]="4000" [pauseOnHover]="pauseOnHover" [pauseOnFocus]="pauseOnFocus" (slide)="onSlide($event)">
+      <ng-template ngbSlide *ngFor="let product of product.products; index as i" style="margin: auto;">
+        <div class="carousel-caption">
+          <h3>My slide {{i + 1}} title</h3>
+        </div>
+        <a  >
+          <div class="picsum-img-wrapper text-center pho-back">
+            <img [src]="product.itemImgUrl" alt="My image {{i + 1}} description" height="250px">
+          </div>
+        </a>
+      </ng-template>
+    </ngb-carousel>
+  </div>
+
+  <div class="row row-cols-lg-auto g-3 align-items-center d-flex justify-content-around mt-2">
+    <mat-card class="saas-card saas-pointer" *ngFor="let shop of shopcard" matRipple>
+      <mat-card-header>
+        <mat-card-title>{{shop.cardTitle}}</mat-card-title>
+      </mat-card-header>
+      <img mat-card-image src="{{shop.cardImgUrl}}" alt="Photo of a Ice-creams">
+      <mat-card-content>
+        <p>
+          {{shop.cardDetail}}
+        </p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button>See more</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>
+<!-- <div class="card p-3 topOnpage">
+  <div class="card-header">
+    Sign in for the best exprience
+  </div>
+  <div class="card body">
+    <button class="btn btn-primary btn-block">Sign in</button>
+  </div>
+</div> -->

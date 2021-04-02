@@ -1,3 +1,125 @@
-<p>
-  signup works!
-</p>
+<div class="card p-4 sign-card text-center d-flex justify-content-center">
+  <mat-spinner *ngIf="isLoading" [style]="{width: '50px', height: '50px'}" styleClass="custom-spinner" strokeWidth="8" fill="#EEEEEE" animationDuration=".5s"></mat-spinner>
+  <form
+  (ngSubmit)="onSignup(signupForm)"
+    *ngIf="!isLoading"
+    #signupForm="ngForm"
+  >
+    <div class="form-row">
+      <div class="form-group col-md has-validation">
+        <label for="userName">Name</label>
+        <br />
+        <input class="btn btn-light form-control is-valid"
+        [class.is-invalid.wa-invalid]="userName.invalid && userName.touched"
+          id="userName"
+          type="text"
+          placement="bottom"
+          ngbTooltip="Name"
+          placeholder="Name ex:'hussaini' "
+          [class.wa-valid]="userName.valid"
+          required
+          ngModel #userName="ngModel" name="userName">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md">
+        <label for="eId">Email ID</label>
+        <br />
+        <input
+          type="email"
+          class="btn btn-light form-control is-valid"
+          placement="bottom"
+          ngbTooltip="Email Id"
+          placeholder="Email Id"
+          ngModel
+          #emailId="ngModel"
+          [class.wa-valid]="emailId.valid"
+          [class.is-invalid.wa-invalid]="emailId.invalid && emailId.touched"
+          name="eId"
+          id="eId"
+          required
+        />
+        <div [class.invalid-tooltip]="emailId.invalid && emailId.touched">
+          <span *ngIf="emailId.invalid && emailId.touched"> Please enter valid Doc ID. </span>
+        </div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md has-validation">
+        <label for="passDoc">Password</label>
+        <br />
+        <input
+          type="password"
+          class="btn btn-light form-control is-valid"
+          placement="bottom"
+          ngbTooltip="Set Password"
+          placeholder="Password"
+          ngModel
+          #passDoc="ngModel"
+          [class.is-invalid.wa-invalid]="passDoc.invalid && passDoc.touched"
+          name="passDoc"
+          id="passDoc"
+          required
+        />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md has-validation">
+        <label for="shopName">Shop Name</label>
+        <br />
+        <input
+          type="text"
+          class="btn btn-light form-control is-valid"
+          placement="bottom"
+          ngbTooltip="Your Shop Name"
+          placeholder="Shop Name"
+          ngModel
+          #shopName="ngModel"
+          name="shopName"
+          id="shopName"
+        />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md has-validation">
+        <label for="shopNumber">Shop Number</label>
+        <br />
+        <input
+          type="number"
+          class="btn btn-light form-control is-valid"
+          placement="bottom"
+          ngbTooltip="Your Shop Number"
+          placeholder="Shop Number"
+          ngModel
+          #shopNumber="ngModel"
+          name="shopNumber"
+          id="shopNumber"
+        />
+      </div>
+    </div>
+    <div class="form-row">
+      <div ngbDropdown  class="form-group col-md has-validation">
+        <label for="usertype">User Type</label>
+        <br />
+        <input class="btn btn-light form-control is-valid"
+        [class.is-invalid.wa-invalid]="usertype.invalid && usertype.touched"
+          id="usertype" ngModel #usertype="ngModel" [(ngModel)]="userType" readonly name="usertype" placeholder="User Type" ngbDropdownToggle>
+        <div ngbDropdownMenu aria-labelledby="usertype">
+          <button ngbDropdownItem type="button" (click)="typeSelect(signupForm, 'wholesaler')">Wholesaler</button>
+          <button ngbDropdownItem type="button" (click)="typeSelect(signupForm, 'retailer')">Retailer</button>
+          <button ngbDropdownItem type="button" (click)="typeSelect(signupForm, 'party')">Party</button>
+        </div>
+      </div>
+    </div>
+    <button
+      type="submit"
+      class="btn-bloack"
+      mat-raised-button
+      color="primary"
+    >Sign Up</button>
+  </form>
+  <hr>
+  <div class="text-center">
+    <a routerLink="/login">Already have a account : click here to login</a>
+  </div>
+</div>
