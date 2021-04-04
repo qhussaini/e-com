@@ -23,7 +23,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatMenuModule } from '@angular/material/menu';
 
 
 import { MyOrderComponent } from './my-order/my-order.component';
@@ -59,6 +60,7 @@ import { AuthInterceptor } from './auth/auth-interceptor';
     ReactiveFormsModule,
     MatIconModule,
     MatTableModule,
+    MatToolbarModule,
     MatButtonModule,
     MatCardModule,
     MatRippleModule,
@@ -69,6 +71,7 @@ import { AuthInterceptor } from './auth/auth-interceptor';
     MatFormFieldModule,
     MatProgressSpinnerModule,
     HttpClientModule,
+    MatMenuModule,
     ToastrModule.forRoot(),
   ],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],

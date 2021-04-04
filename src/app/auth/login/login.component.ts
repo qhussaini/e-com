@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ThemeService } from 'src/app/theme.service';
 import { AuthService } from '../auth.service';
 
 @Component({
@@ -14,7 +15,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   password: string;
   isLoading: boolean = false;
 
-  constructor(private router:Router, private auth: AuthService) { }
+  constructor(private router:Router, private auth: AuthService, public theme:ThemeService) { }
 
   ngOnInit() {
     this.auth.isSigning = true;

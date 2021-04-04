@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { ThemeService } from '../theme.service';
@@ -14,14 +14,21 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private authListenerSub: Subscription;
   themeDark = false;
   cartCount: any=0;
+  public innerWidth: number;
 
-  constructor(public theme:ThemeService, private authService: AuthService) { }
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.innerWidth = window.innerWidth;
+  }
+
+  constructor(public theme:ThemeService, public authService: AuthService) { }
 
   ngOnInit() {
     this.userIsAuthenticated = this.authService.getIsAuth();
     this.authListenerSub = this.authService.getUserAuthStatus().subscribe(isAuthenticated => {
       this.userIsAuthenticated = isAuthenticated
-    })
+    });
+    this.innerWidth = window.innerWidth;
   }
 
   ngOnDestroy() {

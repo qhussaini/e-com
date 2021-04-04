@@ -1,5 +1,5 @@
 
-<div class="container">
+<div class="container" [class.dark-mcard]="theme.themeDark">
   <div>
     <ngb-carousel #carousel [interval]="4000" [pauseOnHover]="pauseOnHover" [pauseOnFocus]="pauseOnFocus" (slide)="onSlide($event)">
       <ng-template ngbSlide *ngFor="let product of product.products; index as i" style="margin: auto;">

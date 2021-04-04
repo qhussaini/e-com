@@ -1,8 +1,67 @@
-<nav class="navbar navbar-expand-lg" [class.navbar-light]="!theme.themeDark" [class.bg-light]="!theme.themeDark" [class.bg-dark]="theme.themeDark" [class.navbar-dark]="theme.themeDark">
+<mat-toolbar class="navbar-expand-lg" >
+  <a class="navbar-brand" routerLink="/" routerLinkActive="primary">
+    <img src="assets/images/logo/scoops-logo.png" alt="Azam Scoop" width="40" height="35">
+  </a>
+
+  <!-- small-menu -->
+
+  <button mat-icon-button [matMenuTriggerFor]="shortMenu" class="navbar-toggler order-5" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <mat-menu #shortMenu="matMenu" style="min-width: 150px;">
+    <button mat-menu-item class="nav-link active" aria-current="page" routerLink="/" routerLinkActive="primary"><mat-icon>home</mat-icon> Home</button>
+    <button mat-menu-item *ngIf="userIsAuthenticated" class="nav-link" routerLink="/admin/dash" routerLinkActive="primary"><mat-icon>dashboard</mat-icon>Dashboard</button>
+    <button *ngIf="userIsAuthenticated" mat-menu-item [matMenuTriggerFor]="tools"><mat-icon>home_repair_service</mat-icon> {{authService.getUserType()|titlecase}} Tools</button>
+    <mat-menu #tools="matMenu" style="min-width: 150px;">
+      <button routerLink="/my-order" mat-menu-item>My Order</button>
+      <button routerLink="/admin/products" *ngIf="authService.getUserType()==='wholesaler'" mat-menu-item>Manager Porduct</button>
+      <button routerLink="/admin/order" *ngIf="authService.getUserType()==='wholesaler'" mat-menu-item>Manager Orders</button>
+      <hr class="dropdown-divider">
+      <button (click)="onLogout()" mat-menu-item>Logout</button>
+    </mat-menu>
+    <button *ngIf="userIsAuthenticated" mat-menu-item>
+      <mat-icon *ngIf="cartCount===0" >shopping_basket</mat-icon>
+      <mat-icon *ngIf="cartCount>0" matBadge="{{cartCount}}" (click)="inCartCount()" matBadgeColor="warn" >shopping_basket</mat-icon>
+      <span>Cart</span>
+    </button>
+    <button *ngIf="!userIsAuthenticated" mat-menu-item routerLink="/login">
+      <mat-icon matBadgeColor="warn" >login</mat-icon>
+      <span>Login</span>
+    </button>
+    </mat-menu>
+
+    <!-- small menu/end -->
+
+    <button mat-button *ngIf="innerWidth>=992" class="nav-link active" aria-current="page" routerLink="/" routerLinkActive="primary">Home</button>
+    <button mat-button *ngIf="userIsAuthenticated && innerWidth>=992" class="nav-link" routerLink="/admin/dash" routerLinkActive="primary">Dashboard</button>
+    <span style="flex: auto;"></span>
+    <button *ngIf="userIsAuthenticated && innerWidth>=992" mat-button [matMenuTriggerFor]="tools">{{authService.getUserType()|titlecase}} Tools <mat-icon>expand_more</mat-icon></button>
+    <mat-menu #tools="matMenu" style="min-width: 150px;">
+      <button routerLink="/my-order" mat-menu-item>My Order</button>
+      <button routerLink="/admin/products" *ngIf="authService.getUserType()==='wholesaler'" mat-menu-item>Manager Porduct</button>
+      <button routerLink="/admin/order" *ngIf="authService.getUserType()==='wholesaler'" mat-menu-item>Manager Orders</button>
+      <hr class="dropdown-divider">
+      <button (click)="onLogout()" mat-menu-item>Logout</button>
+    </mat-menu>
+
+    <mat-slide-toggle [(ngModel)]="theme.themeDark" (change)="theme.themeChange()">
+      <mat-icon>bedtime</mat-icon>
+    </mat-slide-toggle>
+    <button *ngIf="userIsAuthenticated && innerWidth>=992" mat-icon-button ngbTooltip="Cart">
+      <mat-icon *ngIf="cartCount===0" >shopping_basket</mat-icon>
+      <mat-icon *ngIf="cartCount>0" matBadge="{{cartCount}}" (click)="inCartCount()" matBadgeColor="warn" >shopping_basket</mat-icon>
+    </button>
+    <button *ngIf="!userIsAuthenticated && innerWidth>=992" mat-icon-button ngbTooltip="Login" routerLink="/login">
+      <mat-icon matBadgeColor="warn" >login</mat-icon>
+    </button>
+  <!-- <button *ngIf="userIsAuthenticated" mat-icon-button ngbTooltip="Logout" (click)="onLogout()">
+    <mat-icon matBadgeColor="warn" >logout</mat-icon>
+  </button> -->
+</mat-toolbar>
+
+<!-- <nav class="navbar navbar-expand-lg mat-app-backgroung" [ngClass]="{'custom-dark-theme':theme.themeDark}">
   <div class="container-fluid">
-    <a class="navbar-brand" routerLink="/" routerLinkActive="primary">
-      <img src="assets/images/logo/scoops-logo.png" alt="Azam Scoop" width="40" height="35">
-    </a>
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -32,29 +91,26 @@
         </li>
         <li class="nav-item">
           <button mat-icon-button (click)="themeSelecter()" ngbTooltip="Theme Change">
-            <mat-icon [class.text-white]="theme.themeDark">settings_brightness</mat-icon>
+            <mat-icon >settings_brightness</mat-icon>
           </button>
-          <!-- <mat-slide-toggle  [(ngModel)]="theme.themeDark" color="primary">
-            <mat-icon class="d-flex align-items-center" aria-hidden="false" [class.text-white]="theme.themeDark">settings_brightness</mat-icon>
-          </mat-slide-toggle> -->
         </li>
         <li class="nav-item" *ngIf="userIsAuthenticated">
           <button mat-icon-button ngbTooltip="Cart">
-            <mat-icon *ngIf="cartCount===0" [class.text-white]="theme.themeDark">shopping_basket</mat-icon>
-            <mat-icon *ngIf="cartCount>0" matBadge="{{cartCount}}" (click)="inCartCount()" matBadgeColor="warn" [class.text-white]="theme.themeDark">shopping_basket</mat-icon>
+            <mat-icon *ngIf="cartCount===0" >shopping_basket</mat-icon>
+            <mat-icon *ngIf="cartCount>0" matBadge="{{cartCount}}" (click)="inCartCount()" matBadgeColor="warn" >shopping_basket</mat-icon>
           </button>
         </li>
         <li class="nav-item" *ngIf="!userIsAuthenticated">
           <button mat-icon-button ngbTooltip="Login" routerLink="/login">
-            <mat-icon matBadgeColor="warn" [class.text-white]="theme.themeDark">login</mat-icon>
+            <mat-icon matBadgeColor="warn" >login</mat-icon>
           </button>
         </li>
         <li class="nav-item" *ngIf="userIsAuthenticated">
           <button mat-icon-button ngbTooltip="Logout" (click)="onLogout()">
-            <mat-icon matBadgeColor="warn" [class.text-white]="theme.themeDark">logout</mat-icon>
+            <mat-icon matBadgeColor="warn" >logout</mat-icon>
           </button>
         </li>
       </ul>
     </div>
   </div>
-</nav>
+</nav> -->

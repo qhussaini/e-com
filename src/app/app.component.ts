@@ -1,6 +1,7 @@
+import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, OnInit } from '@angular/core';
 import { MatBottomSheet, MatBottomSheetRef } from '@angular/material/bottom-sheet';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from './auth/auth.service';
 import { ThemeService } from './theme.service';
 
@@ -11,7 +12,7 @@ import { ThemeService } from './theme.service';
 })
 export class AppComponent implements OnInit{
   title = 'ecom-ice';
-  constructor(public theme:ThemeService,  private _bottomSheet: MatBottomSheet, private auth: AuthService) {}
+  constructor(public theme:ThemeService,  private _bottomSheet: MatBottomSheet, private auth: AuthService, private overlay:OverlayContainer) {}
 
   ngOnInit(){
     setTimeout(()=>{
@@ -32,7 +33,7 @@ export class AppComponent implements OnInit{
   templateUrl: 'bottom-sheet.html',
 })
 export class BottomSheet {
-  constructor(private _bottomSheetRef: MatBottomSheetRef<BottomSheet>) {}
+  constructor(private _bottomSheetRef: MatBottomSheetRef<BottomSheet>, private router:Router) {}
 
   openLink(event: MouseEvent): void {
     this._bottomSheetRef.dismiss();
@@ -40,5 +41,13 @@ export class BottomSheet {
   }
   close(){
     this._bottomSheetRef.dismiss();
+  }
+  closeSign() {
+    this._bottomSheetRef.dismiss();
+    this.router.navigate(["/signup"])
+  }
+  closeLogin() {
+    this._bottomSheetRef.dismiss();
+    this.router.navigate(["/login"])
   }
 }

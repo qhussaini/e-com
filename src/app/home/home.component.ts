@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgbCarousel, NgbSlideEvent, NgbSlideEventSource } from '@ng-bootstrap/ng-bootstrap';
 import { ProductsService } from '../admin/products.service';
+import { ThemeService } from '../theme.service';
 
 @Component({
   selector: 'app-home',
@@ -20,7 +21,7 @@ export class HomeComponent implements OnInit {
 
   @ViewChild('carousel', {static : true}) carousel: NgbCarousel;
 
-  constructor(public product:ProductsService) { }
+  constructor(public product:ProductsService, public theme:ThemeService) { }
 
   ngOnInit() {
 
