@@ -23,6 +23,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   shopcard = [];
   products: Product[];
   isLoading:boolean = false;
+  productPerPage: number = 3;
+  currentPage: number = 1;
+  totalProducts: number = 0;
 
   @ViewChild('carousel', {static : true}) carousel: NgbCarousel;
 
@@ -37,10 +40,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     ]
 
     this.isLoading = true;
-    this.productService.getProducts();
-    this.productSub = this.productService.getUpdateProduct().subscribe((product: Product[]) => {
+    this.productService.getProducts(this.productPerPage,this.currentPage);
+    this.productService.getUpdateProduct().subscribe((productData: {product:Product[], productCount:number}) => {
       this.isLoading = false;
-      this.products = product;
+      this.totalProducts = productData.productCount;
+      this.products = productData.product;
     });
   }
   ngOnDestroy() {

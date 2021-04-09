@@ -91,12 +91,26 @@ router.get("/categorys", (req, res, next) => {
 })
 
 router.get("", (req, res, next) => {
-  Product.find().then(document => {
+  const pageSize = +req.query.pagesize;
+  const currentPage = +req.query.page;
+  const productQuery = Product.find();
+  let fetchedProduct;
+  if (pageSize && currentPage){
+    productQuery
+      .skip(pageSize * (currentPage -1))
+      .limit(pageSize);
+  }
+  productQuery.then(document => {
+    fetchedProduct = document;
+    return Product.count();
+  })
+  .then(count => {
     res.status(200).json({
-      message: "Posts fetched succesfully!",
-      product: document
+      message: "Products fetched succesfully!",
+      products: fetchedProduct,
+      maxProducts: count
     });
-  });
+  })
 });
 
 router.get("/:itemId", (req, res, next) => {

@@ -30,8 +30,9 @@ export class ProductListComponent implements OnInit, OnDestroy {
   valuForm: FormGroup
   products$: Observable<Product[]>;
   filter = new FormControl('');
-  totelProducts = 10;
+  totalProducts = 10;
   productPerPage = 2;
+  currentPage = 1;
   pageSizeOptions = [5,10,15,20]
   folders: Section[] = [
     {
@@ -73,10 +74,11 @@ export class ProductListComponent implements OnInit, OnDestroy {
       map(text => this.search(text, this.pipe))
     );
     this.isLoading = true;
-    this.productService.getProducts();
-    this.productSub = this.productService.getUpdateProduct().subscribe((product: Product[]) => {
+    this.productService.getProducts(this.productPerPage,this.currentPage);
+    this.productService.getUpdateProduct().subscribe((productData: {product:Product[], productCount:number}) => {
       this.isLoading = false;
-      this.products = product;
+      this.totalProducts = productData.productCount;
+      this.products = productData.product;
     });
     this.isLoading = true;
     this.productService.getCategory();
@@ -104,7 +106,10 @@ export class ProductListComponent implements OnInit, OnDestroy {
   }
 
   onChangePage(pageData: PageEvent){
-    console.log(pageData);
+    this.isLoading = true;
+    this.currentPage = pageData.pageIndex + 1;
+    this.productPerPage = pageData.pageSize;
+    this.productService.getProducts(this.productPerPage, this.currentPage);
   }
 
   search(text: string, pipe: PipeTransform): Product[] {

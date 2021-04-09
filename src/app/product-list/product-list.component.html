@@ -74,10 +74,12 @@
         </div>
       </div>
     </div>
-    <mat-paginator [length]="totelProducts"
-              [pageSize]="productPerPage"
-              [pageSizeOptions]="pageSizeOptions"
-              (page)="onChangePage($event)">
-    </mat-paginator>
+    <div flexLayoutAlign="center center">
+      <mat-paginator [length]="totalProducts"
+                [pageSize]="productPerPage"
+                [pageSizeOptions]="pageSizeOptions"
+                (page)="onChangePage($event)">
+      </mat-paginator>
+    </div>
   </mat-drawer-content>
 </mat-drawer-container>

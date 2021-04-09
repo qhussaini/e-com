@@ -20,7 +20,7 @@ export class ProductsService implements OnInit {
     {itemName: "1/2 LITER-BLACK CURRENT", itemImage:"https://lh3.googleusercontent.com/proxy/gGq1FTz0UGmqGggTxCa-e3QtgGjONMh6OAzarnQeQrpvL6rPRzkcGcBdN6szsQGV_gcm49DAmORk8YR5wWRXvFRqFMaan8I40z7vqkE_E4A9_IN_G3LMGatPa2c_DCzAwf5D", itemCategory: "Current", itemFlavors:"Bars", itemMRP: 0},
     {itemName: "1/2 LITER-BUTTER SCOTCH", itemImage:"https://i2.wp.com/srimadhuramcatering.com/wp-content/uploads/2020/08/butter-scotch-scoop.png?fit=600%2C600&ssl=1", itemCategory: "Butter Scotch", itemFlavors:"Bars", itemMRP: 115},
   ];
-  private productsUpdate = new Subject<Product[]>();
+  private productsUpdate = new Subject<{product: Product[], productCount: number }>();
   public categorys: Category[];
   private categorysUpdate = new Subject<Category[]>();
   public flavors: Flavor[];
@@ -41,12 +41,13 @@ constructor(private http: HttpClient, private router: Router, private toastr: To
     ];
   }
 
-  getProducts() {
+  getProducts(productsPerPage:number, currentPage:number) {
+    const queryParams = `?pagesize=${productsPerPage}&page=${currentPage}`;
     this.http
-      .get<{ message: string; product: any }>("http://localhost:3000/api/admin/products")
+      .get<{ message: string; products: any, maxProducts: number }>("http://localhost:3000/api/admin/products" + queryParams)
       .pipe(
         map((productData) => {
-          return productData.product.map((product) => {
+          return {products: productData.products.map((product) => {
             return {
               itemId:product._id,
               itemName: product.itemName,
@@ -55,12 +56,15 @@ constructor(private http: HttpClient, private router: Router, private toastr: To
               itemImage: product.itemImgUrl,
               itemFlavors: product.itemFlavors,
             };
-          });
+
+          }),
+          maxProduct: productData.maxProducts
+        };
         })
       )
-      .subscribe((transformPosts) => {
-        this.products = transformPosts;
-        this.productsUpdate.next([...this.products]);
+      .subscribe((transformProductData) => {
+        this.products = transformProductData.products;
+        this.productsUpdate.next({product:[...this.products], productCount: transformProductData.maxProduct});
       });
   }
   getCategory() {
@@ -194,10 +198,6 @@ constructor(private http: HttpClient, private router: Router, private toastr: To
         product
       )
       .subscribe((responseData: any) => {
-        console.log('responseData :' + responseData.message);
-        const product : Product = {itemName: itemName, itemMRP: itemPrice, itemCategory: itemCategory, itemFlavors: itemFlavors, itemImage:""}
-        this.products.push(product);
-        this.productsUpdate.next([...this.products]);
         this.router.navigate(['/admin/products']);
       });
   }
@@ -232,31 +232,13 @@ constructor(private http: HttpClient, private router: Router, private toastr: To
     this.http
       .put<{ message:string, itemImage:string}>("http://localhost:3000/api/admin/products/" + itemId, product)
       .subscribe((response) => {
-        const updatedProduct = [...this.products];
-        const oldProductIndex = updatedProduct.findIndex((p) => p.itemId === itemId);
-        const product: Product = {
-          itemId: itemId,
-          itemName: itemName,
-          itemMRP: itemPrice,
-          itemCategory: itemCategory,
-          itemFlavors: itemFlavors,
-          itemImage: response.itemImage,
-        };
-        updatedProduct[oldProductIndex] = product;
-        this.products = updatedProduct;
-        this.productsUpdate.next([...this.products]);
         this.router.navigate(["/admin/products"]);
       });
   }
 
   deleteProduct(itemId: string) {
-    this.http
-      .delete("http://localhost:3000/api/admin/products/" + itemId)
-      .subscribe(() => {
-        const updatedPost = this.products.filter((post) => post.itemId !== itemId);
-        this.products = updatedPost;
-        this.productsUpdate.next([...this.products]);
-      });
+    return this.http
+      .delete("http://localhost:3000/api/admin/products/" + itemId);
   }
 
 

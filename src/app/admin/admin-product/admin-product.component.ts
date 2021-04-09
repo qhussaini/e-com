@@ -19,6 +19,9 @@ export class AdminProductComponent implements OnInit {
   products: Product[];
   filter = new FormControl('');
   isLoading:boolean = false;
+  totalProduct = 0;
+  productPerPage: number=5;
+  currentPage: number=1;
 
   constructor(public productsData: ProductsService, private pipe: DecimalPipe) {}
   search(text: string, pipe: PipeTransform): Product[] {
@@ -40,10 +43,11 @@ export class AdminProductComponent implements OnInit {
     //   {itemName: "1/2 LITER-BUTTER SCOTCH", itemImage:"https://i2.wp.com/srimadhuramcatering.com/wp-content/uploads/2020/08/butter-scotch-scoop.png?fit=600%2C600&ssl=1", itemFlavors: "Butter Scotch", itemCategory:"Bars", itemMRP: 115},
     // ];
     this.isLoading = true;
-    this.productsData.getProducts();
-    this.productsData.getUpdateProduct().subscribe((product: Product[]) => {
+    this.productsData.getProducts(5,1);
+    this.productsData.getUpdateProduct().subscribe((productData: {product:Product[], productCount:number}) => {
       this.isLoading = false;
-      this.products = product;
+      this.totalProduct = productData.productCount;
+      this.products = productData.product;
     });
     this.products$ = this.filter.valueChanges.pipe(
       startWith(''),
@@ -78,12 +82,13 @@ export class AdminProductComponent implements OnInit {
               return 'You need to enter password'
             }else if (value==="12345"){
               this.isLoading = true;
-              this.productsData.deleteProduct(itemId);
-              this.productsData.getProducts();
-              this.productsData.getUpdateProduct().subscribe((product: Product[]) => {
-                this.isLoading = false;
-                this.products = product;
+              this.productsData.deleteProduct(itemId).subscribe(() =>{
+                this.productsData.getProducts(this.productPerPage,this.currentPage);
               });
+              // this.productsData.getUpdateProduct().subscribe((product: Product[]) => {
+              //   this.isLoading = false;
+              //   this.products = product;
+              // });
             }else {
               return 'Invalid password'
             }
