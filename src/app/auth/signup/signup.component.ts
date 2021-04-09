@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { ThemeService } from 'src/app/theme.service';
 import { AuthService } from '../auth.service';
 
 @Component({
@@ -12,7 +13,7 @@ export class SignupComponent implements OnInit, OnDestroy {
   isLoading:boolean=false;
   userType: string = ' ';
 
-  constructor(public authService: AuthService) { }
+  constructor(public authService: AuthService, public theme:ThemeService) { }
 
   ngOnInit() {
     this.authService.isSigning = true;

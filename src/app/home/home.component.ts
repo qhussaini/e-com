@@ -41,7 +41,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.isLoading = true;
     this.productService.getProducts(this.productPerPage,this.currentPage);
-    this.productService.getUpdateProduct().subscribe((productData: {product:Product[], productCount:number}) => {
+    this.productSub = this.productService.getUpdateProduct().subscribe((productData: {product:Product[], productCount:number}) => {
       this.isLoading = false;
       this.totalProducts = productData.productCount;
       this.products = productData.product;

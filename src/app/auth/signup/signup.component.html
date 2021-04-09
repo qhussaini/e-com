@@ -1,4 +1,4 @@
-<div class="card p-4 sign-card text-center d-flex justify-content-center">
+<div class="card p-4 sign-card text-center d-flex justify-content-center" [class.dark-card]='theme.themeDark' [class.text-white]='theme.themeDark'>
   <mat-spinner *ngIf="isLoading" [style]="{width: '50px', height: '50px'}" styleClass="custom-spinner" strokeWidth="8" fill="#EEEEEE" animationDuration=".5s"></mat-spinner>
   <app-ui-preloader [display]="isLoading"></app-ui-preloader>
   <form

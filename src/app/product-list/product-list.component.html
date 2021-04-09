@@ -57,19 +57,19 @@
           <mat-icon>list</mat-icon>
         </button>
         <form class="form-group mt-3">
-          <input class="form-control ml-2" type="text" [formControl]="filter">
+          <input class="form-control ml-2" placeholder="Sreach Product" type="text" [formControl]="filter">
         </form>
       </div>
     </mat-toolbar>
-    <div *ngIf="!isLoading" class="container-fluid d-flex flex-wrap mt-1" fxLayout="row" fxLayoutAlign="center start"  >
+    <div *ngIf="!isLoading" class="container-fluid d-flex flex-wrap mt-1" fxLayout="row" fxLayoutAlign="start start"  >
       <div class="card example-card text-left sa-card m-1" [class.dark-card]='theme.themeDark' *ngFor="let product of products">
         <img [src]="product.itemImage" class="sa-img">
-        <div class="card-body">
+        <div class="card-body pt-0">
           <h1 class="card-title mb-1 itemName">{{ product.itemName | titlecase | slice:10:25 }}</h1>
           <span>Category: {{product.itemCategory}} | Flavors : {{product.itemFlavors}}</span>
           <h4 class="card-text">{{ product.itemMRP  | currency:"INR" }}</h4>
         </div>
-        <div class="card-footer card-btn btn btn-outline-secondary" matRipple>
+        <div class="card-footer text-center btn-outline-secondary" [class.dark-mcard]='theme.themeDark' matRipple>
           Add To Cart
         </div>
       </div>

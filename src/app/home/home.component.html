@@ -16,7 +16,7 @@
   </div>
 
   <div class="row row-cols-lg-auto g-3 align-items-center d-flex justify-content-around mt-2">
-    <mat-card class="saas-card saas-pointer" *ngFor="let shop of shopcard" matRipple>
+    <mat-card class="saas-card saas-pointer" *ngFor="let shop of shopcard" routerLink="/products" matRipple>
       <mat-card-header>
         <mat-card-title>{{shop.cardTitle}}</mat-card-title>
       </mat-card-header>
