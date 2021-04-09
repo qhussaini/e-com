@@ -1,38 +1,42 @@
-<a routerLink="/admin/add-new-product" class="btn btn-primary" role="button">Add New Product</a>
+<button routerLink="/admin/add-new-product" [disabled]="isLoading" class="btn btn-primary" role="button">Add New Product</button>
+
+<div class="d-flex justify-content-center align-items-center">
+  <mat-spinner *ngIf="isLoading"></mat-spinner>
+</div>
 
 <br>
-
-<form class="form-group">
-  <label>Filter</label>
-  <input class="form-control ml-2" type="text" [formControl]="filter">
-</form>
-
-<table class="table table-striped">
-  <thead>
-  <tr>
-    <th scope="col">product ID</th>
-    <th scope="col">product</th>
-    <th scope="col">Category</th>
-    <th scope="col">Type</th>
-    <th scope="col">MRP</th>
-    <th scope="col">Actions</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr *ngFor="let product of pruducts$ | async; index as i">
-    <th scope="row">{{ i + 1 }}</th>
-    <td>
-      <img [src]="product.itemImgUrl" class="mr-2" style="width: 20px">
-      <ngb-highlight [result]="product.itemName" [term]="filter.value"></ngb-highlight>
-    </td>
-    <td><ngb-highlight [result]="product.itemCategory" [term]="filter.value"></ngb-highlight></td>
-    <td><ngb-highlight [result]="product.itemType" [term]="filter.value"></ngb-highlight></td>
-    <td><ngb-highlight [result]="product.itemMRP | number" [term]="filter.value"></ngb-highlight></td>
-    <td>
-      <button mat-icon-button color="primary" placement="bottom" ngbTooltip="Edit Product"><mat-icon>create</mat-icon></button>
-      <button mat-icon-button color="accent" placement="bottom" ngbTooltip="Hold Product"><mat-icon>pan_tool</mat-icon></button>
-      <button mat-icon-button color="warn" placement="bottom" ngbTooltip="Delete Product"><mat-icon>delete_forever</mat-icon></button>
-    </td>
-  </tr>
-  </tbody>
-</table>
+<div *ngIf="!isLoading">
+  <form class="form-group">
+    <label>Filter</label>
+    <input class="form-control ml-2" type="text" [formControl]="filter">
+  </form>
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th scope="col">product ID</th>
+      <th scope="col">product</th>
+      <th scope="col">Category</th>
+      <th scope="col">flavors</th>
+      <th scope="col">MRP</th>
+      <th scope="col">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let product of products$ | async; index as i">
+      <th scope="row">{{ i + 1 }}</th>
+      <td>
+        <img [src]="product.itemImage" class="mr-2" style="width: 30px" >
+        <ngb-highlight [result]="product.itemName" [term]="filter.value"></ngb-highlight>
+      </td>
+      <td><ngb-highlight [result]="product.itemCategory" [term]="filter.value"></ngb-highlight></td>
+      <td><ngb-highlight [result]="product.itemFlavors" [term]="filter.value"></ngb-highlight></td>
+      <td><ngb-highlight [result]="product.itemMRP | number" [term]="filter.value"></ngb-highlight></td>
+      <td>
+        <button mat-icon-button color="primary" placement="bottom" [routerLink]="['/admin/edit-product/',product.itemId]" ngbTooltip="Edit Product"><mat-icon>create</mat-icon></button>
+        <button mat-icon-button color="accent" placement="bottom" ngbTooltip="Hold Product"><mat-icon>pan_tool</mat-icon></button>
+        <button mat-icon-button color="warn" placement="bottom" (click)="onDelete(product.itemId)" ngbTooltip="Delete Product"><mat-icon>delete_forever</mat-icon></button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>

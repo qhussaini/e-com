@@ -2,3 +2,16 @@
   max-width: 300px;
   margin: auto;
 }
+.authentication-form {
+  .form-group {
+      .input-group-text {
+          background-color: transparent;
+
+          i-feather, svg {
+              height: 22px;
+              width: 22px;
+          }
+      }
+  }
+}
+

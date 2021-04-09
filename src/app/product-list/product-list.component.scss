@@ -1,0 +1,26 @@
+
+.sa-card{
+  width: 250px;
+  height: 300px;
+}
+// .sa-card:hover {
+//   border: rgba($color: #171657, $alpha: 1.0) solid 3px;
+// }
+.card-btn{
+  background-color: white;
+}
+.card-btn:hover{
+  background-color: rgb(33, 14, 83);
+}
+
+.sa-img {
+  width: fit;
+  height: 150px;
+  object-fit: scale-down;
+  object-position: center center;
+}
+
+.price-sort input {
+  width: 63px;
+  border: solid gray 1px;
+}

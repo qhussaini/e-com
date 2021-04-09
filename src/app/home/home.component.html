@@ -1,14 +1,14 @@
-
-<div class="container" [class.dark-mcard]="theme.themeDark">
+<app-ui-preloader [display]="isLoading"></app-ui-preloader>
+<div class="container" [class.dark-mcard]="theme.themeDark" *ngIf="!isLoading">
   <div>
     <ngb-carousel #carousel [interval]="4000" [pauseOnHover]="pauseOnHover" [pauseOnFocus]="pauseOnFocus" (slide)="onSlide($event)">
-      <ng-template ngbSlide *ngFor="let product of product.products; index as i" style="margin: auto;">
+      <ng-template ngbSlide *ngFor="let product of products; index as i" style="margin: auto;">
         <div class="carousel-caption">
-          <h3>My slide {{i + 1}} title</h3>
+          <h3>{{product.itemName |titlecase}}</h3>
         </div>
         <a  >
           <div class="picsum-img-wrapper text-center pho-back">
-            <img [src]="product.itemImgUrl" alt="My image {{i + 1}} description" height="250px">
+            <img [src]="product.itemImage" alt="{{product.itemName}}" height="250px">
           </div>
         </a>
       </ng-template>

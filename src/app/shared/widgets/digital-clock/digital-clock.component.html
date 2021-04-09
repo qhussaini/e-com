@@ -1,0 +1,20 @@
+<div class="digitalClock" *ngIf="longClock"  [class.text-white]='theme.themeDark'>
+  <div class="dayTitle">
+    {{day}}
+  </div>
+  <div class="digitalTime">
+    <div>{{hour}} : &nbsp;</div>
+    <div>{{minute}} : &nbsp;</div>
+    <div>{{second}} : &nbsp;</div>
+    <div class="ampm">{{ampm}}</div>
+  </div>
+</div>
+
+<div class="digitalClockShort" *ngIf="shortClock"  [class.text-white]='theme.themeDark'>
+  <div class="digitalTime">
+    <div>{{hour}} : &nbsp;</div>
+    <div>{{minute}} : &nbsp;</div>
+    <div>{{second}} : &nbsp;</div>
+    <div class="ampmshort">{{ampm}}</div>
+  </div>
+</div>

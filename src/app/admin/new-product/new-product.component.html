@@ -1,28 +1,82 @@
-<div class="card p-4" [class.dark-theme]="!theme.themeDark">
-  <form>
-    <div class="form-group">
-      <label for="title">Title</label>
-      <input type="text" id="title" class="form-control">
+<app-ui-preloader [display]="isLoading"></app-ui-preloader>
+<div class="card p-4" [class.dark-card]='theme.themeDark' [class.text-white]='theme.themeDark' *ngIf="!isLoading">
+  <div class="row">
+    <div class="col-md-7">
+      <form [formGroup]="form" (submit)="onSaveProduct()">
+        <div class="form-group">
+          <label for="title">Item Name</label>
+          <input type="text" id="title" formControlName="itemName" [ngClass]="{'is-invalid':form.get('itemName').invalid && isSubmit }"  [ngClass]="{'is-invalid':form.get('itemName').invalid && form.get('itemName').touched }"  class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="price">Price</label>
+          <div class="input-group">
+            <span class="input-group-text">₹</span>
+            <input type="number" id="price" [ngClass]="{'is-invalid':form.get('itemPrice').invalid && form.get('itemPrice').touched }" [ngClass]="{'is-invalid':form.get('itemPrice').invalid && isSubmit }" class="form-control" formControlName="itemPrice">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="category">Category</label>
+          <div class="input-group">
+            <select id="category" class="form-control" [ngClass]="{'is-invalid':form.get('itemCategory').invalid && form.get('itemCategory').touched }" [ngClass]="{'is-invalid':form.get('itemCategory').invalid && isSubmit }" formControlName="itemCategory">
+              <option *ngFor="let cat of categorys" value="{{cat.newCategory}}">{{cat.newCategory}}</option>
+            </select>
+            <button mat-stroked-button color="primary" (click)="addNewCategory()" placement="bottom" ngbTooltip="Add New Category"><mat-icon>add</mat-icon></button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="flavors">flavors</label>
+          <div class="input-group">
+            <select id="flavors" class="form-control" [ngClass]="{'is-invalid':form.get('itemflavors').invalid && form.get('itemflavors').touched }" [ngClass]="{'is-invalid':form.get('itemflavors').invalid && isSubmit }" formControlName="itemflavors">
+              <option *ngFor="let flavor of flavors" value="{{flavor.newFlavors}}">{{flavor.newFlavors}}</option>
+            </select>
+            <button mat-stroked-button color="primary" (click)="addNewFlaver()" placement="bottom" ngbTooltip="Add New Flavors"><mat-icon>add</mat-icon></button>
+          </div>
+        </div>
+        <div class="form-group" >
+          <div class="alert alert-danger" role="alert" *ngIf="!imagePreview && isSubmit ">
+            Upload Image of Product
+          </div>
+          <div class="image-preview" *ngIf="imagePreview !== '' && imagePreview && form.get('itemImage').valid">
+            <img [src]="imagePreview" [alt]="form.value.itemName">
+          </div>
+          <button class="btn btn-outline-primary btn-sm" (click)="filepicker.click()" [ngClass]="{'btn-outline-secondary':theme.themeDark}" type="button">{{upImage}}</button>
+          <input type="file" #filepicker (change)="onImagePick($event)">
+        </div>
+        <button type="submit" class="btn btn-success">
+          Save
+        </button>
+      </form>
     </div>
-    <div class="form-group">
-      <label for="price">Price</label>
-      <div class="input-group">
-        <span class="input-group-text">₹</span>
-        <input type="number" id="price" class="form-control">
+    <div class="col-md-5"  *ngIf="imagePreview || form.get('itemName').value">
+      <div class="card text-left sa-card" [class.dark-mcard]='theme.themeDark' [class.text-white]='theme.themeDark'>
+        <img [src]="imagePreview" class="pri-image">
+        <div class="card-body">
+          <h1 class="card-title mb-1 itemName">{{ form.get('itemName').value | titlecase }}</h1>
+          <span>Category: <small *ngIf="!form.get('itemCategory').value">.......</small> {{form.get('itemCategory').value}} | Flavors : <small *ngIf="!form.get('itemflavors').value">.......</small> {{form.get('itemflavors').value}}</span>
+          <h4 class="card-text">{{ form.get('itemPrice').value  | currency:"INR" }}</h4>
+        </div>
       </div>
+      <!-- <mat-card class="saas-card saas-pointer">
+        <mat-card-header>
+          <mat-card-title>{{form.get('itemName').value}}</mat-card-title>
+        </mat-card-header>
+        <img mat-card-image class="pri-image" [src]="imagePreview" alt="Photo of a Ice-creams">
+        <mat-card-content>
+          <h1>{{form.get('itemPrice').value |currency:"INR"}}</h1>
+          <div class="row">
+            <div class="col-4">
+              Category :
+            </div>
+            <div class="col-8">
+              <small>{{form.get('itemCategory').value}}</small>
+            </div>
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button>See more</button>
+        </mat-card-actions>
+      </mat-card> -->
     </div>
-    <div class="form-group">
-      <label for="category">Category</label>
-      <select name="category" id="category" class="form-control">
-        <option value=""></option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="imageUrl">Image Url</label>
-      <input type="text" id="imageUrl" class="form-control">
-    </div>
-    <button type="submit" class="btn btn-success">
-      Save
-    </button>
-  </form>
+  </div>
+
 </div>

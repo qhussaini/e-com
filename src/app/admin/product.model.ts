@@ -1,7 +1,14 @@
 export interface Product {
+  itemId?: string;
   itemName: string;
   itemCategory: string;
   itemMRP: Number;
-  itemImgUrl?:string;
-  itemType: string;
+  itemImage?:File|string;
+  itemFlavors: string;
+}
+export interface Category {
+  newCategory: string;
+}
+export interface Flavor {
+  newFlavors: string;
 }

@@ -54,11 +54,13 @@ router.post("/login", (req, res, next) => {
   .then(result => {
     if(!result){
       return res.status(401).json({
-        message: 'Auth failed'
+        message: 'Unauthorised Check your email & password'
       });
     }
-    const token = jwt.sign({loginId: fetchedUser.loginId, userId: fetchedUser._id, userType: fetchedUser.userType}, "secret_encrypt_doc_appointment", { expiresIn:"1h" });
+    const token = jwt.sign({email: fetchedUser.email, userId: fetchedUser._id, userType: fetchedUser.userType}, "secret_encrypt_doc_appointment", { expiresIn:"1h" });
     res.status(200).json({
+      id: fetchedUser._id,
+      email: fetchedUser.email,
       token: token,
       expiresIn: 3600,
       userType: fetchedUser.userType,
@@ -67,7 +69,7 @@ router.post("/login", (req, res, next) => {
   })
   .catch(err => {
     return res.status(401).json({
-      message: 'Auth failed'
+      message: 'Unauthorised Check your email & password'
     });
   });
 })

@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { first } from 'rxjs/operators';
 import { ThemeService } from 'src/app/theme.service';
 import { AuthService } from '../auth.service';
 
@@ -14,23 +15,53 @@ export class LoginComponent implements OnInit, OnDestroy {
   username: string;
   password: string;
   isLoading: boolean = false;
+  submitted = false;
+  returnUrl: string;
+  error = "";
 
-  constructor(private router:Router, private auth: AuthService, public theme:ThemeService) { }
+  constructor(private router:Router, private route: ActivatedRoute, private auth: AuthService, public theme:ThemeService) { }
 
   ngOnInit() {
     this.auth.isSigning = true;
+    this.returnUrl = this.route.snapshot.queryParams["returnUrl"] || "/"
   }
   ngOnDestroy() {
     this.auth.isSigning = false;
   }
 
-  onLogin(form: NgForm){
-    if(form.invalid) {
-      console.log("error")
+  // onLogin(form: NgForm){
+  //   if(form.invalid) {
+  //     console.log("error")
+  //     return;
+  //   }
+  //   console.log("542aas")
+  //   this.isLoading = true;
+  //   this.auth.login(form.value.eId, form.value.passDoc );
+  // }
+
+  onLogin(form: NgForm) {
+    this.submitted = true;
+
+    // stop here if form is invalid
+    if (form.invalid) {
       return;
     }
-    console.log("542aas")
-    this.auth.login(form.value.eId, form.value.passDoc );
+    this.username = form.value.eId;
+    this.isLoading = true;
+    this.auth
+      .login_cb(this.username.toLowerCase(), form.value.password)
+      .pipe(first())
+      .subscribe(
+        (data) => {
+          this.router.navigate([this.returnUrl]);
+          this.isLoading = false;
+        },
+        (error) => {
+          console.log(error.error)
+          this.error = error.error.message;
+          this.isLoading = false;
+        }
+      );
   }
 
   // login() : void {

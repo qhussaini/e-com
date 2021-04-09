@@ -23,8 +23,8 @@ $ecom-ice-theme:   mat-light-theme((
 
 // Define an alternate dark theme.
 $dark-primary: mat-palette($mat-blue-grey);
-$dark-accent:  mat-palette($mat-amber, A200, A100, A400);
-$dark-warn:    mat-palette($mat-deep-orange);
+$dark-accent:  mat-palette($mat-deep-orange, 400);
+$dark-warn:    mat-palette($mat-red, 800);
 $dark-theme:   mat-dark-theme((
   color: (
     primary: $dark-primary,
@@ -59,6 +59,12 @@ $dark-theme:   mat-dark-theme((
 /* Importing Bootstrap SCSS file. */
 @import '~bootstrap/scss/bootstrap';
 @import '~@sweetalert2/theme-dark/dark.scss';
+@import "assets/scss/app";
+
+/*   Dark Theme*/
+.dark-mode{
+  @import "assets/scss/app-dark";
+}
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

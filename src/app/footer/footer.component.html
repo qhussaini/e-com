@@ -9,11 +9,48 @@
       <div class="row">
 
         <!-- Grid column -->
-        <div class="col-md-6 mt-md-0 mt-3">
+        <div class="col-md-6 mt-md-0 mt-3 pt-3">
 
           <!-- Content -->
-          <h5 class="text-uppercase">Footer Content</h5>
-          <p>Here you can use rows and columns here to organize your footer content.</p>
+          <h5 class="text-uppercase text-white footer-title">Contact Info</h5>
+          <p class="text-white-50">
+            Timing : 10:00 AM - 05:30 PM,
+            <br>
+            Monday-Surtday
+            <br>
+            Sunday Close
+          </p>
+
+          <ul class="list-unstyled">
+            <li class="mb-3">
+              <a>
+                <span class="contact-info"><mat-icon class="mt-2">location_on</mat-icon></span>
+                <span>Address : </span><br>
+                <small class="text-white-50">Hyderabad, TS, INDIA</small>
+              </a>
+            </li>
+            <li class="mb-3">
+              <a>
+                <span class="contact-info"><mat-icon class="mt-2">phone</mat-icon></span>
+                <span>Phone : </span><br>
+                <small class="text-white-50">+91-(040)22222222</small>
+              </a>
+            </li>
+            <li class="mb-3">
+              <a>
+                <span class="contact-info"><mat-icon class="mt-2">email</mat-icon></span>
+                <span>Email : </span><br>
+                <small class="text-white-50">contact@azamscoops.in</small>
+              </a>
+            </li>
+            <li class="mb-3">
+              <a>
+                <span class="contact-info"><mat-icon class="mt-2">web</mat-icon></span>
+                <span>Website : </span><br>
+                <small class="text-white-50 text-uppercase">www.azamscoops.in</small>
+              </a>
+            </li>
+          </ul>
 
         </div>
         <!-- Grid column -->
@@ -21,23 +58,23 @@
         <hr class="clearfix w-100 d-md-none pb-3">
 
         <!-- Grid column -->
-        <div class="col-md-3 mb-md-0 mb-3">
+        <div class="col-md-3 mt-3 mb-md-0 mb-3">
 
             <!-- Links -->
-            <h5 class="text-uppercase">Links</h5>
+            <h5 class="text-uppercase text-white footer-title">Shop</h5>
 
             <ul class="list-unstyled">
-              <li>
-                <a href="#!">Link 1</a>
+              <li class="store-list mb-1">
+                <a href="#!">Bars</a>
               </li>
-              <li>
-                <a href="#!">Link 2</a>
+              <li class="store-list mb-1">
+                <a href="#!">Cone</a>
               </li>
-              <li>
-                <a href="#!">Link 3</a>
+              <li class="store-list mb-1">
+                <a href="#!">Cups</a>
               </li>
-              <li>
-                <a href="#!">Link 4</a>
+              <li class="store-list mb-1">
+                <a href="#!">Sandwich</a>
               </li>
             </ul>
 
@@ -73,7 +110,8 @@
 
     </div>
     <!-- Footer Links -->
-
+    <mat-divider>
+    </mat-divider>
     <!-- Copyright -->
     <div class="footer-copyright text-center text-white py-3" [ngClass]="{'footer-copyright':!theme.themeDark}">© 2020 Copyright:
       <a routerLink="http://www.azamscoops.in/">Azam Scoops</a>

@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { AuthData } from './auth-data.model';
 import { ToastrService } from 'ngx-toastr';
+import { map } from 'rxjs/operators';
 
 
 @Injectable({
@@ -18,6 +19,7 @@ export class AuthService {
   private tokenTimer: any;
   private userType: string="";
   public isSigning: boolean = false;
+  user: AuthData;
 
 constructor(private http: HttpClient, private router: Router, private toastr: ToastrService) { }
 
@@ -78,13 +80,17 @@ constructor(private http: HttpClient, private router: Router, private toastr: To
 
   createUser(loginID: string, userName: string, password: string, usertype: string, shopNumber:number, shopName:string) {
     const authData: AuthData = {email: loginID, userName: userName, passWord: password, userType: usertype, shopNumber:shopNumber, shopName:shopName}
-    this.http.post<{message:string, error:string}>('http://localhost:3000/api/user/signup', authData)
+    return this.http.post<{message:string, error:string}>('http://localhost:3000/api/user/signup', authData)
       .subscribe(response => {
         if (response.message == "User created!") {
           this.toastr.success("Your Account Is successfully created", "Signup Successful",{
             timeOut:1000,
             progressBar:true,
           })
+          setTimeout(() => {
+            const isloading = false;
+            this.router.navigate(["/account/confirm"]);
+          }, 1000);
         }else{
           this.toastr.error("Your Signup Failed", "Signup Failed",{
             timeOut:1000,
@@ -116,7 +122,7 @@ constructor(private http: HttpClient, private router: Router, private toastr: To
   login(emailId: string, password: string) {
     const authData: AuthData = {email: emailId, passWord: password}
     console.log("reached")
-    this.http.post<{token: string, expiresIn: number, userType:string, userName:string}>('http://localhost:3000/api/user/login', authData)
+    return this.http.post<{token: string, expiresIn: number, userType:string, userName:string}>('http://localhost:3000/api/user/login', authData)
       .subscribe(response => {
         const token = response.token;
         this.token = token;
@@ -133,9 +139,39 @@ constructor(private http: HttpClient, private router: Router, private toastr: To
           this.saveAuthData(token, expirationDate, userType, userName);
           this.router.navigate(['/']);
           this.getIsAuth()
+          return this.token
         }
       });
   }
+
+  login_cb(email: string, password: string) {
+    const authData: AuthData = {email: email, passWord: password}
+    return this.http.post<any>('http://localhost:3000/api/user/login', authData)
+        .pipe(map(user => {
+            // login successful if there's a jwt token in the response
+            if (user && user.token) {
+                this.user = user;
+                // store user details and jwt in cookie
+                this.token = user.token
+                if (this.token){
+                  const userType = user.userType;
+                  const userName = user.userName;
+                  const expiresInDuration = user.expiresIn;
+                  this.setAuthTimer(expiresInDuration);
+                  this.userAuth = true;
+                  this.authStatusListener.next(true);
+                  const now = new Date();
+                  const expirationDate = new Date(now.getTime() + expiresInDuration * 1000);
+                  console.log("token userType : " + this.userType);
+                  this.saveAuthData(this.token, expirationDate, userType, userName);
+                  this.router.navigate(['/']);
+                  this.getIsAuth()
+                  return this.token
+                }
+            }
+            return user;
+        }));
+}
 
   logout(){
     this.token = undefined;

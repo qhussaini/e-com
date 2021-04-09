@@ -9,6 +9,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
+import { ChartModule } from 'angular2-chartjs';
+import { ChartsModule } from 'ng2-charts';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 //material-components
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
@@ -25,6 +28,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatPaginatorModule } from '@angular/material/paginator';
+
+
 
 
 import { MyOrderComponent } from './my-order/my-order.component';
@@ -36,6 +44,12 @@ import { SignupComponent } from './auth/signup/signup.component';
 import { AdminProductComponent } from './admin/admin-product/admin-product.component';
 import { FooterComponent } from './footer/footer.component';
 import { AuthInterceptor } from './auth/auth-interceptor';
+import { SharedModule } from './shared/shared.module';
+import { FlatpickrModule } from 'angularx-flatpickr';
+import { DashboardComponent } from './admin/dashboard/dashboard.component';
+import { WidgetModule } from './shared/widgets/widget.module';
+import { UIModule } from './shared/ui/ui.module';
+import { ProductListComponent } from './product-list/product-list.component';
 
 @NgModule({
   declarations: [
@@ -47,8 +61,10 @@ import { AuthInterceptor } from './auth/auth-interceptor';
       NewProductComponent,
       OrdersComponent,
       LoginComponent,
+      DashboardComponent,
       SignupComponent,
-      FooterComponent
+      FooterComponent,
+      ProductListComponent
    ],
   imports: [
     BrowserModule,
@@ -72,8 +88,19 @@ import { AuthInterceptor } from './auth/auth-interceptor';
     MatProgressSpinnerModule,
     HttpClientModule,
     MatMenuModule,
+    SharedModule,
+    WidgetModule,
+    UIModule,
     ToastrModule.forRoot(),
+    FlatpickrModule.forRoot(),
+    ChartModule,
+    ChartsModule,
+    FlexLayoutModule,
+    MatSelectModule,
+    MatSliderModule,
+    MatPaginatorModule,
   ],
+  exports: [],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })

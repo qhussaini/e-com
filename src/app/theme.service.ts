@@ -7,7 +7,9 @@ import { Injectable } from '@angular/core';
 export class ThemeService {
 
   themeDark = false;
-
+  deviceXs: boolean;
+  themeColor: string;
+  sideBar:string;
 constructor(private overlay:OverlayContainer) { }
 
   themeChange(){
@@ -15,6 +17,18 @@ constructor(private overlay:OverlayContainer) { }
       this.overlay.getContainerElement().classList.add('dark-mode');
     }else {
       this.overlay.getContainerElement().classList.remove('dark-mode');
+    }
+  }
+  setThemeColor(theme){
+    this.themeColor = theme;
+    localStorage.setItem('user-theme', theme);
+  }
+
+  getThemeColor(){
+    if (localStorage.getItem('user-theme')) {
+      this.themeColor = localStorage.getItem('user-theme')
+    }else {
+      this.themeColor = 'light-mode';
     }
   }
 

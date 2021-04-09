@@ -1,7 +1,7 @@
-<div [ngClass]="{'dark-mode':theme.themeDark}">
+<div [ngClass]="{'dark-mode':theme.themeDark}" [class.dark-mcard]="theme.themeDark" fxLayout="column" fxLayoutAlign="start" >
   <app-header></app-header>
-  <div class="home-card body">
-    <router-outlet></router-outlet>
+  <div class="home-card m-0 mt-2" [class.dark-mcard]="theme.themeDark">
+      <router-outlet></router-outlet>
   </div>
   <app-footer class="footer"></app-footer>
 </div>

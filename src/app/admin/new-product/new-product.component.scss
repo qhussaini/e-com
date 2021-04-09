@@ -1,0 +1,23 @@
+input[type="file"] {
+  visibility: hidden;
+}
+
+.image-preview {
+  height: 5rem;
+  margin: 1rem 0;
+}
+.image-preview img {
+  height: 100%;
+}
+.pri-image {
+  height: 300px;
+  object-fit: cover;
+  object-position: center center;
+}
+
+.sa-card:hover {
+  animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}

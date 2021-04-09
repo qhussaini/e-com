@@ -1,0 +1,18 @@
+<div class="card" [class.dark-card]='theme.themeDark'>
+    <div class="card-body p-0">
+        <div class="media p-3">
+            <div class="media-body">
+                <span class="text-uppercase font-size-12 font-weight-bold" [class.text-muted]='!theme.themeDark' [class.text-white-50]='theme.themeDark'>{{ mainTitle }}</span>
+                <h2 class="mb-0"  [class.text-white]='theme.themeDark'>{{ value }}</h2>
+            </div>
+            <div class="align-self-center">
+                <!-- <apx-chart #chart class="apex-chart-widget" [series]="series" [chart]="chartData" [colors]="colors"
+                    [tooltip]="tooltip" [stroke]="stroke" [fill]="fill" [markers]="markers">
+                </apx-chart> -->
+                <span class="text-success font-weight-bold font-size-13" [class.text-danger]="down" [class.text-white]='theme.themeDark'><i class='uil'
+                        [ngClass]="{ 'uil uil-arrow-down': down , 'uil uil-arrow-up': !down}"></i>
+                    {{ subValue }}</span>
+            </div>
+        </div>
+    </div>
+</div>

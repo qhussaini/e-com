@@ -1,0 +1,83 @@
+<app-ui-preloader [display]="isLoading"></app-ui-preloader>
+<mat-drawer-container class="example-container" >
+  <!-- [hasBackdrop]="hasBackdrop.value" -->
+  <mat-drawer #drawer [opened]="!theme.deviceXs" [mode]="theme.sideBar">
+    <mat-list>
+      <div mat-subheader>Categorys</div>
+      <mat-list-item *ngFor="let category of categorys" role="button" matRipple>
+        <div mat-line>{{category.newCategory |titlecase}}</div>
+      </mat-list-item>
+      <mat-divider></mat-divider>
+      <div mat-subheader>Flavors</div>
+      <mat-list-item *ngFor="let flavor of flavors" matRipple>
+        <div mat-line>{{flavor.newFlavors |titlecase}}</div>
+      </mat-list-item>
+      <mat-divider></mat-divider>
+      <div mat-subheader>Sort</div>
+      <mat-list-item *ngFor="let note of notes" matRipple>
+        <mat-icon mat-list-icon>note</mat-icon>
+        <div mat-line>{{note.name}}</div>
+        <div mat-line> {{note.updated | date}} </div>
+      </mat-list-item>
+      <mat-divider></mat-divider>
+      <div mat-subheader>Price Range</div>
+      <mat-list-item>
+        <form [formGroup]="valuForm" class="price-sort" (submit)="onPriceSet()" flexLayout="row" flexLayoutAlign="space-between center">
+            <input type="text" id="minValue" class="mr-1 btn" placeholder="₹Min" formControlName="minValue" >
+            <input type="text" id="maxValue" class="mr-1 btn" placeholder="₹Max" formControlName="maxValue" >
+          <button mat-stroked-button type="submit">
+            Set
+          </button>
+        </form>
+      </mat-list-item>
+      <mat-divider></mat-divider>
+
+    </mat-list>
+  </mat-drawer>
+  <mat-drawer-content>
+    <!-- <mat-form-field>
+      <mat-label>Sidenav mode</mat-label>
+      <mat-select #mode value="side">
+        <mat-option value="side">Side</mat-option>
+        <mat-option value="over">Over</mat-option>
+        <mat-option value="push">Push</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Has backdrop</mat-label>
+      <mat-select #hasBackdrop>
+        <mat-option>Unset</mat-option>
+        <mat-option [value]="true">True</mat-option>
+        <mat-option [value]="false">False</mat-option>
+      </mat-select>
+    </mat-form-field> -->
+    <mat-toolbar>
+      <div fxLayoutAlign="space-between center">
+        <button mat-icon-button *ngIf="theme.deviceXs" (click)="drawer.toggle()" >
+          <mat-icon>list</mat-icon>
+        </button>
+        <form class="form-group mt-3">
+          <input class="form-control ml-2" type="text" [formControl]="filter">
+        </form>
+      </div>
+    </mat-toolbar>
+    <div *ngIf="!isLoading" class="container-fluid d-flex flex-wrap mt-1" fxLayout="row" fxLayoutAlign="center start"  >
+      <div class="card example-card text-left sa-card m-1" [class.dark-card]='theme.themeDark' *ngFor="let product of products">
+        <img [src]="product.itemImage" class="sa-img">
+        <div class="card-body">
+          <h1 class="card-title mb-1 itemName">{{ product.itemName | titlecase | slice:10:25 }}</h1>
+          <span>Category: {{product.itemCategory}} | Flavors : {{product.itemFlavors}}</span>
+          <h4 class="card-text">{{ product.itemMRP  | currency:"INR" }}</h4>
+        </div>
+        <div class="card-footer card-btn btn btn-outline-secondary" matRipple>
+          Add To Cart
+        </div>
+      </div>
+    </div>
+    <mat-paginator [length]="totelProducts"
+              [pageSize]="productPerPage"
+              [pageSizeOptions]="pageSizeOptions"
+              (page)="onChangePage($event)">
+    </mat-paginator>
+  </mat-drawer-content>
+</mat-drawer-container>

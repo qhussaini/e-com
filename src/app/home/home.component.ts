@@ -1,5 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NgbCarousel, NgbSlideEvent, NgbSlideEventSource } from '@ng-bootstrap/ng-bootstrap';
+import { Subscription } from 'rxjs';
+import { Product } from '../admin/product.model';
 import { ProductsService } from '../admin/products.service';
 import { ThemeService } from '../theme.service';
 
@@ -8,7 +10,7 @@ import { ThemeService } from '../theme.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
 
   images = [62, 83, 466, 965, 982, 1043, 738].map((n) => `https://picsum.photos/id/${n}/900/500`);
 
@@ -17,11 +19,14 @@ export class HomeComponent implements OnInit {
   pauseOnIndicator = false;
   pauseOnHover = true;
   pauseOnFocus = true;
+  productSub:Subscription;
   shopcard = [];
+  products: Product[];
+  isLoading:boolean = false;
 
   @ViewChild('carousel', {static : true}) carousel: NgbCarousel;
 
-  constructor(public product:ProductsService, public theme:ThemeService) { }
+  constructor(public productService:ProductsService, public theme:ThemeService) { }
 
   ngOnInit() {
 
@@ -30,6 +35,16 @@ export class HomeComponent implements OnInit {
       {cardTitle: "Find your ideal Ice Creams", cardImgUrl:"https://media-cdn.tripadvisor.com/media/photo-s/0c/9f/c9/d6/close-up-of-other-sundae.jpg", cardDetail:"1 Liter bars of all flavors"},
       {cardTitle: "Find your ideal Ice Creams", cardImgUrl:"https://media-cdn.tripadvisor.com/media/photo-s/0c/9f/c9/d6/close-up-of-other-sundae.jpg", cardDetail:"1 Liter bars of all flavors"},
     ]
+
+    this.isLoading = true;
+    this.productService.getProducts();
+    this.productSub = this.productService.getUpdateProduct().subscribe((product: Product[]) => {
+      this.isLoading = false;
+      this.products = product;
+    });
+  }
+  ngOnDestroy() {
+    this.productSub.unsubscribe();
   }
 
   togglePaused() {

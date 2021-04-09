@@ -1,4 +1,4 @@
-import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { ThemeService } from '../theme.service';
@@ -9,6 +9,8 @@ import { ThemeService } from '../theme.service';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit, OnDestroy {
+
+  @Input() deviceXs:boolean;
 
   userIsAuthenticated = false;
   private authListenerSub: Subscription;
