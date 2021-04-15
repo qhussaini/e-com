@@ -35,7 +35,7 @@
         <label for="password">Password</label>
         <br />
         <input
-          type="password"
+          [type]="passtype"
           class="btn btn-light form-control is-valid"
           placement="bottom"
           ngbTooltip="Set Password"
@@ -49,6 +49,8 @@
         />
       </div>
     </div>
+    <mat-checkbox class="example-margin" name="showPass" (change)="showpass()" [(ngModel)]="showPass">Show Password</mat-checkbox>
+    <hr>
     <button
       type="submit"
       class="btn-bloack"

@@ -12,6 +12,7 @@
         <br />
         <input class="btn btn-light form-control is-valid"
         [class.is-invalid.wa-invalid]="userName.invalid && userName.touched"
+        [class.is-invalid]="userName.invalid && submit"
           id="userName"
           type="text"
           placement="bottom"
@@ -36,12 +37,13 @@
           #emailId="ngModel"
           [class.wa-valid]="emailId.valid"
           [class.is-invalid.wa-invalid]="emailId.invalid && emailId.touched"
+          [class.is-invalid.wa-invalid]="emailId.invalid && submit"
           name="eId"
           id="eId"
           required
         />
-        <div [class.invalid-tooltip]="emailId.invalid && emailId.touched">
-          <span *ngIf="emailId.invalid && emailId.touched"> Please enter valid Doc ID. </span>
+        <div [class.invalid-tooltip]="emailId.invalid && emailId.touched" [class.invalid-tooltip]="emailId.invalid && submit">
+          <span *ngIf="emailId.invalid && emailId.touched || emailId.invalid && submit"> Please enter valid Doc ID. </span>
         </div>
       </div>
     </div>
@@ -55,15 +57,40 @@
           placement="bottom"
           ngbTooltip="Set Password"
           placeholder="Password"
-          ngModel
+          [(ngModel)]="verifyPassword"
           #passDoc="ngModel"
           [class.is-invalid.wa-invalid]="passDoc.invalid && passDoc.touched"
+          [class.is-invalid.wa-invalid]="passDoc.invalid && submit"
+          [class.is-invalid.wa-invalid]="machPasword"
           name="passDoc"
           id="passDoc"
           required
         />
       </div>
     </div>
+    <div class="form-row">
+      <div class="form-group col-md has-validation">
+        <label for="passCheck">Password</label>
+        <br />
+        <input
+          type="password"
+          class="btn btn-light form-control is-valid"
+          placement="bottom"
+          ngbTooltip="verify Password"
+          placeholder="verify Password"
+          ngModel
+          #passCheck="ngModel"
+          (change)="verify(passCheck.value)"
+          [class.is-invalid.wa-invalid]="passCheck.invalid && passCheck.touched"
+          [class.is-invalid.wa-invalid]="passCheck.invalid && submit"
+          [class.is-invalid.wa-invalid]="machPasword"
+          name="passCheck"
+          id="passCheck"
+          required
+        />
+      </div>
+    </div>
+    <ngb-alert type="danger" *ngIf="machPasword" [dismissible]="false">Password not mach</ngb-alert>
     <div class="form-row">
       <div class="form-group col-md has-validation">
         <label for="shopName">Shop Name</label>
@@ -102,14 +129,11 @@
       <div ngbDropdown  class="form-group col-md has-validation">
         <label for="usertype">User Type</label>
         <br />
-        <input class="btn btn-light form-control is-valid"
-        [class.is-invalid.wa-invalid]="usertype.invalid && usertype.touched"
-          id="usertype" ngModel #usertype="ngModel" [(ngModel)]="userType" readonly name="usertype" placeholder="User Type" ngbDropdownToggle>
-        <div ngbDropdownMenu aria-labelledby="usertype">
-          <button ngbDropdownItem type="button" (click)="typeSelect(signupForm, 'wholesaler')">Wholesaler</button>
-          <button ngbDropdownItem type="button" (click)="typeSelect(signupForm, 'retailer')">Retailer</button>
-          <button ngbDropdownItem type="button" (click)="typeSelect(signupForm, 'party')">Party</button>
-        </div>
+        <mat-select id="usertype" class="btn btn-light form-control is-valid" ngModel #usertype="ngModel" name="usertype" [class.is-invalid]="usertype.invalid && usertype.touched || usertype.invalid && submit">
+            <mat-option value="wholesaler">Wholesaler</mat-option>
+            <mat-option value="retailer">Retailer</mat-option>
+            <mat-option value="party">Party</mat-option>
+        </mat-select>
       </div>
     </div>
     <button

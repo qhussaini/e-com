@@ -3,7 +3,9 @@ const express = require("express");
 const Product = require('../models/product');
 const Category = require('../models/category');
 const Flavor = require('../models/flavor');
-const multer = require('multer')
+const Cart = require("../models/cart");
+const multer = require('multer');
+const checkAuth = require("../middleware/check-auth");
 
 const router = express.Router();
 
@@ -29,14 +31,15 @@ const storage = multer.diskStorage({
   }
 });
 
-router.post("", multer({storage: storage}).single("itemImage"), (req, res, next) => {
+router.post("", checkAuth, multer({storage: storage}).single("itemImage"), (req, res, next) => {
   const url = req.protocol + "://" + req.get("host");
   const product = new Product({
     itemName: req.body.itemName,
     itemCategory: req.body.itemCategory,
     itemMRP: req.body.itemMRP,
     itemFlavors: req.body.itemFlavors,
-    itemImgUrl: url + "/images/" + req.file.filename
+    itemImgUrl: url + "/images/" + req.file.filename,
+    creator: req.userData.userId
   });
   product.save().then(createdProduct => {
     res.status(201).json({
@@ -64,17 +67,17 @@ router.post("/category", (req, res, next) => {
 router.get("/flavors", (req, res, next) => {
   Flavor.find().then(document => {
     res.status(200).json({
-      message: "Posts fetched succesfully!",
+      message: "flavor fetched succesfully!",
       flavor: document
     });
   });
 })
 router.post("/flavor", (req, res, next) => {
   // console.log("cat : "+ req.body.newCategory)
-  const category = new Flavor({
+  const flavor = new Flavor({
     flavor: req.body.newFlavors
   });
-  category.save().then(newFlavor => {
+  flavor.save().then(newFlavor => {
     res.status(201).json({
       message: "flavor added successfully",
       flavor: newFlavor
@@ -84,7 +87,7 @@ router.post("/flavor", (req, res, next) => {
 router.get("/categorys", (req, res, next) => {
   Category.find().then(document => {
     res.status(200).json({
-      message: "Posts fetched succesfully!",
+      message: "Categorys fetched succesfully!",
       category: document
     });
   });
@@ -123,7 +126,7 @@ router.get("/:itemId", (req, res, next) => {
   });
 });
 
-router.put("/:itemId", multer({storage: storage}).single("itemImage"), (req, res, next) => {
+router.put("/:itemId", checkAuth, multer({storage: storage}).single("itemImage"), (req, res, next) => {
   let imagePath = req.body.imagePath;
   if (req.file) {
     const url = req.protocol + "://" + req.get("host");
@@ -137,21 +140,104 @@ router.put("/:itemId", multer({storage: storage}).single("itemImage"), (req, res
     itemFlavors: req.body.itemFlavors,
     itemImgUrl: imagePath,
   });
-  Product.updateOne({ _id: req.params.itemId }, product).then(result => {
-    console.log(result)
-    res.status(200).json({
-       message: "Update Successful!",
-      //  itemImage: result.
-      });
+  Product.updateOne({ _id: req.params.itemId, creator:req.userData.userId }, product).then(result => {
+      if(result.nModified > 0){
+        res.status(200).json({
+           message: "Update Successful!",
+        });
+      }else {
+        res.status(401).json({
+           message: "Not authorized To update this product!",
+        });
+      }
   });
 });
 
-router.delete("/:itemId", (req, res, next) => {
-  Product.deleteOne({ _id: req.params.itemId }).then((result) => {
-    console.log(result);
-    res.status(200).json({ message: "post deleted!" });
+router.delete("/:itemId", checkAuth, (req, res, next) => {
+  Product.deleteOne({ _id: req.params.itemId, creator:req.userData.userId }).then((result) => {
+    if(result.n > 0){
+      res.status(200).json({
+         message: "Deletion Successful!",
+      });
+    }else {
+      res.status(401).json({
+         message: "Not authorized To delete this product!",
+      });
+    }
   });
 });
+router.delete("/categorys/:categoryId", (req, res, next) => {
+  Category.deleteOne({ _id: req.params.categoryId }).then((result) => {
+    res.status(200).json({ message: "Category deleted!" });
+  });
+});
+
+// cart routes
+// router.post("/cart", (req, res, next) => {
+//   const cart = new Cart({
+//     dateCreated: req.body.dateCreated
+//   });
+//   cart.save().then(newCart => {
+//     res.status(201).json({
+//       message: "cart added successfully",
+//       cart: newCart
+//     })
+//   })
+// });
+// router.post("/add-to-cart", checkAuth, (req, res, next) => {
+//   const cart = new Cart({
+//     products: req.body.productId,
+//     userId: req.userData.userId
+//   });
+//   cart.save().then(cart => {
+//     res.status(201).json({
+//       message: "cart add successfully",
+//       cart:cart
+//     })
+//   })
+// });
+// router.get("/cart/:cartId", (req, res, next) => {
+//   Cart.findById({ _id: req.params.cartId }).then(document => {
+//     res.status(200).json({
+//       message: "Cart fetched succesfully!",
+//       cart: document
+//     });
+//   });
+// })
+// router.put("/cart", (req, res, next) => {
+
+// })
+// router.get('/add-to-cart/:id', (req, res, next) => {
+//   var productId = req.params.id;
+//   // var cart = new Cart(req.session.cart ? req.session.cart : {item:{}});
+//   Product.findById(productId).then((err, product) => {
+//     if (err) {
+//       return res.status(404).json({
+//         message: 'Error'
+//       });
+//     }
+//     console.log(product);
+//     cart.add(product, productId);
+//     req.session.cart = cart;
+//     res.status(201).json({
+//       message: 'added'
+//     })
+//   });
+//   Product.findById( productId, (err, product) => {
+//     if (err) {
+//       return res.status(404).json({
+//         message: 'Error'
+//       });
+//     }
+//     console.log(product);
+//     cart.add(product, productId);
+//     req.session.cart = cart;
+//     res.status(201).json({
+//       message: 'added'
+//     })
+//   });
+// });
+
 
 
 module.exports = router;

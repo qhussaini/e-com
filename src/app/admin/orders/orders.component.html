@@ -1,3 +1,51 @@
-<p>
-  order works!
-</p>
+<app-ui-preloader [display]="isLoading"></app-ui-preloader>
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <th scope="col">Shop Name</th>
+    <th scope="col">Product</th>
+    <th scope="col">Total Price</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let id of product; index as i">
+    <th scope="row">{{ id.userName }}</th>
+    <th scope="row" class="pt-0">
+      <thead>
+        <tr>
+          <th scope="col">Product Name</th>
+          <th scope="col">Category</th>
+          <th scope="col">Flavors</th>
+          <th scope="col">Product MRP</th>
+          <th scope="col">Quantity</th>
+          <th scope="col">Total Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let pt of product[i].products">
+          <th scope="row">
+            <img [src]="pt.itemImage" class="mr-2" style="width: 30px" [alt]="pt.itemName">{{ pt.itemName }}
+          </th>
+          <th scope="row">{{ pt.itemCategory }}</th>
+          <th scope="row">{{ pt.itemFlavors }}</th>
+          <th scope="row">{{ pt.itemMRP |currency:"INR" }}</th>
+          <th scope="row">{{ pt.quantity }}</th>
+          <th scope="row">{{ pt.totalPrice |currency:"INR"}}</th>
+        </tr>
+        </tbody>
+    </th>
+    <th scope="row">{{ id.totalPrice |currency:"INR"}}</th>
+  </tr>
+  </tbody>
+</table>
+
+<!-- <div class="d-flex justify-content-between p-2">
+  <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize" (pageChange)="refreshCountries()">
+  </ngb-pagination>
+
+  <select class="custom-select" style="width: auto" [(ngModel)]="pageSize" (ngModelChange)="refreshCountries()">
+    <option [ngValue]="2">2 items per page</option>
+    <option [ngValue]="4">4 items per page</option>
+    <option [ngValue]="6">6 items per page</option>
+  </select>
+</div> -->

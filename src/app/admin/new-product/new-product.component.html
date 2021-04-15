@@ -17,18 +17,24 @@
         <div class="form-group">
           <label for="category">Category</label>
           <div class="input-group">
-            <select id="category" class="form-control" [ngClass]="{'is-invalid':form.get('itemCategory').invalid && form.get('itemCategory').touched }" [ngClass]="{'is-invalid':form.get('itemCategory').invalid && isSubmit }" formControlName="itemCategory">
-              <option *ngFor="let cat of categorys" value="{{cat.newCategory}}">{{cat.newCategory}}</option>
-            </select>
+            <mat-select  class="form-control" [ngClass]="{'is-invalid':form.get('itemCategory').invalid && form.get('itemCategory').touched }" [ngClass]="{'is-invalid':form.get('itemCategory').invalid && isSubmit }" formControlName="itemCategory">
+              <div class="d-flex bd-highlight" fxLayoutAlign="center stretch"  *ngFor="let cat of categorys" >
+                <mat-option class="p-2 flex-grow-1 bd-highlight" value="{{cat.newCategory}}">{{cat.newCategory}}</mat-option>
+                <button class="p-2 bd-highlight" mat-icon-button color="warn"><mat-icon>delete</mat-icon></button>
+              </div>
+            </mat-select>
             <button mat-stroked-button color="primary" (click)="addNewCategory()" placement="bottom" ngbTooltip="Add New Category"><mat-icon>add</mat-icon></button>
           </div>
         </div>
         <div class="form-group">
           <label for="flavors">flavors</label>
           <div class="input-group">
-            <select id="flavors" class="form-control" [ngClass]="{'is-invalid':form.get('itemflavors').invalid && form.get('itemflavors').touched }" [ngClass]="{'is-invalid':form.get('itemflavors').invalid && isSubmit }" formControlName="itemflavors">
-              <option *ngFor="let flavor of flavors" value="{{flavor.newFlavors}}">{{flavor.newFlavors}}</option>
-            </select>
+            <mat-select  class="form-control" [ngClass]="{'is-invalid':form.get('itemflavors').invalid && form.get('itemflavors').touched }" [ngClass]="{'is-invalid':form.get('itemflavors').invalid && isSubmit }" formControlName="itemflavors">
+              <div class="d-flex bd-highlight" fxLayoutAlign="center stretch"  *ngFor="let flavor of flavors" >
+                <mat-option class="p-2 flex-grow-1 bd-highlight" value="{{flavor.newFlavors}}">{{flavor.newFlavors}}</mat-option>
+                <button class="p-2 bd-highlight" mat-icon-button color="warn"><mat-icon>delete</mat-icon></button>
+              </div>
+            </mat-select>
             <button mat-stroked-button color="primary" (click)="addNewFlaver()" placement="bottom" ngbTooltip="Add New Flavors"><mat-icon>add</mat-icon></button>
           </div>
         </div>

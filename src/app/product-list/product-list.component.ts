@@ -6,6 +6,7 @@ import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { Category, Flavor, Product } from '../admin/product.model';
 import { ProductsService } from '../admin/products.service';
+import { ShoppingCartService } from '../my-order/shopping-cart.service';
 import { ThemeService } from '../theme.service';
 
 export interface Section {
@@ -26,6 +27,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   products: Product[];
   categorys: Category[];
   flavors: Flavor[];
+  quantity:number;
   isLoading:boolean = false;
   valuForm: FormGroup
   products$: Observable<Product[]>;
@@ -65,7 +67,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
     return value;
   }
-  constructor(public theme:ThemeService, private productService: ProductsService, private pipe: DecimalPipe){}
+  constructor(public theme:ThemeService, private cartService:ShoppingCartService, private productService: ProductsService, private pipe: DecimalPipe){}
 
 
   ngOnInit(){
@@ -112,6 +114,10 @@ export class ProductListComponent implements OnInit, OnDestroy {
     this.productService.getProducts(this.productPerPage, this.currentPage);
   }
 
+  // addToCart(product: Product){
+  //   this.cartService.addToCart(product);
+  // }
+
   search(text: string, pipe: PipeTransform): Product[] {
     return this.products.filter(product => {
       const term = text.toLowerCase();
@@ -129,4 +135,71 @@ export class ProductListComponent implements OnInit, OnDestroy {
     }
     console.table(this.valuForm);
   }
+  getProductQuantity(product: Product){
+    return this.cartService.cartShow.forEach(item => {
+      if(product.itemName === item.product.itemName){
+        return item.productQty;
+      }
+      return 0;
+    })
+    // return this.quantity ? this.quantity: 0;
+  }
+
+  addToCart(option) {
+    const itemId = option.itemId;
+    const itemName = option.itemName;
+    const itemMRP: number = option.itemMRP;
+    const itemCategory = option.itemCategory;
+    const itemFlavors = option.itemFlavors;
+    const ItemImage = option.itemImage;
+    const quantity: number = 1;
+    let dup = false;
+    let qtyM = this.products.indexOf(option);
+    this.cartService.cartShow.forEach((value) => {
+      let product = value.product;
+      if (product.itemName === itemName) {
+        value.productQty++;
+        let tp:number = value.product.itemMRP;
+        value.totalPrice = tp * value.productQty;
+        console.log(value.totalPrice);
+        dup = true;
+        // this.products[qtyM].IUnit =
+        //   this.products[qtyM].IUnit - 1;
+        // this.showToastr(itemName + " is added successfully");
+      }
+    });
+      if (!dup && this.cartService.cartShow.length !== 0) {
+        this.cartService.cartShow.push({
+          product: {
+            itemId: itemId,
+            itemName: itemName,
+            itemMRP: itemMRP,
+            itemCategory: itemCategory,
+            itemFlavors: itemFlavors,
+            itemImage: ItemImage,
+          },
+          productQty: quantity,
+          totalPrice: quantity * itemMRP
+        });
+      }
+      if (this.cartService.cartShow.length === 0) {
+        this.cartService.cartShow.push({
+          product: {
+            itemId: itemId,
+            itemName: itemName,
+            itemMRP: itemMRP,
+            itemCategory: itemCategory,
+            itemFlavors: itemFlavors,
+            itemImage: ItemImage,
+          },
+          productQty: quantity,
+          totalPrice: quantity * itemMRP
+        });
+        // console.log("main adding mothed is called");
+        // console.log("bill di" + this.orderService.bill.length);
+      }
+      localStorage.setItem("cartItem", JSON.stringify(this.cartService.cartShow))
+      console.log(this.cartService.cartShow)
+  }
+
 }

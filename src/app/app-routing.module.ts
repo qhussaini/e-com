@@ -9,6 +9,7 @@ import { AuthGuardAdmin } from './auth/auth-guard-admin';
 import { ConfirmComponent } from './auth/confirm/confirm.component';
 import { LoginComponent } from './auth/login/login.component';
 import { SignupComponent } from './auth/signup/signup.component';
+import { CartComponent } from './cart/cart.component';
 import { HomeComponent } from './home/home.component';
 import { MyOrderComponent } from './my-order/my-order.component';
 import { ProductListComponent } from './product-list/product-list.component';
@@ -25,6 +26,7 @@ const routes: Routes = [
   {path:"admin/edit-product/:itemId" , component: NewProductComponent, canActivate: [AuthGuardAdmin] },
   {path:"admin/products" , component: AdminProductComponent, canActivate: [AuthGuardAdmin] },
   {path:"my-order" , component: MyOrderComponent, canActivate: [AuthGuard] },
+  {path:"cart" , component: CartComponent },
 ];
 
 @NgModule({

@@ -2,15 +2,15 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
+import { ShoppingCartService } from '../my-order/shopping-cart.service';
 import { ThemeService } from '../theme.service';
-import { ShoppingCartService } from './shopping-cart.service';
 
 @Component({
-  selector: 'app-my-order',
-  templateUrl: './my-order.component.html',
-  styleUrls: ['./my-order.component.scss']
+  selector: 'app-cart',
+  templateUrl: './cart.component.html',
+  styleUrls: ['./cart.component.scss']
 })
-export class MyOrderComponent implements OnInit, OnDestroy {
+export class CartComponent implements OnInit, OnDestroy {
 
   totalPrice:number = 0;
   productId: Object[] = [];
@@ -44,5 +44,4 @@ export class MyOrderComponent implements OnInit, OnDestroy {
       this.route.navigate(["/login"])
     }
   }
-
 }

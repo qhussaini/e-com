@@ -31,7 +31,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatPaginatorModule } from '@angular/material/paginator';
-
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 
 
@@ -50,9 +50,11 @@ import { DashboardComponent } from './admin/dashboard/dashboard.component';
 import { WidgetModule } from './shared/widgets/widget.module';
 import { UIModule } from './shared/ui/ui.module';
 import { ProductListComponent } from './product-list/product-list.component';
+import { ProductCardComponent } from './product-card/product-card.component';
+import { CartComponent } from './cart/cart.component';
 
 @NgModule({
-  declarations: [
+  declarations: [		
     AppComponent,
       HeaderComponent,
       MyOrderComponent,
@@ -64,7 +66,9 @@ import { ProductListComponent } from './product-list/product-list.component';
       DashboardComponent,
       SignupComponent,
       FooterComponent,
-      ProductListComponent
+      ProductListComponent,
+      ProductCardComponent,
+      CartComponent
    ],
   imports: [
     BrowserModule,
@@ -99,6 +103,7 @@ import { ProductListComponent } from './product-list/product-list.component';
     MatSelectModule,
     MatSliderModule,
     MatPaginatorModule,
+    MatCheckboxModule,
   ],
   exports: [],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],

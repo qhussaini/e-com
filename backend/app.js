@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 
 const userRoutes = require('./routes/user');
 const productsRoutes = require('./routes/products');
+const cartsRoutes = require('./routes/carts');
 
 
 
@@ -14,7 +15,8 @@ mongoose.connect("mongodb+srv://postuser:VuOA4COivk92uT9j@cluster0.b76v3.mongodb
   .then(() => {
     console.log("connected to database");
   })
-  .catch(() => {
+  .catch((error) => {
+    console.log(error);
     console.log("Connection failed!");
   });
 
@@ -31,5 +33,6 @@ app.use((req, res, next) => {
 
 app.use("/api/user",userRoutes);
 app.use("/api/admin/products",productsRoutes);
+app.use("/api/cart", cartsRoutes);
 
 module.exports = app;

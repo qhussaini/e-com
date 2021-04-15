@@ -39,6 +39,13 @@ router.get("", checkAuth, (req, res, next) => {
     });
   })
 });
+router.get("/client/:id", checkAuth, (req, res, next) => {
+  User.findOne({ _id : req.params.id }).then(document => {
+    res.status(200).json({
+      userName: document.userName
+    });
+  })
+});
 
 router.post("/login", (req, res, next) => {
   let fetchedUser;
@@ -57,7 +64,7 @@ router.post("/login", (req, res, next) => {
         message: 'Unauthorised Check your email & password'
       });
     }
-    const token = jwt.sign({email: fetchedUser.email, userId: fetchedUser._id, userType: fetchedUser.userType}, "secret_encrypt_doc_appointment", { expiresIn:"1h" });
+    const token = jwt.sign({email: fetchedUser.email, userId: fetchedUser._id}, "secret_encrypt_doc_appointment", { expiresIn:"1h" });
     res.status(200).json({
       id: fetchedUser._id,
       email: fetchedUser.email,
@@ -72,6 +79,32 @@ router.post("/login", (req, res, next) => {
       message: 'Unauthorised Check your email & password'
     });
   });
+})
+
+router.post("/checkAuth", checkAuth, (req, res, next) => {
+    User.findOne({ email: req.userData.email }).then(user => {
+      if(!user){
+        return res.status(401).json({
+          message: 'Auth failed'
+        });
+      }
+      return bcrypt.compare(req.body.passWord, user.password);
+    })
+    .then(result => {
+      if(!result){
+        return res.status(401).json({
+          message: 'Unauthorised Check your password'
+        });
+      }
+      res.status(200).json({
+        message: 'auth Successful'
+      });
+    })
+    .catch(err => {
+      return res.status(401).json({
+        message: 'Unauthorised Check your password'
+      });
+    });
 })
 
 module.exports = router;

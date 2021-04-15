@@ -13,9 +13,11 @@ import { map } from 'rxjs/operators';
 export class AuthService {
   private userAuth = false;
   private userName = "";
+  private clientName = "";
   private token: string|undefined;
   private authStatusListener = new Subject<boolean>();
   private userNameUpdate = new Subject<string>();
+  private clientNameUpdate = new Subject<string>();
   private tokenTimer: any;
   private userType: string="";
   public isSigning: boolean = false;
@@ -62,6 +64,16 @@ constructor(private http: HttpClient, private router: Router, private toastr: To
         this.userNameUpdate.next(this.userName);
       });
   }
+  getClientData(id:string) {
+    this.http
+      .get<{ message: string; userName: string }>(
+        'http://localhost:3000/api/user/client/' + id
+      )
+      .subscribe((appointmentData) => {
+        this.clientName = appointmentData.userName;
+        this.clientNameUpdate.next(this.clientName);
+      });
+  }
 
   getUserType(){
     return this.userType;
@@ -69,6 +81,9 @@ constructor(private http: HttpClient, private router: Router, private toastr: To
 
   getUpdateUserName() {
     return this.userNameUpdate.asObservable();
+  }
+  getUpdateClientName() {
+    return this.clientNameUpdate.asObservable();
   }
 
   // getUserNamed() {
@@ -147,31 +162,60 @@ constructor(private http: HttpClient, private router: Router, private toastr: To
   login_cb(email: string, password: string) {
     const authData: AuthData = {email: email, passWord: password}
     return this.http.post<any>('http://localhost:3000/api/user/login', authData)
-        .pipe(map(user => {
-            // login successful if there's a jwt token in the response
-            if (user && user.token) {
-                this.user = user;
-                // store user details and jwt in cookie
-                this.token = user.token
-                if (this.token){
-                  const userType = user.userType;
-                  const userName = user.userName;
-                  const expiresInDuration = user.expiresIn;
-                  this.setAuthTimer(expiresInDuration);
-                  this.userAuth = true;
-                  this.authStatusListener.next(true);
-                  const now = new Date();
-                  const expirationDate = new Date(now.getTime() + expiresInDuration * 1000);
-                  console.log("token userType : " + this.userType);
-                  this.saveAuthData(this.token, expirationDate, userType, userName);
-                  this.router.navigate(['/']);
-                  this.getIsAuth()
-                  return this.token
-                }
+      .pipe(map(user => {
+        // login successful if there's a jwt token in the response
+        if (user && user.token) {
+            this.user = user;
+            // store user details and jwt in cookie
+            this.token = user.token
+            if (this.token){
+              const userType = user.userType;
+              const userName = user.userName;
+              const expiresInDuration = user.expiresIn;
+              this.setAuthTimer(expiresInDuration);
+              this.userAuth = true;
+              this.authStatusListener.next(true);
+              const now = new Date();
+              const expirationDate = new Date(now.getTime() + expiresInDuration * 1000);
+              console.log("token userType : " + this.userType);
+              this.saveAuthData(this.token, expirationDate, userType, userName);
+              this.router.navigate(['/']);
+              this.getIsAuth()
+              return this.token
             }
-            return user;
-        }));
-}
+          }
+          return user;
+      }));
+  }
+  checkAuth(password: string) {
+    const authData = {passWord: password}
+    return this.http.post<any>('http://localhost:3000/api/user/checkAuth', authData)
+      .pipe(map(user => {
+        console.log(user);
+        // login successful if there's a jwt token in the response
+        // if (user && user.token) {
+        //     this.user = user;
+        //     // store user details and jwt in cookie
+        //     this.token = user.token
+        //     if (this.token){
+        //       const userType = user.userType;
+        //       const userName = user.userName;
+        //       const expiresInDuration = user.expiresIn;
+        //       this.setAuthTimer(expiresInDuration);
+        //       this.userAuth = true;
+        //       this.authStatusListener.next(true);
+        //       const now = new Date();
+        //       const expirationDate = new Date(now.getTime() + expiresInDuration * 1000);
+        //       console.log("token userType : " + this.userType);
+        //       this.saveAuthData(this.token, expirationDate, userType, userName);
+        //       this.router.navigate(['/']);
+        //       this.getIsAuth()
+        //       return this.token
+        //     }
+        //   }
+          return user;
+      }));
+  }
 
   logout(){
     this.token = undefined;

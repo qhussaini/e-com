@@ -1,8 +1,10 @@
 import { DecimalPipe } from '@angular/common';
 import { Component, OnInit, PipeTransform } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { first, map, startWith } from 'rxjs/operators';
+import { AuthService } from 'src/app/auth/auth.service';
 import Swal from 'sweetalert2';
 import { Product } from '../product.model';
 import { ProductsService } from '../products.service';
@@ -23,7 +25,7 @@ export class AdminProductComponent implements OnInit {
   productPerPage: number=5;
   currentPage: number=1;
 
-  constructor(public productsData: ProductsService, private pipe: DecimalPipe) {}
+  constructor(public productsData: ProductsService, private pipe: DecimalPipe, private auth:AuthService, private toastr: ToastrService) {}
   search(text: string, pipe: PipeTransform): Product[] {
     return this.products.filter(product => {
       const term = text.toLowerCase();
@@ -33,15 +35,6 @@ export class AdminProductComponent implements OnInit {
   }
 
   ngOnInit() {
-    // this.products = [
-    //   {itemName: "1/2 LITER-ALFANSO MANGO", itemImage:"https://pngimg.com/uploads/mango/mango_PNG9163.png", itemFlavors: "Mango", itemCategory:"Bars", itemMRP: 165},
-    //   {itemName: "1/2 LITER-ANJEER BADAM", itemImage:"https://freepngimg.com/thumb/almond/5-2-almond-png-picture-thumb.png", itemFlavors: "Badam", itemCategory:"Bars", itemMRP: 165},
-    //   {itemName: "1/2 LITER-APRICOT", itemImage:"http://pngimg.com/uploads/apricot/apricot_PNG12647.png", itemFlavors: "Apricot", itemCategory:"Bars", itemMRP: 0},
-    //   {itemName: "1/2 LITER-BELGIUM DARK CHOCOLATE", itemImage:"https://www.pngarts.com/files/3/Dark-Chocolate-PNG-Picture.png", itemFlavors: "Chocolate", itemCategory:"Bars", itemMRP: 165},
-    //   {itemName: "1/2 LITER-BERRY BONANZA", itemImage:"https://webstockreview.net/images/berries-clipart-single-6.png", itemFlavors: "Berry", itemCategory:"Bars", itemMRP: 0},
-    //   {itemName: "1/2 LITER-BLACK CURRENT", itemImage:"https://lh3.googleusercontent.com/proxy/gGq1FTz0UGmqGggTxCa-e3QtgGjONMh6OAzarnQeQrpvL6rPRzkcGcBdN6szsQGV_gcm49DAmORk8YR5wWRXvFRqFMaan8I40z7vqkE_E4A9_IN_G3LMGatPa2c_DCzAwf5D", itemFlavors: "Current", itemCategory:"Bars", itemMRP: 0},
-    //   {itemName: "1/2 LITER-BUTTER SCOTCH", itemImage:"https://i2.wp.com/srimadhuramcatering.com/wp-content/uploads/2020/08/butter-scotch-scoop.png?fit=600%2C600&ssl=1", itemFlavors: "Butter Scotch", itemCategory:"Bars", itemMRP: 115},
-    // ];
     this.isLoading = true;
     this.productsData.getProducts(5,1);
     this.productsData.getUpdateProduct().subscribe((productData: {product:Product[], productCount:number}) => {
@@ -80,17 +73,29 @@ export class AdminProductComponent implements OnInit {
           inputValidator: (value) => {
             if (!value) {
               return 'You need to enter password'
-            }else if (value==="12345"){
-              this.isLoading = true;
-              this.productsData.deleteProduct(itemId).subscribe(() =>{
-                this.productsData.getProducts(this.productPerPage,this.currentPage);
-              });
-              // this.productsData.getUpdateProduct().subscribe((product: Product[]) => {
-              //   this.isLoading = false;
-              //   this.products = product;
-              // });
-            }else {
-              return 'Invalid password'
+            }else{
+              this.auth
+                .checkAuth(value)
+                .pipe(first())
+                .subscribe(
+                  (data) => {
+                    console.log(data)
+                    if (data.message === "auth Successful"){
+                      this.isLoading = true;
+                      this.productsData.deleteProduct(itemId).subscribe(() =>{
+                        this.productsData.getProducts(this.productPerPage,this.currentPage);
+                      });
+                    }
+                  },
+                  (error) => {
+                    if (error.error.message==="Unauthorised Check your password"){
+                      this.toastr.error("check your password", "Invalid password",{
+                        timeOut:3000,
+                        progressBar:true,
+                      })
+                    }
+                  }
+                );
             }
           }
         })

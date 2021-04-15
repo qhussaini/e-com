@@ -1,6 +1,7 @@
 import { Component, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
+import { ShoppingCartService } from '../my-order/shopping-cart.service';
 import { ThemeService } from '../theme.service';
 
 @Component({
@@ -23,7 +24,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.innerWidth = window.innerWidth;
   }
 
-  constructor(public theme:ThemeService, public authService: AuthService) { }
+  constructor(public theme:ThemeService, public authService: AuthService, public cart: ShoppingCartService) { }
 
   ngOnInit() {
     this.userIsAuthenticated = this.authService.getIsAuth();

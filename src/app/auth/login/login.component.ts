@@ -18,6 +18,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   submitted = false;
   returnUrl: string;
   error = "";
+  showPass:boolean = false;
+  passtype:string = "password";
 
   constructor(private router:Router, private route: ActivatedRoute, private auth: AuthService, public theme:ThemeService) { }
 
@@ -38,6 +40,13 @@ export class LoginComponent implements OnInit, OnDestroy {
   //   this.isLoading = true;
   //   this.auth.login(form.value.eId, form.value.passDoc );
   // }
+  showpass(){
+    if(this.showPass){
+      this.passtype = "text"
+    }else {
+      this.passtype = "password"
+    }
+  }
 
   onLogin(form: NgForm) {
     this.submitted = true;

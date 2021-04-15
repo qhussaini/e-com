@@ -20,13 +20,11 @@
         <hr class="dropdown-divider">
         <button (click)="onLogout()" mat-menu-item>Logout</button>
       </mat-menu>
-      <button *ngIf="userIsAuthenticated" mat-icon-button ngbTooltip="Cart">
-        <mat-icon *ngIf="cartCount===0" >shopping_basket</mat-icon>
-        <mat-icon *ngIf="cartCount>0" matBadge="{{cartCount}}" (click)="inCartCount()" matBadgeColor="warn" >shopping_basket</mat-icon>
-      </button>
       <mat-slide-toggle color="primary" [(ngModel)]="theme.themeDark" (change)="theme.themeChange()">
         <mat-icon>bedtime</mat-icon>
       </mat-slide-toggle>
+      <button mat-icon-button routerLink="/cart" *ngIf="cart.cartShow.length===0"><mat-icon>shopping_basket</mat-icon></button>
+      <button mat-icon-button routerLink="/cart" *ngIf="cart.cartShow.length>0"><mat-icon [matBadge]="cart.cartShow.length" MatBadgeSize = 'small' matBadgeColor="warn">shopping_basket</mat-icon></button>
       <button *ngIf="!userIsAuthenticated" mat-icon-button ngbTooltip="Login" routerLink="/login">
         <mat-icon matBadgeColor="warn" >login</mat-icon>
       </button>

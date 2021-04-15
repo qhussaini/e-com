@@ -62,15 +62,14 @@
       </div>
     </mat-toolbar>
     <div *ngIf="!isLoading" class="container-fluid d-flex flex-wrap mt-1" fxLayout="row" fxLayoutAlign="start start"  >
-      <div class="card example-card text-left sa-card m-1" [class.dark-card]='theme.themeDark' *ngFor="let product of products">
-        <img [src]="product.itemImage" class="sa-img">
+      <div class="card example-card sa-card m-1" *ngFor="let product of products" ngbTooltip="Category: {{product.itemCategory}}" [class.dark-card]='theme.themeDark'>
+        <img [src]="product.itemImage" class="sa-img rounded mx-auto d-block">
         <div class="card-body pt-0">
-          <h1 class="card-title mb-1 itemName">{{ product.itemName | titlecase | slice:10:25 }}</h1>
-          <span>Category: {{product.itemCategory}} | Flavors : {{product.itemFlavors}}</span>
+          <h1 class="card-title mb-1">{{ product.itemName | titlecase }}</h1>
           <h4 class="card-text">{{ product.itemMRP  | currency:"INR" }}</h4>
         </div>
-        <div class="card-footer text-center btn-outline-secondary" [class.dark-mcard]='theme.themeDark' matRipple>
-          Add To Cart
+        <div class="card-footer p-0" [class.dark-mcard]='theme.themeDark' matRipple>
+          <button (click)="addToCart(product)" class="btn btn-primary btn-block"> Add to Cart</button>
         </div>
       </div>
     </div>

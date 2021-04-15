@@ -6,6 +6,7 @@ import { AuthService } from './auth/auth.service';
 import { ThemeService } from './theme.service';
 import { MediaObserver, MediaChange } from '@angular/flex-layout';
 import { Subscription } from 'rxjs';
+import { ShoppingCartService } from './my-order/shopping-cart.service';
 
 @Component({
   selector: 'app-root',
@@ -20,7 +21,8 @@ export class AppComponent implements OnInit, OnDestroy{
     private _bottomSheet: MatBottomSheet,
     private auth: AuthService,
     private overlay:OverlayContainer,
-    public mediaObserver: MediaObserver
+    public mediaObserver: MediaObserver,
+    private cart: ShoppingCartService
     ) {}
 
   ngOnInit(){
@@ -33,13 +35,14 @@ export class AppComponent implements OnInit, OnDestroy{
         this.theme.sideBar = "side"
       }
     })
+    this.cart.cartShow = JSON.parse(localStorage.getItem("cartItem") || "[]");
     setTimeout(()=>{
       var isLogedin = null
       isLogedin = localStorage.getItem('token');
       if (isLogedin===null && !this.auth.isSigning) {
         this._bottomSheet.open(BottomSheet);
       }
-    },5000*7)
+    },60000*5)
     this.auth.autoAuthUser();
   }
   ngOnDestroy(){

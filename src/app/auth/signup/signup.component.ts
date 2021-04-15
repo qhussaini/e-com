@@ -12,6 +12,9 @@ export class SignupComponent implements OnInit, OnDestroy {
 
   isLoading:boolean=false;
   userType: string = ' ';
+  verifyPassword:string="";
+  machPasword:boolean;
+  submit: boolean;
 
   constructor(public authService: AuthService, public theme:ThemeService) { }
 
@@ -27,10 +30,18 @@ export class SignupComponent implements OnInit, OnDestroy {
     const usertype = type;
     this.userType = usertype;
   }
+  verify(pass:string){
+    if(this.verifyPassword === pass) {
+      this.machPasword = false;
+    }else {
+      this.machPasword = true;
+    }
+  }
 
   onSignup(form:NgForm){
     // console.log("ggsj : "+ form.value)
-    if ( form.invalid ){
+    this.submit = true;
+    if ( form.invalid && !this.machPasword || !this.machPasword ){
       return;
     }
     this.isLoading = true;

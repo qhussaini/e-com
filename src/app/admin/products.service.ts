@@ -55,6 +55,7 @@ constructor(private http: HttpClient, private router: Router, private toastr: To
               itemMRP: product.itemMRP,
               itemImage: product.itemImgUrl,
               itemFlavors: product.itemFlavors,
+              creator: product.creator
             };
 
           }),
@@ -75,8 +76,8 @@ constructor(private http: HttpClient, private router: Router, private toastr: To
           return productData.category.map((categorys) => {
             if(categorys.category){
               return {
-                  newCategory: categorys.category,
-                  newFlavors: categorys.flavors
+                newCategory: categorys.category,
+                categoryId: categorys._id
               };
             }else {
               return {
@@ -99,7 +100,8 @@ constructor(private http: HttpClient, private router: Router, private toastr: To
           return productData.flavor.map((flavors) => {
             if(flavors.flavor){
               return {
-                  newFlavors: flavors.flavor
+                  newFlavors: flavors.flavor,
+                  flavorId: flavors._id
               };
             }else {
               return {
@@ -178,13 +180,6 @@ constructor(private http: HttpClient, private router: Router, private toastr: To
     itemPrice:number,
     itemImage:File,
   ) {
-    // const product: Product = {
-    //   itemName: itemName,
-    //   itemFlavors: itemFlavors,
-    //   itemMRP: itemPrice,
-    //   itemCategory: itemCategory,
-    //   itemImage: itemImage
-    // };
     const product = new FormData();
      product.append("itemName", itemName);
      product.append("itemFlavors", itemFlavors);

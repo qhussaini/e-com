@@ -6,6 +6,7 @@ const productSchema = mongoose.Schema({
   itemMRP:{ type: Number, required:true },
   itemImgUrl:{ type: String, required:true },
   itemFlavors:{ type: String, required:true },
+  creator: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true},
 });
 
 module.exports = mongoose.model('Product', productSchema);
