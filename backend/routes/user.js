@@ -64,7 +64,7 @@ router.post("/login", (req, res, next) => {
         message: 'Unauthorised Check your email & password'
       });
     }
-    const token = jwt.sign({email: fetchedUser.email, userId: fetchedUser._id}, "secret_encrypt_doc_appointment", { expiresIn:"1h" });
+    const token = jwt.sign({email: fetchedUser.email, userId: fetchedUser._id, userName: fetchedUser.userName, shopName: fetchedUser.shopName }, "secret_encrypt_doc_appointment", { expiresIn:"1h" });
     res.status(200).json({
       id: fetchedUser._id,
       email: fetchedUser.email,

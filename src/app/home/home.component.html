@@ -14,21 +14,18 @@
       </ng-template>
     </ngb-carousel>
   </div>
-
+  <!-- class="row row-cols-lg-auto g-3 align-items-center d-flex justify-content-around mt-2" -->
   <div class="row row-cols-lg-auto g-3 align-items-center d-flex justify-content-around mt-2">
-    <mat-card class="saas-card saas-pointer" *ngFor="let shop of shopcard" routerLink="/products" matRipple>
+    <mat-card class="sa-card saas-pointer mb-2 mr-1" *ngFor="let cat of category" [routerLink]="'/products/'+ cat.newCategory" matRipple>
       <mat-card-header>
-        <mat-card-title>{{shop.cardTitle}}</mat-card-title>
+        <mat-card-title>Find {{ cat.newCategory }} Ice cream</mat-card-title>
       </mat-card-header>
-      <img mat-card-image src="{{shop.cardImgUrl}}" alt="Photo of a Ice-creams">
+      <img mat-card-image class="sa-img rounded mx-auto d-block" src="{{cat.categoryImage}}" alt="Photo of a Ice-creams">
       <mat-card-content>
         <p>
-          {{shop.cardDetail}}
+           {{cat.newCategory}}
         </p>
       </mat-card-content>
-      <mat-card-actions>
-        <button mat-button>See more</button>
-      </mat-card-actions>
     </mat-card>
   </div>
 </div>

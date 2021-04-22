@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { ShoppingCartService } from '../my-order/shopping-cart.service';
@@ -17,7 +18,7 @@ export class CartComponent implements OnInit, OnDestroy {
   productQty:any[] = [];
   userIsAuthenticated: any;
   authListenerSub: Subscription;
-  constructor(public cart: ShoppingCartService, public theme: ThemeService, private authService:AuthService, private route: Router) { }
+  constructor(public cart: ShoppingCartService, public theme: ThemeService,  private toastr: ToastrService, private authService:AuthService, private route: Router) { }
 
   ngOnInit() {
     this.userIsAuthenticated = this.authService.getIsAuth();
@@ -39,7 +40,15 @@ export class CartComponent implements OnInit, OnDestroy {
 
   addToCart() {
     if (this.userIsAuthenticated) {
-      this.cart.createNewCart(this.productId, this.totalPrice);
+      this.cart.createNewCart(this.productId, this.totalPrice)
+      .subscribe(result => {
+        this.toastr.success("Order Placed successfully", "",{
+          timeOut:3000,
+          progressBar:true,
+        })
+        this.cart.cartShow = [];
+        localStorage.removeItem("cartItem")
+      });
     }else {
       this.route.navigate(["/login"])
     }

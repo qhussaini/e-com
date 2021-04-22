@@ -15,20 +15,22 @@ constructor(private overlay:OverlayContainer) { }
   themeChange(){
     if(this.themeDark){
       this.overlay.getContainerElement().classList.add('dark-mode');
+      this.setThemeColor(true);
     }else {
       this.overlay.getContainerElement().classList.remove('dark-mode');
+      this.setThemeColor(false);
     }
   }
-  setThemeColor(theme){
-    this.themeColor = theme;
-    localStorage.setItem('user-theme', theme);
+  private setThemeColor(theme:boolean){
+    this.themeDark = theme;
+    localStorage.setItem('user-theme', `${theme}`);
   }
 
   getThemeColor(){
-    if (localStorage.getItem('user-theme')) {
-      this.themeColor = localStorage.getItem('user-theme')
+    if (localStorage.getItem('user-theme') && localStorage.getItem('user-theme') === "true") {
+      this.themeDark = true
     }else {
-      this.themeColor = 'light-mode';
+      this.themeDark = false;
     }
   }
 

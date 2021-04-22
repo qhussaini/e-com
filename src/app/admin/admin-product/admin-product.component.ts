@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { first, map, startWith } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/auth.service';
+import { ThemeService } from 'src/app/theme.service';
 import Swal from 'sweetalert2';
 import { Product } from '../product.model';
 import { ProductsService } from '../products.service';
@@ -25,7 +26,7 @@ export class AdminProductComponent implements OnInit {
   productPerPage: number=5;
   currentPage: number=1;
 
-  constructor(public productsData: ProductsService, private pipe: DecimalPipe, private auth:AuthService, private toastr: ToastrService) {}
+  constructor(public productsData: ProductsService, private pipe: DecimalPipe, private auth:AuthService, private toastr: ToastrService, public theme: ThemeService) {}
   search(text: string, pipe: PipeTransform): Product[] {
     return this.products.filter(product => {
       const term = text.toLowerCase();

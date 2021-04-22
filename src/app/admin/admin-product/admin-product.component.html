@@ -1,3 +1,4 @@
+<div class="p-1">
 <button routerLink="/admin/add-new-product" [disabled]="isLoading" class="btn btn-primary" role="button">Add New Product</button>
 
 <div class="d-flex justify-content-center align-items-center">
@@ -5,14 +6,16 @@
 </div>
 
 <br>
-<div *ngIf="!isLoading">
-  <form class="form-group">
-    <label>Filter</label>
-    <input class="form-control ml-2" type="text" [formControl]="filter">
-  </form>
-  <table class="table table-striped">
+<div *ngIf="!isLoading" [class.table-dark]="theme.themeDark">
+  <div class="row-cols-lg-5">
+    <form class="form-group p-2">
+      <label>Filter</label>
+      <input class="form-control" type="text" placeholder="Filter" [formControl]="filter">
+    </form>
+  </div>
+  <table class="table table-striped" [class.table-dark]="theme.themeDark">
     <thead>
-    <tr>
+    <tr class="text-center">
       <th scope="col">product ID</th>
       <th scope="col">product</th>
       <th scope="col">Category</th>
@@ -22,7 +25,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let product of products$ | async; index as i">
+    <tr class="text-center" *ngFor="let product of products$ | async; index as i">
       <th scope="row">{{ i + 1 }}</th>
       <td>
         <img [src]="product.itemImage" class="mr-2" style="width: 30px" >
@@ -39,4 +42,6 @@
     </tr>
     </tbody>
   </table>
+</div>
+
 </div>

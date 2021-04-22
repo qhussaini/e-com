@@ -5,21 +5,13 @@
         <img src="assets/images/logo/scoops-logo.png" alt="Azam Scoop" width="40" height="35">
       </a>
       <div *ngIf="!theme.deviceXs">
-        <button mat-button routerLink="" routerLinkActive="mat-primary">Home</button>
-        <button mat-button *ngIf="userIsAuthenticated" routerLink="/admin/dash" routerLinkActive="mat-primary">Dashboard</button>
-        <button mat-button routerLink="" routerLinkActive="mat-primary">Contact Us</button>
-        <button mat-button routerLink="/products" routerLinkActive="mat-primary">About Us</button>
+        <button mat-button routerLink="/" routerLinkActive="mat-primary">Home</button>
+        <button mat-button *ngIf="userIsAuthenticated && authService.getUserType()==='wholesaler'" routerLink="/admin/dash" routerLinkActive="mat-primary">Dashboard</button>
+        <button mat-button routerLink="/products" routerLinkActive="mat-primary">Products</button>
+        <button mat-button routerLink="/about-us" routerLinkActive="mat-primary">About Us</button>
       </div>
     </div>
     <div>
-      <button *ngIf="userIsAuthenticated" mat-button [matMenuTriggerFor]="tools">{{authService.getUserType()|titlecase}} Tools <mat-icon>expand_more</mat-icon></button>
-      <mat-menu #tools="matMenu" style="min-width: 150px;">
-        <button routerLink="/my-order" mat-menu-item>My Order</button>
-        <button routerLink="/admin/products" *ngIf="authService.getUserType()==='wholesaler'" mat-menu-item>Manager Porduct</button>
-        <button routerLink="/admin/order" *ngIf="authService.getUserType()==='wholesaler'" mat-menu-item>Manager Orders</button>
-        <hr class="dropdown-divider">
-        <button (click)="onLogout()" mat-menu-item>Logout</button>
-      </mat-menu>
       <mat-slide-toggle color="primary" [(ngModel)]="theme.themeDark" (change)="theme.themeChange()">
         <mat-icon>bedtime</mat-icon>
       </mat-slide-toggle>
@@ -28,13 +20,21 @@
       <button *ngIf="!userIsAuthenticated" mat-icon-button ngbTooltip="Login" routerLink="/login">
         <mat-icon matBadgeColor="warn" >login</mat-icon>
       </button>
+      <button *ngIf="userIsAuthenticated" mat-button [matMenuTriggerFor]="tools">{{authService.getUserType()|titlecase}} Tools <mat-icon>expand_more</mat-icon></button>
+      <mat-menu #tools="matMenu" style="min-width: 150px;">
+        <button routerLink="/my-order" mat-menu-item>My Order</button>
+        <button routerLink="/admin/products" *ngIf="authService.getUserType()==='wholesaler'" mat-menu-item>Manager Porduct</button>
+        <button routerLink="/admin/order" *ngIf="authService.getUserType()==='wholesaler'" mat-menu-item>Manager Orders</button>
+        <hr class="dropdown-divider">
+        <button (click)="onLogout()" mat-menu-item>Logout</button>
+      </mat-menu>
     </div>
   </mat-toolbar-row>
 
   <mat-toolbar-row *ngIf="theme.deviceXs" fxLayoutAlign="space-between end">
     <button mat-button aria-current="page" routerLink="/" routerLinkActive="primary">Home</button>
-    <button mat-button *ngIf="userIsAuthenticated" routerLink="/admin/dash" routerLinkActive="primary">Dashboard</button>
-    <button mat-button routerLink="/admin/dash" routerLinkActive="primary">Contact Us</button>
-    <button mat-button routerLink="/admin/dash" routerLinkActive="primary">About Us</button>
+    <button mat-button *ngIf="userIsAuthenticated && authService.getUserType()==='wholesaler'" routerLink="/admin/dash" routerLinkActive="primary">Dashboard</button>
+    <button mat-button routerLink="/admin/products" routerLinkActive="primary">Products</button>
+    <button mat-button routerLink="/about-us" routerLinkActive="primary">About Us</button>
   </mat-toolbar-row>
 </mat-toolbar>

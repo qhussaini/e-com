@@ -27,7 +27,6 @@ export class AppComponent implements OnInit, OnDestroy{
 
   ngOnInit(){
     this.mediaSub = this.mediaObserver.media$.subscribe((result: MediaChange) => {
-      console.log(result.mqAlias);
       this.theme.deviceXs = result.mqAlias === 'xs' ? true : false;
       if(this.theme.deviceXs) {
         this.theme.sideBar = "over"
@@ -35,6 +34,8 @@ export class AppComponent implements OnInit, OnDestroy{
         this.theme.sideBar = "side"
       }
     })
+    this.theme.getThemeColor();
+    this.theme.themeChange()
     this.cart.cartShow = JSON.parse(localStorage.getItem("cartItem") || "[]");
     setTimeout(()=>{
       var isLogedin = null

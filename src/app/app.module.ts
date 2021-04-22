@@ -37,7 +37,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import { MyOrderComponent } from './my-order/my-order.component';
 import { HomeComponent } from './home/home.component';
-import { NewProductComponent } from './admin/new-product/new-product.component';
+import { NewCategory, NewFlavor, NewProductComponent } from './admin/new-product/new-product.component';
 import { OrdersComponent } from './admin/orders/orders.component';
 import { LoginComponent } from './auth/login/login.component';
 import { SignupComponent } from './auth/signup/signup.component';
@@ -52,9 +52,10 @@ import { UIModule } from './shared/ui/ui.module';
 import { ProductListComponent } from './product-list/product-list.component';
 import { ProductCardComponent } from './product-card/product-card.component';
 import { CartComponent } from './cart/cart.component';
+import { AboutUsComponent } from './about-us/about-us.component';
 
 @NgModule({
-  declarations: [		
+  declarations: [	
     AppComponent,
       HeaderComponent,
       MyOrderComponent,
@@ -68,7 +69,10 @@ import { CartComponent } from './cart/cart.component';
       FooterComponent,
       ProductListComponent,
       ProductCardComponent,
-      CartComponent
+      CartComponent,
+      NewCategory,
+      NewFlavor,
+      AboutUsComponent
    ],
   imports: [
     BrowserModule,

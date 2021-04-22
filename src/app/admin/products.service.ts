@@ -11,15 +11,7 @@ import { Category, Flavor, Product } from './product.model';
 })
 export class ProductsService implements OnInit {
 
-  public products: Product[] = [
-    {itemName: "1/2 LITER-ALFANSO MANGO", itemImage:"https://pngimg.com/uploads/mango/mango_PNG9163.png", itemCategory: "Mango", itemFlavors:"Bars", itemMRP: 165},
-    {itemName: "1/2 LITER-ANJEER BADAM", itemImage:"https://freepngimg.com/thumb/almond/5-2-almond-png-picture-thumb.png", itemCategory: "Badam", itemFlavors:"Bars", itemMRP: 165},
-    {itemName: "1/2 LITER-APRICOT", itemImage:"http://pngimg.com/uploads/apricot/apricot_PNG12647.png", itemCategory: "Apricot", itemFlavors:"Bars", itemMRP: 0},
-    {itemName: "1/2 LITER-BELGIUM DARK CHOCOLATE", itemImage:"https://www.pngarts.com/files/3/Dark-Chocolate-PNG-Picture.png", itemCategory: "Chocolate", itemFlavors:"Bars", itemMRP: 165},
-    {itemName: "1/2 LITER-BERRY BONANZA", itemImage:"https://webstockreview.net/images/berries-clipart-single-6.png", itemCategory: "Berry", itemFlavors:"Bars", itemMRP: 0},
-    {itemName: "1/2 LITER-BLACK CURRENT", itemImage:"https://lh3.googleusercontent.com/proxy/gGq1FTz0UGmqGggTxCa-e3QtgGjONMh6OAzarnQeQrpvL6rPRzkcGcBdN6szsQGV_gcm49DAmORk8YR5wWRXvFRqFMaan8I40z7vqkE_E4A9_IN_G3LMGatPa2c_DCzAwf5D", itemCategory: "Current", itemFlavors:"Bars", itemMRP: 0},
-    {itemName: "1/2 LITER-BUTTER SCOTCH", itemImage:"https://i2.wp.com/srimadhuramcatering.com/wp-content/uploads/2020/08/butter-scotch-scoop.png?fit=600%2C600&ssl=1", itemCategory: "Butter Scotch", itemFlavors:"Bars", itemMRP: 115},
-  ];
+  public products: Product[] = [];
   private productsUpdate = new Subject<{product: Product[], productCount: number }>();
   public categorys: Category[];
   private categorysUpdate = new Subject<Category[]>();
@@ -30,15 +22,6 @@ export class ProductsService implements OnInit {
 constructor(private http: HttpClient, private router: Router, private toastr: ToastrService) { }
 
   ngOnInit(){
-    this.products = [
-      {itemName: "1/2 LITER-ALFANSO MANGO", itemImage:"https://pngimg.com/uploads/mango/mango_PNG9163.png", itemCategory: "Mango", itemFlavors:"Bars", itemMRP: 165},
-      {itemName: "1/2 LITER-ANJEER BADAM", itemImage:"https://freepngimg.com/thumb/almond/5-2-almond-png-picture-thumb.png", itemCategory: "Badam", itemFlavors:"Bars", itemMRP: 165},
-      {itemName: "1/2 LITER-APRICOT", itemImage:"http://pngimg.com/uploads/apricot/apricot_PNG12647.png", itemCategory: "Apricot", itemFlavors:"Bars", itemMRP: 0},
-      {itemName: "1/2 LITER-BELGIUM DARK CHOCOLATE", itemImage:"https://www.pngarts.com/files/3/Dark-Chocolate-PNG-Picture.png", itemCategory: "Chocolate", itemFlavors:"Bars", itemMRP: 165},
-      {itemName: "1/2 LITER-BERRY BONANZA", itemImage:"https://webstockreview.net/images/berries-clipart-single-6.png", itemCategory: "Berry", itemFlavors:"Bars", itemMRP: 0},
-      {itemName: "1/2 LITER-BLACK CURRENT", itemImage:"https://lh3.googleusercontent.com/proxy/gGq1FTz0UGmqGggTxCa-e3QtgGjONMh6OAzarnQeQrpvL6rPRzkcGcBdN6szsQGV_gcm49DAmORk8YR5wWRXvFRqFMaan8I40z7vqkE_E4A9_IN_G3LMGatPa2c_DCzAwf5D", itemCategory: "Current", itemFlavors:"Bars", itemMRP: 0},
-      {itemName: "1/2 LITER-BUTTER SCOTCH", itemImage:"https://i2.wp.com/srimadhuramcatering.com/wp-content/uploads/2020/08/butter-scotch-scoop.png?fit=600%2C600&ssl=1", itemCategory: "Butter Scotch", itemFlavors:"Bars", itemMRP: 115},
-    ];
   }
 
   getProducts(productsPerPage:number, currentPage:number) {
@@ -77,7 +60,8 @@ constructor(private http: HttpClient, private router: Router, private toastr: To
             if(categorys.category){
               return {
                 newCategory: categorys.category,
-                categoryId: categorys._id
+                categoryId: categorys._id,
+                categoryImage: categorys.categoryImage,
               };
             }else {
               return {
@@ -138,11 +122,12 @@ constructor(private http: HttpClient, private router: Router, private toastr: To
     return this.productsUpdate.asObservable();
   }
 
-  addCategory(newCategory:string) {
+  addCategory(newCategory:string, categoryImage:File|string) {
     console.log("data : " + newCategory)
-    const categoryData: Category = {
-      newCategory: newCategory
-    }
+    const categoryData = new FormData();
+    categoryData.append( "newCategory",newCategory);
+    categoryData.append( "categoryImage", categoryImage);
+
     return this.http
       .post<{ message: string, category: any }>(
         'http://localhost:3000/api/admin/products/category',
@@ -234,6 +219,16 @@ constructor(private http: HttpClient, private router: Router, private toastr: To
   deleteProduct(itemId: string) {
     return this.http
       .delete("http://localhost:3000/api/admin/products/" + itemId);
+  }
+
+  deleteCategory(categoryId: string){
+    return this.http
+      .delete("http://localhost:3000/api/admin/products/categorys/" + categoryId);
+  }
+
+  deleteFlavor(flavorId: string){
+    return this.http
+      .delete("http://localhost:3000/api/admin/products/flavors/" + flavorId);
   }
 
 

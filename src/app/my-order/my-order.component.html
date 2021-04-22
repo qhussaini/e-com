@@ -1,56 +1,54 @@
-<div class="container" [ngClass]="{'custom-dark-theme':theme.themeDark}">
-  <div class="text-center" *ngIf="cart.cartShow.length===0">
-    <span>Your Scoops Basket is empty</span>
+<app-ui-preloader [display]="isLoading"></app-ui-preloader>
+<div *ngIf="!isLoading" class="container" [ngClass]="{'custom-dark-theme':theme.themeDark}">
+  <div class="text-center" *ngIf="products.length===0">
+    <span>No orders To show</span>
   </div>
-  <div class="card" *ngIf="cart.cartShow.length>0" [class.dark-mcard]='theme.themeDark' [class.text-white]='theme.themeDark'>
-    <div class="full-width m-1" *ngFor="let cart of cart.cartShow" [class.dark-card]='theme.themeDark' [class.card]='!theme.themeDark' >
+  <div class="card border-0" *ngIf="products.length>0" [class.dark-mcard]='theme.themeDark' [class.text-white]='theme.themeDark'>
+    <div class="full-width m-1" *ngFor="let product of products" [class.dark-card]='theme.themeDark' [class.card]='!theme.themeDark' >
       <div class="card-body d-flex justify-content-between" >
         <div>
           <span>
-            <img [src]="cart.product.itemImage" class="product-image" alt="">
+            <img [src]="product.itemImage" class="product-image" alt="">
           </span>
           <br *ngIf="theme.deviceXs">
           <span class="card-title">
-            {{cart.product.itemName}}
+            {{product.itemName}}
           </span>
         </div>
         <div>
           <div class="d-flex justify-content-between">
             <label for="mrp">MRP :</label>
-            <span id="mrp"> {{cart.product.itemMRP |currency: "INR"}}</span>
+            <span id="mrp"> {{product.itemMRP |currency: "INR"}}</span>
           </div>
           <div class="d-flex justify-content-between">
             <label for="qty">Quantity :</label>
-            <span id="qty"> {{cart.productQty }}</span>
+            <span id="qty"> {{product.quantity }}</span>
           </div>
           <div>
             <div class="d-flex justify-content-between">
               <label for="tp">Total Price :</label>
-              <span id="tp"> {{cart.totalPrice |currency: "INR"}}</span>
+              <span id="tp"> {{product.totalPrice |currency: "INR"}}</span>
             </div>
           </div>
         </div>
       </div>
       <hr>
-      <div class="pt-0 card-body white d-flex justify-content-between" [class.dark-card]='theme.themeDark'>
-        <div>
+      <div class="pt-0 card-body white" [ngClass]="{'d-flex justify-content-md-between':!theme.deviceXs}" [class.dark-card]='theme.themeDark'>
+        <div class="col-md-8">
           <small class="card-text mr-2">
-            Flavor : {{cart.product.itemFlavors |titlecase}}
+            Flavor : {{product.itemFlavors |titlecase}}
           </small>
           <small class="card-text">
-            Category : {{cart.product.itemCategory |titlecase}}
+            Category : {{product.itemCategory |titlecase}}
           </small>
         </div>
-        <div>
-          <button class="btn-sm btn btn-danger" mat-ripple>delete</button>
+        <div class="col-md-3">
+          <ngb-progressbar [type]="statusBar" [textType]="product.orderStatus==='Panding'? warning: success" height="25px" [value]="100" [striped]="true" [animated]="product.orderStatus==='Panding' ? true : false"><i>{{product.orderStatus}}<i *ngIf="product.orderStatus==='Panding'">.....</i></i></ngb-progressbar>
         </div>
       </div>
     </div>
     <div class="text-right m-2">
       Total Price : {{totalPrice |currency:"INR"}}
-    </div>
-    <div class="d-flex justify-content-end m-2">
-      <button mat-raised-button type="button" [ngClass]="{'btn-block':theme.deviceXs}" color="primary" (click)="addToCart()"> Proceed to Buy </button>
     </div>
   </div>
 </div>

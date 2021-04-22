@@ -2,6 +2,7 @@ import { DecimalPipe } from '@angular/common';
 import { Component, Input, OnDestroy, OnInit, PipeTransform } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { Category, Flavor, Product } from '../admin/product.model';
@@ -24,7 +25,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
   topVal = 0;
   productSub:Subscription;
-  products: Product[];
+  products: Product[] = [];
   categorys: Category[];
   flavors: Flavor[];
   quantity:number;
@@ -32,63 +33,49 @@ export class ProductListComponent implements OnInit, OnDestroy {
   valuForm: FormGroup
   products$: Observable<Product[]>;
   filter = new FormControl('');
+  filteredProducts: Product[] = [];
+  private _filterTerm: string;
   totalProducts = 10;
-  productPerPage = 2;
+  productPerPage = 5;
   currentPage = 1;
   pageSizeOptions = [5,10,15,20]
-  folders: Section[] = [
-    {
-      name: 'Photos',
-      updated: new Date('1/1/16'),
-    },
-    {
-      name: 'Recipes',
-      updated: new Date('1/17/16'),
-    },
-    {
-      name: 'Work',
-      updated: new Date('1/28/16'),
-    }
-  ];
-  notes: Section[] = [
-    {
-      name: 'Vacation Itinerary',
-      updated: new Date('2/20/16'),
-    },
-    {
-      name: 'Kitchen Remodel',
-      updated: new Date('1/18/16'),
-    }
-  ];
-  formatLabel(value: number) {
-    if (value >= 1000) {
-      return Math.round(value / 1000) + 'k';
-    }
-
-    return value;
+  constructor(public theme:ThemeService, public cartService:ShoppingCartService, private activatedRoute: ActivatedRoute, private productService: ProductsService, private pipe: DecimalPipe){}
+  getfilterTerm():string {
+    return this._filterTerm;
   }
-  constructor(public theme:ThemeService, private cartService:ShoppingCartService, private productService: ProductsService, private pipe: DecimalPipe){}
+  setfilterTerm(value: string){
+    this._filterTerm = value
+    this.filteredProducts = this.filterProducts(value);
+  }
 
-
-  ngOnInit(){
-    this.products$ = this.filter.valueChanges.pipe(
-      startWith(''),
-      map(text => this.search(text, this.pipe))
-    );
+   filterProducts(searchString: string){
+    return this.products.filter(product =>
+      product.itemCategory.toLocaleLowerCase().indexOf(searchString.toLocaleLowerCase())!==-1);
+  }
+  async ngOnInit(){
     this.isLoading = true;
     this.productService.getProducts(this.productPerPage,this.currentPage);
-    this.productService.getUpdateProduct().subscribe((productData: {product:Product[], productCount:number}) => {
-      this.isLoading = false;
-      this.totalProducts = productData.productCount;
-      this.products = productData.product;
-    });
-    this.isLoading = true;
+    await this.activatedRoute.paramMap.subscribe(async (paramMap: ParamMap) => {
+      this.productSub = await this.productService.getUpdateProduct().subscribe((productData: {product:Product[], productCount:number}) => {
+        // this.isLoading = false;
+        this.totalProducts = productData.productCount;
+        this.products = productData.product;
+        if (paramMap.has("category")) {
+          let category = paramMap.get("category")
+          this.setfilterTerm(category);
+          this.filteredProducts = this.filterProducts(category);
+        }else {
+          this.filteredProducts = this.products;
+        }
+      });
+    })
+    // this.isLoading = true;
     this.productService.getCategory();
     this.productSub = this.productService.getUpdateCategory().subscribe((category: Category[]) => {
-      this.isLoading = false;
+      // this.isLoading = false;
       this.categorys = category;
     });
-    this.isLoading = true;
+    // this.isLoading = true;
     this.productService.getFlavor();
     this.productSub = this.productService.getUpdateFlavor().subscribe((flavor: Flavor[]) => {
       this.isLoading = false;
@@ -112,20 +99,25 @@ export class ProductListComponent implements OnInit, OnDestroy {
     this.currentPage = pageData.pageIndex + 1;
     this.productPerPage = pageData.pageSize;
     this.productService.getProducts(this.productPerPage, this.currentPage);
+    this.activatedRoute.paramMap.subscribe(async (paramMap: ParamMap) => {
+      if (paramMap.has("category")) {
+        let category = paramMap.get("category")
+        this.productSub = this.productService.getUpdateProduct().subscribe((productData: {product:Product[], productCount:number}) => {
+          this.totalProducts = productData.productCount;
+          this.products = productData.product;
+          this.filteredProducts = this.products;
+          this.filteredProducts = this.filterProducts(category);
+        });
+        console.log("cat " + category);
+        // await this.setfilterTerm(category);
+        this.isLoading = false;
+      }
+    })
   }
 
   // addToCart(product: Product){
   //   this.cartService.addToCart(product);
   // }
-
-  search(text: string, pipe: PipeTransform): Product[] {
-    return this.products.filter(product => {
-      const term = text.toLowerCase();
-      return product.itemName.toLowerCase().includes(term)
-          || product.itemFlavors.toLowerCase().includes(term)
-          ||product.itemCategory.toLowerCase().includes(term);
-    });
-  }
 
 
   onPriceSet() {
@@ -161,7 +153,6 @@ export class ProductListComponent implements OnInit, OnDestroy {
         value.productQty++;
         let tp:number = value.product.itemMRP;
         value.totalPrice = tp * value.productQty;
-        console.log(value.totalPrice);
         dup = true;
         // this.products[qtyM].IUnit =
         //   this.products[qtyM].IUnit - 1;
@@ -199,7 +190,6 @@ export class ProductListComponent implements OnInit, OnDestroy {
         // console.log("bill di" + this.orderService.bill.length);
       }
       localStorage.setItem("cartItem", JSON.stringify(this.cartService.cartShow))
-      console.log(this.cartService.cartShow)
   }
 
 }

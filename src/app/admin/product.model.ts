@@ -7,17 +7,23 @@ export interface Product {
   itemFlavors: string;
   quantity?:number;
   totalPrice?:number;
+  orderStatus?:string;
 }
 export interface OrederProduct {
+  cartId: string;
   userName: string;
+  userShop: string;
+  userId: string;
   products:Product[];
   totalPrice:number;
+  orderStatus:string;
 }
 export interface Category {
-  categoryId?:String;
+  categoryId?:string;
   newCategory: string;
+  categoryImage: File|string;
 }
 export interface Flavor {
-  flavorId?:String;
+  flavorId?:string;
   newFlavors: string;
 }

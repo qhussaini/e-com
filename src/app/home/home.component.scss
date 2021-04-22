@@ -7,11 +7,21 @@
   cursor: pointer;
 }
 .saas-pointer:hover {
-  cursor: pointer;
   border: rgb(109, 30, 30) solid 1px;
   padding: 20px;
 }
 
 .pho-back {
   background-color: slategrey;
+}
+
+.sa-card{
+  width: 290px;
+  height: 300px;
+}
+.sa-img {
+  width: 250px;
+  height: 150px;
+  object-fit: scale-down;
+  object-position: center center;
 }

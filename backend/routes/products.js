@@ -22,7 +22,22 @@ const storage = multer.diskStorage({
     if (isValid) {
       error = null;
     }
-    cb(error, "backend/images");
+    cb(error, "backend/images/products");
+  },
+  filename: (req, file, cb) => {
+    const name = file.originalname.toLowerCase().split(' ').join('-');
+    const ext = MIME_TYPE_MAP[file.mimetype];
+    cb(null, name + '-' + Date.now() + '.' + ext);
+  }
+});
+const storageCategory = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const isValid = MIME_TYPE_MAP[file.mimetype];
+    let error = new Error("Invalid mime type");
+    if (isValid) {
+      error = null;
+    }
+    cb(error, "backend/images/category");
   },
   filename: (req, file, cb) => {
     const name = file.originalname.toLowerCase().split(' ').join('-');
@@ -38,7 +53,7 @@ router.post("", checkAuth, multer({storage: storage}).single("itemImage"), (req,
     itemCategory: req.body.itemCategory,
     itemMRP: req.body.itemMRP,
     itemFlavors: req.body.itemFlavors,
-    itemImgUrl: url + "/images/" + req.file.filename,
+    itemImgUrl: url + "/images/products/" + req.file.filename,
     creator: req.userData.userId
   });
   product.save().then(createdProduct => {
@@ -52,10 +67,11 @@ router.post("", checkAuth, multer({storage: storage}).single("itemImage"), (req,
   });
 });
 
-router.post("/category", (req, res, next) => {
-  // console.log("cat : "+ req.body.newCategory)
+router.post("/category", checkAuth, multer({storage: storageCategory}).single("categoryImage"), (req, res, next) => {
+  const url = req.protocol + "://" + req.get("host");
   const category = new Category({
-    category: req.body.newCategory
+    category: req.body.newCategory,
+    categoryImage: url + "/images/category/" + req.file.filename,
   });
   category.save().then(newcategory => {
     res.status(201).json({
@@ -72,7 +88,7 @@ router.get("/flavors", (req, res, next) => {
     });
   });
 })
-router.post("/flavor", (req, res, next) => {
+router.post("/flavor", checkAuth, (req, res, next) => {
   // console.log("cat : "+ req.body.newCategory)
   const flavor = new Flavor({
     flavor: req.body.newFlavors
@@ -166,77 +182,18 @@ router.delete("/:itemId", checkAuth, (req, res, next) => {
     }
   });
 });
+
 router.delete("/categorys/:categoryId", (req, res, next) => {
   Category.deleteOne({ _id: req.params.categoryId }).then((result) => {
     res.status(200).json({ message: "Category deleted!" });
   });
 });
+router.delete("/flavors/:flavorId", (req, res, next) => {
+  Flavor.deleteOne({ _id: req.params.flavorId }).then((result) => {
+    res.status(200).json({ message: "Flavor deleted!" });
+  });
+});
 
-// cart routes
-// router.post("/cart", (req, res, next) => {
-//   const cart = new Cart({
-//     dateCreated: req.body.dateCreated
-//   });
-//   cart.save().then(newCart => {
-//     res.status(201).json({
-//       message: "cart added successfully",
-//       cart: newCart
-//     })
-//   })
-// });
-// router.post("/add-to-cart", checkAuth, (req, res, next) => {
-//   const cart = new Cart({
-//     products: req.body.productId,
-//     userId: req.userData.userId
-//   });
-//   cart.save().then(cart => {
-//     res.status(201).json({
-//       message: "cart add successfully",
-//       cart:cart
-//     })
-//   })
-// });
-// router.get("/cart/:cartId", (req, res, next) => {
-//   Cart.findById({ _id: req.params.cartId }).then(document => {
-//     res.status(200).json({
-//       message: "Cart fetched succesfully!",
-//       cart: document
-//     });
-//   });
-// })
-// router.put("/cart", (req, res, next) => {
-
-// })
-// router.get('/add-to-cart/:id', (req, res, next) => {
-//   var productId = req.params.id;
-//   // var cart = new Cart(req.session.cart ? req.session.cart : {item:{}});
-//   Product.findById(productId).then((err, product) => {
-//     if (err) {
-//       return res.status(404).json({
-//         message: 'Error'
-//       });
-//     }
-//     console.log(product);
-//     cart.add(product, productId);
-//     req.session.cart = cart;
-//     res.status(201).json({
-//       message: 'added'
-//     })
-//   });
-//   Product.findById( productId, (err, product) => {
-//     if (err) {
-//       return res.status(404).json({
-//         message: 'Error'
-//       });
-//     }
-//     console.log(product);
-//     cart.add(product, productId);
-//     req.session.cart = cart;
-//     res.status(201).json({
-//       message: 'added'
-//     })
-//   });
-// });
 
 
 

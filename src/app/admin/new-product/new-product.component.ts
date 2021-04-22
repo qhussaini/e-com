@@ -2,8 +2,11 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { MatBottomSheet, MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { first } from 'rxjs/operators';
+import { AuthService } from 'src/app/auth/auth.service';
 import { ThemeService } from 'src/app/theme.service';
+import Swal from 'sweetalert2';
 import { Category, Flavor, Product } from '../product.model';
 import { ProductsService } from '../products.service';
 import { mimeType } from './mime-type.validator';
@@ -27,7 +30,7 @@ export class NewProductComponent implements OnInit {
   product:Product;
   isSubmit:boolean=false;
 
-  constructor(public theme:ThemeService,private _bottomSheet: MatBottomSheet, public route: ActivatedRoute, public productsService: ProductsService) { }
+  constructor(public theme:ThemeService, private toastr: ToastrService, private auth:AuthService, private _bottomSheet: MatBottomSheet, public route: ActivatedRoute, public productsService: ProductsService) { }
 
   ngOnInit() {
     this.form = new FormGroup({
@@ -93,6 +96,116 @@ export class NewProductComponent implements OnInit {
     });
   }
 
+  deleteCategory(category: Category){
+    Swal.fire({
+      title: 'Warning',
+      text: "Are you sure you want to permanently delete this category"+"'"+category.newCategory+"'",
+      icon: 'warning',
+      confirmButtonText: 'Yes, Delete',
+      cancelButtonText: 'No, keep it',
+      showCancelButton:true,
+      allowEscapeKey:false,
+      allowOutsideClick:false,
+    }).then((result) => {
+      if (result.value) {
+        Swal.fire({
+          title: 'Enter your Admin Password',
+          input: 'password',
+          inputLabel: 'Your Admin Password',
+          // inputValue: inputValue,
+          showCancelButton: true,
+          inputValidator: (value) => {
+            if (!value) {
+              return 'You need to enter password'
+            }else{
+              this.auth
+                .checkAuth(value)
+                .pipe(first())
+                .subscribe(
+                  (data) => {
+                    console.log(data)
+                    if (data.message === "auth Successful"){
+                      this.isLoading = true;
+                      this.productsService.deleteCategory(category.categoryId).subscribe(() => {
+                        this.productsService.getCategory()
+                        this.isLoading = false;
+                      });
+                    }
+                  },
+                  (error) => {
+                    if (error.error.message==="Unauthorised Check your password"){
+                      this.toastr.error("check your password", "Invalid password",{
+                        timeOut:3000,
+                        progressBar:true,
+                      })
+                    }
+                  }
+                );
+            }
+          }
+        })
+
+      } else if (result.isDismissed) {
+        // this.router.navigate(['/']);
+      }
+    })
+  }
+  deleteFlavor(flavor:Flavor){
+    Swal.fire({
+      title: 'Warning',
+      text: "Are you sure you want to permanently delete this flavor"+"'"+flavor.newFlavors+"'",
+      icon: 'warning',
+      confirmButtonText: 'Yes, Delete',
+      cancelButtonText: 'No, keep it',
+      showCancelButton:true,
+      allowEscapeKey:false,
+      allowOutsideClick:false,
+    }).then((result) => {
+      if (result.value) {
+        Swal.fire({
+          title: 'Enter your Admin Password',
+          input: 'password',
+          inputLabel: 'Your Admin Password',
+          // inputValue: inputValue,
+          showCancelButton: true,
+          inputValidator: (value) => {
+            if (!value) {
+              return 'You need to enter password'
+            }else{
+              this.auth
+                .checkAuth(value)
+                .pipe(first())
+                .subscribe(
+                  (data) => {
+                    console.log(data)
+                    if (data.message === "auth Successful"){
+                      this.isLoading = true;
+                      this.productsService.deleteFlavor(flavor.flavorId).subscribe(() => {
+                        this.productsService.getFlavor()
+                        this.isLoading = false;
+                      });
+                    }
+                  },
+                  (error) => {
+                    if (error.error.message==="Unauthorised Check your password"){
+                      this.toastr.error("check your password", "Invalid password",{
+                        timeOut:3000,
+                        progressBar:true,
+                      })
+                    }
+                  }
+                );
+            }
+          }
+        })
+
+      } else if (result.isDismissed) {
+        // this.router.navigate(['/']);
+      }
+    })
+
+  }
+
   onImagePick(event: Event){
     const file = (event.target as HTMLInputElement).files[0];
     this.form.patchValue({ itemImage: file });
@@ -112,7 +225,7 @@ export class NewProductComponent implements OnInit {
   addNewCategory(){
     this._bottomSheet.open(NewCategory);
   }
-  addNewFlaver(){
+  addNewFlavor(){
     this._bottomSheet.open(NewFlavor);
   }
 
@@ -146,18 +259,25 @@ export class NewProductComponent implements OnInit {
 @Component({
   selector: 'new-category',
   templateUrl: 'new-category.html',
+  styleUrls: ['./new-product.component.scss'],
   providers: [NewProductComponent]
 })
 export class NewCategory implements OnInit{
-  addNew = "category"
   formCategory: FormGroup;
   isLoading:boolean = false;
-  constructor(private _bottomSheetRef: MatBottomSheetRef<NewCategory>,private newProductComponent:NewProductComponent, public productsService: ProductsService) {}
+  imagePreview: string | File = "";
+  upImage = "Upload Image";
+  isSubmit:boolean=false;
+  constructor(private _bottomSheetRef: MatBottomSheetRef<NewCategory>,public newProductComponent:NewProductComponent, public productsService: ProductsService) {}
 
   ngOnInit(){
     this.formCategory = new FormGroup({
       newCategory: new FormControl(null, {
         validators: [Validators.required],
+      }),
+      categoryImage: new FormControl(null, {
+        validators: [Validators.required],
+        asyncValidators: [mimeType],
       })
     });
   }
@@ -169,23 +289,37 @@ export class NewCategory implements OnInit{
   close(){
     this._bottomSheetRef.dismiss();
   }
-  onSaveCategory(category: HTMLInputElement){
-    if (!category.value){
+  onCatImagePick(event: Event){
+    const file = (event.target as HTMLInputElement).files[0];
+    this.formCategory.patchValue({ categoryImage: file });
+    this.formCategory.get("categoryImage").updateValueAndValidity();
+    const render = new FileReader();
+    render.onload = () => {
+      this.imagePreview = render.result as string;
+      if (this.imagePreview && this.formCategory.get('categoryImage').valid){
+        this.upImage = "Change Image";
+      }else {
+        this.upImage = "Upload Image";
+      }
+    };
+    render.readAsDataURL(file);
+  }
+  onSaveCategory(){
+    this.isSubmit = true;
+    if (this.formCategory.invalid){
       return;
     }
     this.isLoading = true;
     this.newProductComponent.isLoading = true;
-    this.productsService.addCategory(category.value)
+    this.productsService.addCategory(this.formCategory.value.newCategory,this.formCategory.value.categoryImage)
       .pipe(first())
       .subscribe(
         (data) => {
           this.productsService.getCategory();
-          this.productsService.getUpdateCategory().subscribe((category: Category[]) => {
-            this.newProductComponent.categorys = category;
+          this.productsService.getUpdateCategory().subscribe(cat =>{
+            this.newProductComponent.categorys = cat;
             this._bottomSheetRef.dismiss();
-            this.isLoading = false;
-            this.newProductComponent.isLoading = false;
-          });
+          })
         },
         (error) => {
           this.newProductComponent.isLoading = false;
@@ -201,7 +335,6 @@ export class NewCategory implements OnInit{
   providers: [NewProductComponent]
 })
 export class NewFlavor {
-  addNew = "flavor"
   isLoading:boolean = false;
   constructor(private _bottomSheetRef: MatBottomSheetRef<NewFlavor>,private newProductComponent: NewProductComponent, private productsService: ProductsService) {}
 
@@ -223,12 +356,6 @@ export class NewFlavor {
       .subscribe(
         (data) => {
           this.productsService.getFlavor();
-          this.productsService.getUpdateFlavor().subscribe((flavors: Flavor[]) => {
-            this.newProductComponent.flavors = flavors;
-            this._bottomSheetRef.dismiss();
-            this.isLoading = false;
-            this.newProductComponent.isLoading = false;
-          });
         },
         (error) => {
           this.isLoading = false;

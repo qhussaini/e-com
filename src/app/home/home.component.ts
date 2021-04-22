@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NgbCarousel, NgbSlideEvent, NgbSlideEventSource } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
-import { Product } from '../admin/product.model';
+import { Category, Product } from '../admin/product.model';
 import { ProductsService } from '../admin/products.service';
 import { ThemeService } from '../theme.service';
 
@@ -22,6 +22,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   productSub:Subscription;
   shopcard = [];
   products: Product[];
+  category: Category[];
   isLoading:boolean = false;
   productPerPage: number = 3;
   currentPage: number = 1;
@@ -32,20 +33,22 @@ export class HomeComponent implements OnInit, OnDestroy {
   constructor(public productService:ProductsService, public theme:ThemeService) { }
 
   ngOnInit() {
-
+    this.isLoading = true;
     this.shopcard = [
       {cardTitle: "Find your ideal Ice Creams", cardImgUrl:"https://media-cdn.tripadvisor.com/media/photo-s/0c/9f/c9/d6/close-up-of-other-sundae.jpg", cardDetail:"1 Liter bars of all flavors"},
       {cardTitle: "Find your ideal Ice Creams", cardImgUrl:"https://media-cdn.tripadvisor.com/media/photo-s/0c/9f/c9/d6/close-up-of-other-sundae.jpg", cardDetail:"1 Liter bars of all flavors"},
       {cardTitle: "Find your ideal Ice Creams", cardImgUrl:"https://media-cdn.tripadvisor.com/media/photo-s/0c/9f/c9/d6/close-up-of-other-sundae.jpg", cardDetail:"1 Liter bars of all flavors"},
     ]
-
-    this.isLoading = true;
     this.productService.getProducts(this.productPerPage,this.currentPage);
     this.productSub = this.productService.getUpdateProduct().subscribe((productData: {product:Product[], productCount:number}) => {
-      this.isLoading = false;
       this.totalProducts = productData.productCount;
       this.products = productData.product;
     });
+    this.productService.getCategory()
+    this.productService.getUpdateCategory().subscribe(category => {
+      this.category = category;
+      this.isLoading = false;
+    })
   }
   ngOnDestroy() {
     this.productSub.unsubscribe();

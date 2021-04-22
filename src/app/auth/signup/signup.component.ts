@@ -32,16 +32,18 @@ export class SignupComponent implements OnInit, OnDestroy {
   }
   verify(pass:string){
     if(this.verifyPassword === pass) {
-      this.machPasword = false;
-    }else {
       this.machPasword = true;
+    }else {
+      this.machPasword = false;
     }
   }
 
   onSignup(form:NgForm){
     // console.log("ggsj : "+ form.value)
+    this.verify(form.value.passDoc);
     this.submit = true;
-    if ( form.invalid && !this.machPasword || !this.machPasword ){
+    if ( form.invalid || !this.machPasword ){
+      alert("something went wrong")
       return;
     }
     this.isLoading = true;

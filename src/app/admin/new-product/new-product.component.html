@@ -5,37 +5,37 @@
       <form [formGroup]="form" (submit)="onSaveProduct()">
         <div class="form-group">
           <label for="title">Item Name</label>
-          <input type="text" id="title" formControlName="itemName" [ngClass]="{'is-invalid':form.get('itemName').invalid && isSubmit }"  [ngClass]="{'is-invalid':form.get('itemName').invalid && form.get('itemName').touched }"  class="form-control">
+          <input type="text" id="title" [class.form-control-dark]="theme.themeDark" formControlName="itemName" [ngClass]="{'is-invalid':form.get('itemName').invalid && isSubmit }"  [ngClass]="{'is-invalid':form.get('itemName').invalid && form.get('itemName').touched }"  class="form-control">
         </div>
         <div class="form-group">
           <label for="price">Price</label>
           <div class="input-group">
-            <span class="input-group-text">₹</span>
-            <input type="number" id="price" [ngClass]="{'is-invalid':form.get('itemPrice').invalid && form.get('itemPrice').touched }" [ngClass]="{'is-invalid':form.get('itemPrice').invalid && isSubmit }" class="form-control" formControlName="itemPrice">
+            <span class="input-group-text" [class.form-control-dark]="theme.themeDark">₹</span>
+            <input type="number" id="price" [class.form-control-dark]="theme.themeDark" [ngClass]="{'is-invalid':form.get('itemPrice').invalid && form.get('itemPrice').touched }" [ngClass]="{'is-invalid':form.get('itemPrice').invalid && isSubmit }" class="form-control" formControlName="itemPrice">
           </div>
         </div>
         <div class="form-group">
           <label for="category">Category</label>
           <div class="input-group">
-            <mat-select  class="form-control" [ngClass]="{'is-invalid':form.get('itemCategory').invalid && form.get('itemCategory').touched }" [ngClass]="{'is-invalid':form.get('itemCategory').invalid && isSubmit }" formControlName="itemCategory">
+            <mat-select  class="form-control" [class.form-control-dark]="theme.themeDark" [ngClass]="{'is-invalid':form.get('itemCategory').invalid && form.get('itemCategory').touched }" [ngClass]="{'is-invalid':form.get('itemCategory').invalid && isSubmit }" formControlName="itemCategory">
               <div class="d-flex bd-highlight" fxLayoutAlign="center stretch"  *ngFor="let cat of categorys" >
-                <mat-option class="p-2 flex-grow-1 bd-highlight" value="{{cat.newCategory}}">{{cat.newCategory}}</mat-option>
-                <button class="p-2 bd-highlight" mat-icon-button color="warn"><mat-icon>delete</mat-icon></button>
+                <mat-option class="p-2 flex-grow-1 bd-highlight" value="{{cat.newCategory}}">{{cat.newCategory |titlecase}}</mat-option>
+                <button class="p-2 bd-highlight" mat-icon-button (click)="deleteCategory(cat)" color="warn"><mat-icon>delete</mat-icon></button>
               </div>
             </mat-select>
-            <button mat-stroked-button color="primary" (click)="addNewCategory()" placement="bottom" ngbTooltip="Add New Category"><mat-icon>add</mat-icon></button>
+            <button mat-stroked-button color="primary" (click)="addNewCategory()" type="button" placement="bottom" ngbTooltip="Add New Category"><mat-icon>add</mat-icon></button>
           </div>
         </div>
         <div class="form-group">
           <label for="flavors">flavors</label>
           <div class="input-group">
-            <mat-select  class="form-control" [ngClass]="{'is-invalid':form.get('itemflavors').invalid && form.get('itemflavors').touched }" [ngClass]="{'is-invalid':form.get('itemflavors').invalid && isSubmit }" formControlName="itemflavors">
+            <mat-select  class="form-control" [class.form-control-dark]="theme.themeDark" [ngClass]="{'is-invalid':form.get('itemflavors').invalid && form.get('itemflavors').touched }" [ngClass]="{'is-invalid':form.get('itemflavors').invalid && isSubmit }" formControlName="itemflavors">
               <div class="d-flex bd-highlight" fxLayoutAlign="center stretch"  *ngFor="let flavor of flavors" >
-                <mat-option class="p-2 flex-grow-1 bd-highlight" value="{{flavor.newFlavors}}">{{flavor.newFlavors}}</mat-option>
-                <button class="p-2 bd-highlight" mat-icon-button color="warn"><mat-icon>delete</mat-icon></button>
+                <mat-option class="p-2 flex-grow-1 bd-highlight" value="{{flavor.newFlavors}}">{{flavor.newFlavors |titlecase}}</mat-option>
+                <button class="p-2 bd-highlight" mat-icon-button (click)="deleteFlavor(flavor)" color="warn"><mat-icon>delete</mat-icon></button>
               </div>
             </mat-select>
-            <button mat-stroked-button color="primary" (click)="addNewFlaver()" placement="bottom" ngbTooltip="Add New Flavors"><mat-icon>add</mat-icon></button>
+            <button mat-stroked-button color="primary" type="button" (click)="addNewFlavor()" placement="bottom" ngbTooltip="Add New Flavors"><mat-icon>add</mat-icon></button>
           </div>
         </div>
         <div class="form-group" >
@@ -50,6 +50,9 @@
         </div>
         <button type="submit" class="btn btn-success">
           Save
+        </button>
+        <button type="reset" class="btn ml-2 btn-danger">
+          Clear
         </button>
       </form>
     </div>

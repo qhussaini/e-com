@@ -36,6 +36,7 @@
     "express": "^4.17.1",
     "feather-icons": "^4.28.0",
     "flatpickr": "^4.6.9",
+    "jquery-parallax.js": "^1.5.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.12.3",
     "mongoose-unique-validator": "^2.0.3",

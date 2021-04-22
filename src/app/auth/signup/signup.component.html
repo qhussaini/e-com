@@ -61,7 +61,6 @@
           #passDoc="ngModel"
           [class.is-invalid.wa-invalid]="passDoc.invalid && passDoc.touched"
           [class.is-invalid.wa-invalid]="passDoc.invalid && submit"
-          [class.is-invalid.wa-invalid]="machPasword"
           name="passDoc"
           id="passDoc"
           required
@@ -80,17 +79,16 @@
           placeholder="verify Password"
           ngModel
           #passCheck="ngModel"
-          (change)="verify(passCheck.value)"
           [class.is-invalid.wa-invalid]="passCheck.invalid && passCheck.touched"
           [class.is-invalid.wa-invalid]="passCheck.invalid && submit"
-          [class.is-invalid.wa-invalid]="machPasword"
+          [class.is-invalid.wa-invalid]="!machPasword"
           name="passCheck"
           id="passCheck"
           required
         />
       </div>
     </div>
-    <ngb-alert type="danger" *ngIf="machPasword" [dismissible]="false">Password not mach</ngb-alert>
+    <ngb-alert type="danger" *ngIf="!machPasword" [dismissible]="false">Password not mach</ngb-alert>
     <div class="form-row">
       <div class="form-group col-md has-validation">
         <label for="shopName">Shop Name</label>

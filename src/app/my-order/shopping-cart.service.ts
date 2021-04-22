@@ -13,19 +13,19 @@ export class ShoppingCartService {
 
   cartShow:CartShow[] = [];
   private cart:Cart[] = [];
+  private myCart:Cart[] = [];
   private cartUpdate = new Subject<Cart[]>();
+  private myCartUpdate = new Subject<Cart[]>();
   constructor(private http: HttpClient, private auth:AuthService, private route: Router) { }
 
   createNewCart(productId, totalPrice){
-    const cart: Cart = { productId: {productId:productId, totalPrice:totalPrice}};
+    const orderStatus = "Panding"
+    const cart: Cart = { productId: {productId:productId, totalPrice:totalPrice}, orderStatus: orderStatus};
     console.log(cart);
-    this.http.post<{ message: string, cart: any }>(
+    return this.http.post<{ message: string, cart: any }>(
       'http://localhost:3000/api/cart',
       cart
     )
-      .subscribe(result => {
-        console.log(result);
-      })
   }
   getQuantity(product: Product) {
     return this.cartShow.forEach(item => {
@@ -45,7 +45,11 @@ export class ShoppingCartService {
             if(cart.product){
               return {
                 productId: cart.product.productId,
-                userId: cart.creator
+                userId: cart.creatorId,
+                userName: cart.creatorName,
+                userShop: cart.creatorShop,
+                cartId: cart._id,
+                orderStatus:cart.orderStatus,
               };
             }else {
               return {
@@ -56,13 +60,50 @@ export class ShoppingCartService {
         })
       )
       .subscribe((transformPosts) => {
-        console.log(transformPosts);
         this.cart = transformPosts;
         this.cartUpdate.next([...this.cart]);
       });
   }
+  getMyCartItem(){
+    this.http
+      .get<{ message: string; cart: any }>("http://localhost:3000/api/cart/client")
+      .pipe(
+        map((cartData) => {
+          return cartData.cart.map((cart) => {
+            console.log(cart.product.productId)
+            if(cart.product){
+              return {
+                productId: cart.product.productId,
+                creatorId: cart.creatorId,
+                userName: cart.creatorName,
+                userShop: cart.creatorShop,
+                orderStatus:cart.orderStatus,
+              };
+            }else {
+              return {
+                productId: null
+            };
+            }
+          });
+        })
+      )
+      .subscribe((transformPosts) => {
+        this.myCart = transformPosts;
+        this.myCartUpdate.next([...this.myCart]);
+      });
+  }
+
+  // confirmOrder(cartId:string, ){
+
+  //   this.http.put<{message: string}>("http://localhost:3000/api/cart/" + cartId,)
+  // }
+
   getUpdatedCart(){
     return this.cartUpdate.asObservable();
+  }
+
+  getUpdatedMyCart(){
+    return this.myCartUpdate.asObservable();
   }
 
 
@@ -70,40 +111,34 @@ export class ShoppingCartService {
    return this.http.get<{ message:string, cart: any}>('http://localhost:3000/api/admin/products/cart/' + cartId);
   }
 
-  // private getOrCreateCartId(productId, productQty){
-  //   let cartId = localStorage.getItem('cartId');
-  //   if (cartId){
-  //     return cartId;
-  //   } else {
-  //     this.createNewCart(productId, productQty).subscribe(result => {
-  //       // localStorage.setItem('cartId', result.cart._id)
-  //       return result.cart
-  //     });
-  //   }
-  // }
+  confirmOrder(
+    creatorId: string,
+    cartId:string,
+    status: string,
+  ) {
+    const confirmOrder = {cartId:cartId, creatorId:creatorId, orderStatus: status};
+    console.log(confirmOrder)
+    return this.http.put<{ message:string, orderStatus:string }>("http://localhost:3000/api/cart/update/"+cartId, confirmOrder)
+  }
+
 
   addToCart(productId, totalPrice){
     console.log(totalPrice);
     this.createNewCart(productId, totalPrice);
-
-    // let cartItem = this.getCart(cartId).subscribe(r => {
-    //   // console.log(r)
-    //   // if (product.itemId === r.cart.items.productId) {
-    //   //   console.log(r.cart.items.quantity);
-    //   //   console.log(r.cart.items.quantity+1);
-    //   // }else {
-    //   //   console.log("not added")
-    //   // }
-    // })
   }
 
 
 }
 export interface Cart {
   productId: any;
+  creatorId?:string;
   userId?:string;
+  userName?:string;
+  userShop?:string;
   allOrderId?: string;
   productQty?: number;
+  cartId?:string;
+  orderStatus?: string;
 }
 export interface CartShow {
   product: Product;

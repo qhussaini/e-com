@@ -1,8 +1,18 @@
 <div class="p-4">
-  <form (submit)="onSaveCategory(newCategory)">
+  <form [formGroup]="formCategory" (submit)="onSaveCategory()">
     <div class="form-group">
       <label for="newCategory">Add New Category</label>
-      <input type="text" id="newCategory" name="newCategory" #newCategory class="form-control">
+      <input type="text" id="newCategory" placeholder="Category" formControlName="newCategory" #newCategory class="form-control">
+    </div>
+    <div class="form-group" >
+      <div class="alert alert-danger" role="alert" *ngIf="!imagePreview && isSubmit ">
+        Upload Image of Category
+      </div>
+      <div class="image-preview" *ngIf="imagePreview !== '' && imagePreview && formCategory.get('categoryImage').valid">
+        <img [src]="imagePreview"  [alt]="formCategory.value.newCategory">
+      </div>
+      <button class="btn btn-outline-primary btn-sm" (click)="filepicker.click()" [class.btn-outline-secondary]="newProductComponent.theme.themeDark" type="button">{{upImage}}</button>
+      <input type="file" #filepicker (change)="onCatImagePick($event)">
     </div>
     <button type="submit" class="btn btn-success">
       Save

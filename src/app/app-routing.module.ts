@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AboutUsComponent } from './about-us/about-us.component';
 import { AdminProductComponent } from './admin/admin-product/admin-product.component';
 import { DashboardComponent } from './admin/dashboard/dashboard.component';
 import { NewProductComponent } from './admin/new-product/new-product.component';
@@ -17,6 +18,8 @@ import { ProductListComponent } from './product-list/product-list.component';
 const routes: Routes = [
   {path:"" , component: HomeComponent },
   {path:"products" , component: ProductListComponent },
+  {path:"products/:category" , component: ProductListComponent },
+  {path:"about-us" , component: AboutUsComponent },
   {path:"login" , component: LoginComponent },
   {path:"signup" , component: SignupComponent },
   {path:"account/confirm" , component: ConfirmComponent },
