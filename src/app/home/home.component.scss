@@ -1,4 +1,36 @@
 
+.parallax-window {
+	min-height: 500px;
+  width: 100%;
+	background: transparent;
+  padding: 5px;
+  margin: 0;
+}
+.parallax-window-dark {
+	min-height: 500px;
+	background: rgba($color: #000000, $alpha: 0.5);
+  padding: 5px;
+}
+
+.product-col{
+  min-height: 50vh;
+}
+
+.parallax-2 {
+	min-height: 500px;
+	background-color: rgba($color: #fff, $alpha: 0.5);
+}
+
+.title-line{
+  border-top: white double 2px;
+  border-bottom: white double 2px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  font-size: large;
+  color: red;
+  background-color: rgba($color: #fff, $alpha: 0.5);
+}
+
 .saas-card {
   max-width: 240px;
 }
@@ -20,8 +52,6 @@
   height: 300px;
 }
 .sa-img {
-  width: 250px;
-  height: 150px;
   object-fit: scale-down;
-  object-position: center center;
+  height: 150px;
 }

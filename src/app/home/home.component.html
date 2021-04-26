@@ -1,5 +1,5 @@
 <app-ui-preloader [display]="isLoading"></app-ui-preloader>
-<div class="container" [class.dark-mcard]="theme.themeDark" *ngIf="!isLoading">
+<!-- <div class="container" [class.dark-mcard]="theme.themeDark" *ngIf="!isLoading">
   <div>
     <ngb-carousel #carousel [interval]="4000" [pauseOnHover]="pauseOnHover" [pauseOnFocus]="pauseOnFocus" (slide)="onSlide($event)">
       <ng-template ngbSlide *ngFor="let product of products; index as i" style="margin: auto;">
@@ -14,7 +14,7 @@
       </ng-template>
     </ngb-carousel>
   </div>
-  <!-- class="row row-cols-lg-auto g-3 align-items-center d-flex justify-content-around mt-2" -->
+  class="row row-cols-lg-auto g-3 align-items-center d-flex justify-content-around mt-2"
   <div class="row row-cols-lg-auto g-3 align-items-center d-flex justify-content-around mt-2">
     <mat-card class="sa-card saas-pointer mb-2 mr-1" *ngFor="let cat of category" [routerLink]="'/products/'+ cat.newCategory" matRipple>
       <mat-card-header>
@@ -28,7 +28,7 @@
       </mat-card-content>
     </mat-card>
   </div>
-</div>
+</div> -->
 <!-- <div class="card p-3 topOnpage">
   <div class="card-header">
     Sign in for the best exprience
@@ -37,3 +37,65 @@
     <button class="btn btn-primary btn-block">Sign in</button>
   </div>
 </div> -->
+
+<div>
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div [class.parallax-window]="!theme.themeDark" [class.parallax-window-dark]="theme.themeDark" data-parallax="scroll" data-image-src="../../assets/images/banner1.jpg">
+        <div class="d-flex justify-content-md-end">
+          <div class="text-center">
+            <img src="../../assets/images/logo/scoops-logo.png" alt="AzamScoops">
+            <br>
+            <label class="title-line">DELICIOUS ICE CREAMS</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row product-col">
+    <div class="align-items-center col-12 d-flex justify-content-around pt-2" [class.dark-card]="theme.themeDark" [class.bg-white]="!theme.themeDark" >
+      <mat-card class="sa-card saas-pointer mb-2 mr-1" *ngFor="let cat of category" [routerLink]="'/products/'+ cat.newCategory" matRipple>
+        <mat-card-header>
+          <mat-card-title>Find {{ cat.newCategory }} Ice cream</mat-card-title>
+        </mat-card-header>
+        <img mat-card-image class="sa-img d-block" src="{{cat.categoryImage}}" alt="Photo of a Ice-creams">
+        <mat-card-content>
+          <p>
+            {{cat.newCategory}}
+          </p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div [class.parallax-window]="!theme.themeDark" [class.parallax-window-dark]="theme.themeDark" data-parallax="scroll" data-image-src="../../assets/images/banner2.jpg">
+        <div class="d-flex justify-content-md-end">
+          <div class="text-center">
+            <img src="../../assets/images/logo/scoops-logo.png" alt="AzamScoops">
+            <br>
+            <label class="title-line">DELICIOUS ICE CREAMS</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row product-col">
+    <div class="align-items-center col-12 d-flex justify-content-around pt-2" [class.dark-card]="theme.themeDark" [class.bg-white]="!theme.themeDark" >
+      <div class="card sa-card m-1" *ngFor="let product of products" ngbTooltip="Category: {{product.itemCategory}}" [class.dark-card]='theme.themeDark'>
+        <img [src]="product.itemImage" class="sa-img rounded mx-auto d-block">
+        <div class="card-body pt-0">
+          <h1 class="card-title mb-1">{{ product.itemName | titlecase }}</h1>
+          <h4 class="card-text">{{ product.itemMRP  | currency:"INR" }}</h4>
+        </div>
+        <div class="card-footer p-0" [class.dark-mcard]='theme.themeDark' matRipple>
+          <button (click)="addToCart(product)" class="btn btn-primary btn-block"> Add to Cart</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
