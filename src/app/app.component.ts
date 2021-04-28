@@ -16,6 +16,7 @@ import { ShoppingCartService } from './my-order/shopping-cart.service';
 export class AppComponent implements OnInit, OnDestroy{
   title = 'ecom-ice';
   mediaSub: Subscription;
+  isHome:boolean = false;
   constructor(
     public theme:ThemeService,
     private _bottomSheet: MatBottomSheet,

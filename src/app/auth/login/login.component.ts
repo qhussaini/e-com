@@ -25,7 +25,9 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.auth.isSigning = true;
-    this.returnUrl = this.route.snapshot.queryParams["returnUrl"] || "/"
+    this.returnUrl = this.route.snapshot.queryParams["returnUrl"] || "/products"
+    console.log(this.returnUrl)
+    console.log(this.route.snapshot)
   }
   ngOnDestroy() {
     this.auth.isSigning = false;

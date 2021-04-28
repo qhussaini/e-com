@@ -137,7 +137,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
     // return this.quantity ? this.quantity: 0;
   }
 
-  addToCart(option) {
+  addToCart(option:Product) {
     const itemId = option.itemId;
     const itemName = option.itemName;
     const itemMRP: number = option.itemMRP;

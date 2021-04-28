@@ -61,7 +61,7 @@
       <div class="card sa-card m-1" *ngFor="let product of filteredProducts" ngbTooltip="Category: {{product.itemCategory}}" [class.dark-card]='theme.themeDark'>
         <img [src]="product.itemImage" class="sa-img rounded mx-auto d-block">
         <div class="card-body pt-0">
-          <h1 class="card-title mb-1">{{ product.itemName | titlecase }}</h1>
+          <h1 class="card-title product-title mb-1">{{ product.itemName | titlecase }}</h1>
           <h4 class="card-text">{{ product.itemMRP  | currency:"INR" }}</h4>
         </div>
         <div class="card-footer p-0" [class.dark-mcard]='theme.themeDark' matRipple>

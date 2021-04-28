@@ -33,6 +33,22 @@ export class CartComponent implements OnInit, OnDestroy {
       console.log(this.productId)
       // this.productQty.push(value.productQty)
     })
+    const minusButton = document.getElementById('minus');
+    const plusButton = document.getElementById('plus');
+    const inputField = document.getElementById('input');
+    console.log(inputField)
+
+    // minusButton.addEventListener('click', event => {
+    //   event.preventDefault();
+    //   const currentValue = Number(inputField) || 0;
+    //   inputField = currentValue - 1;
+    // });
+
+    // plusButton.addEventListener('click', event => {
+    //   event.preventDefault();
+    //   const currentValue = Number(inputField.value) || 0;
+    //   inputField.value = currentValue + 1;
+    // });
   }
   ngOnDestroy() {
     this.authListenerSub.unsubscribe();

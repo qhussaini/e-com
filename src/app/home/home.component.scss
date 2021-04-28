@@ -22,13 +22,30 @@
 }
 
 .title-line{
-  border-top: white double 2px;
-  border-bottom: white double 2px;
-  padding-top: 3px;
-  padding-bottom: 3px;
-  font-size: large;
-  color: red;
-  background-color: rgba($color: #fff, $alpha: 0.5);
+  padding: 8px 0px 8px 0px;
+  background-color: #F7F0F082;
+  border-style: double;
+  border-width: 3px 0px 3px 0px;
+  border-color: #ffffff;
+}
+.title-text {
+  color: #F61111;
+  font-size: 18px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 10px;
+  text-shadow: 0px 0px 10px rgb(239 162 46 / 95%);
+  mix-blend-mode: multiply;
+}
+.tag-line {
+  color: #FF0000;
+  font-size: 80px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.product-title {
+  font-size: 20px;
 }
 
 .saas-card {

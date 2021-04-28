@@ -38,16 +38,23 @@
   </div>
 </div> -->
 
-<div>
-
   <div class="row">
     <div class="col-lg-12">
       <div [class.parallax-window]="!theme.themeDark" [class.parallax-window-dark]="theme.themeDark" data-parallax="scroll" data-image-src="../../assets/images/banner1.jpg">
-        <div class="d-flex justify-content-md-end">
-          <div class="text-center">
-            <img src="../../assets/images/logo/scoops-logo.png" alt="AzamScoops">
-            <br>
-            <label class="title-line">DELICIOUS ICE CREAMS</label>
+        <div class="row">
+          <div class="col-lg-5 col-md-0">
+          </div>
+          <div class="col-lg-7 col-md-12">
+            <div class="text-center">
+              <img src="../../assets/images/logo/scoops-logo.png" alt="AzamScoops">
+              <div class="text-right">
+                <div class="title-line">
+                  <h2 class="title-text text-center">DELICIOUS ICE CREAMS</h2>
+                </div>
+                <h2 class="tag-line text-right">WHOLESALE STORE</h2>
+                <button class="btn btn-lg btn-danger rounded-pill" routerLink="/products">Shop Now</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -89,8 +96,8 @@
       <div class="card sa-card m-1" *ngFor="let product of products" ngbTooltip="Category: {{product.itemCategory}}" [class.dark-card]='theme.themeDark'>
         <img [src]="product.itemImage" class="sa-img rounded mx-auto d-block">
         <div class="card-body pt-0">
-          <h1 class="card-title mb-1">{{ product.itemName | titlecase }}</h1>
-          <h4 class="card-text">{{ product.itemMRP  | currency:"INR" }}</h4>
+          <h1 class="card-title product-title mb-1">{{ product.itemName | titlecase }}</h1>
+          <label class="card-text">{{ product.itemMRP  | currency:"INR" }}</label>
         </div>
         <div class="card-footer p-0" [class.dark-mcard]='theme.themeDark' matRipple>
           <button (click)="addToCart(product)" class="btn btn-primary btn-block"> Add to Cart</button>
@@ -98,4 +105,17 @@
       </div>
     </div>
   </div>
-</div>
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div [class.parallax-window]="!theme.themeDark" [class.parallax-window-dark]="theme.themeDark" data-parallax="scroll" data-image-src="../../assets/images/banner4.jpg">
+        <div class="d-flex justify-content-md-end">
+          <div class="text-center">
+            <img src="../../assets/images/logo/scoops-logo.png" alt="AzamScoops">
+            <br>
+            <label class="title-line">DELICIOUS ICE CREAMS</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

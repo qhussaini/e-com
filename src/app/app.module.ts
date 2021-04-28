@@ -32,6 +32,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 
 
@@ -55,7 +56,7 @@ import { CartComponent } from './cart/cart.component';
 import { AboutUsComponent } from './about-us/about-us.component';
 
 @NgModule({
-  declarations: [	
+  declarations: [
     AppComponent,
       HeaderComponent,
       MyOrderComponent,
@@ -94,6 +95,7 @@ import { AboutUsComponent } from './about-us/about-us.component';
     MatSidenavModule,
     MatFormFieldModule,
     MatProgressSpinnerModule,
+    MatAutocompleteModule,
     HttpClientModule,
     MatMenuModule,
     SharedModule,

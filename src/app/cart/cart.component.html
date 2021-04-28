@@ -20,7 +20,15 @@
             <span id="mrp"> {{cart.product.itemMRP |currency: "INR"}}</span>
           </div>
           <div class="d-flex justify-content-between">
-            <label for="qty">Quantity :</label>
+              <label for="qty">Quantity :</label>
+              <input list="qtyOptions" id="qty" name="qty" [(ngModel)]="cart.productQty" max="100">
+              <datalist id="qtyOptions">
+                <option value="1">
+                <option value="5">
+                <option value="10">
+                <option value="15">
+                <option value="20">
+              </datalist>
             <span id="qty"> {{cart.productQty }}</span>
           </div>
           <div>

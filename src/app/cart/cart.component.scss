@@ -5,3 +5,15 @@
 .card-footer {
   background-color: white;
 }
+.quantity {
+  position: relative;
+  float: left;
+  overflow: hidden;
+  zoom: 1;
+  min-width: 110px;
+}
+
+.form-control-dark {
+  background-color: #12171d;
+  border: #101922 solid 1px;
+}

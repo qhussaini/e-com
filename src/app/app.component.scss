@@ -1,7 +1,11 @@
 .home-card {
   width: 100%;
   margin: 1rem auto;
-  min-height: calc(100vh - 63px - 205px);
+  min-height: calc(100vh - 63px - 77px);
+}
+
+.ro-height{
+  height: 100vh;
 }
 
 .back-color {
