@@ -54,6 +54,7 @@ import { ProductListComponent } from './product-list/product-list.component';
 import { ProductCardComponent } from './product-card/product-card.component';
 import { CartComponent } from './cart/cart.component';
 import { AboutUsComponent } from './about-us/about-us.component';
+import { ISlimScrollOptions, NgSlimScrollModule, SLIMSCROLL_DEFAULTS } from 'ngx-slimscroll';
 
 @NgModule({
   declarations: [
@@ -110,9 +111,18 @@ import { AboutUsComponent } from './about-us/about-us.component';
     MatSliderModule,
     MatPaginatorModule,
     MatCheckboxModule,
+    NgSlimScrollModule
   ],
   exports: [],
-  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    {
+      provide: SLIMSCROLL_DEFAULTS,
+      useValue: {
+        alwaysVisible : false
+      } as ISlimScrollOptions
+    },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

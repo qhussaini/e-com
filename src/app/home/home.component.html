@@ -41,20 +41,14 @@
   <div class="row">
     <div class="col-lg-12">
       <div [class.parallax-window]="!theme.themeDark" [class.parallax-window-dark]="theme.themeDark" data-parallax="scroll" data-image-src="../../assets/images/banner1.jpg">
-        <div class="row">
-          <div class="col-lg-5 col-md-0">
-          </div>
-          <div class="col-lg-7 col-md-12">
-            <div class="text-center">
-              <img src="../../assets/images/logo/scoops-logo.png" alt="AzamScoops">
-              <div class="text-right">
-                <div class="title-line">
-                  <h2 class="title-text text-center">DELICIOUS ICE CREAMS</h2>
-                </div>
-                <h2 class="tag-line text-right">WHOLESALE STORE</h2>
-                <button class="btn btn-lg btn-danger rounded-pill" routerLink="/products">Shop Now</button>
-              </div>
+        <div class="text-center">
+          <img src="../../assets/images/logo/scoops-logo.png" alt="AzamScoops">
+          <div >
+            <div [class.title-line-dark]="theme.themeDark" [class.title-line]="!theme.themeDark">
+              <h2 class="text-center m-0" [class.title-text-dark]="theme.themeDark" [class.title-text]="!theme.themeDark">DELICIOUS ICE CREAMS</h2>
             </div>
+            <h2 [class.tag-line-dark]="theme.themeDark" [class.tag-line]="!theme.themeDark">WHOLESALE STORE</h2>
+            <button class="btn btn-lg rounded-pill" [class.btn-danger]="!theme.themeDark" [class.btn-primary]="theme.themeDark" routerLink="/products">Shop Now</button>
           </div>
         </div>
       </div>
@@ -62,7 +56,7 @@
   </div>
 
   <div class="row product-col">
-    <div class="align-items-center col-12 d-flex justify-content-around pt-2" [class.dark-card]="theme.themeDark" [class.bg-white]="!theme.themeDark" >
+    <div class="align-items-lg-center bd-highlight col-12 d-flex justify-content-center flex-wrap" [class.dark-card]="theme.themeDark" [class.bg-white]="!theme.themeDark" >
       <mat-card class="sa-card saas-pointer mb-2 mr-1" *ngFor="let cat of category" [routerLink]="'/products/'+ cat.newCategory" matRipple>
         <mat-card-header>
           <mat-card-title>Find {{ cat.newCategory }} Ice cream</mat-card-title>
@@ -92,7 +86,7 @@
   </div>
 
   <div class="row product-col">
-    <div class="align-items-center col-12 d-flex justify-content-around pt-2" [class.dark-card]="theme.themeDark" [class.bg-white]="!theme.themeDark" >
+    <div class="align-items-center col-12 d-flex justify-content-center flex-wrap" [class.dark-card]="theme.themeDark" [class.bg-white]="!theme.themeDark" >
       <div class="card sa-card m-1" *ngFor="let product of products" ngbTooltip="Category: {{product.itemCategory}}" [class.dark-card]='theme.themeDark'>
         <img [src]="product.itemImage" class="sa-img rounded mx-auto d-block">
         <div class="card-body pt-0">

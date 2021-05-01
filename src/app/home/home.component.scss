@@ -2,13 +2,13 @@
 .parallax-window {
 	min-height: 500px;
   width: 100%;
-	background: transparent;
+	background-color: transparent;
   padding: 5px;
   margin: 0;
 }
 .parallax-window-dark {
 	min-height: 500px;
-	background: rgba($color: #000000, $alpha: 0.5);
+	background-color: rgba($color: #000000, $alpha: 0.5);
   padding: 5px;
 }
 
@@ -22,23 +22,45 @@
 }
 
 .title-line{
-  padding: 8px 0px 8px 0px;
+  padding: 8px;
   background-color: #F7F0F082;
   border-style: double;
   border-width: 3px 0px 3px 0px;
   border-color: #ffffff;
 }
+.title-line-dark {
+  padding: 8px;
+  background-color: #53967736;
+  border-style: double;
+  border-width: 3px 0px 3px 0px;
+  border-color: #9c975e;
+}
 .title-text {
-  color: #F61111;
+  color: red;
   font-size: 18px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 10px;
   text-shadow: 0px 0px 10px rgb(239 162 46 / 95%);
-  mix-blend-mode: multiply;
+}
+.title-text-dark {
+  color: #ffff42c7;
+  font-size: 18px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 10px;
+  text-shadow: 0px 0px 10px rgb(239 162 46 / 95%);
+  mix-blend-mode: color-dodge;
 }
 .tag-line {
-  color: #FF0000;
+  color:#ef1616ad;
+  font-size: 80px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.tag-line-dark {
+  color: rgb(0 123 255 / 78%);
   font-size: 80px;
   font-weight: 900;
   text-transform: uppercase;
