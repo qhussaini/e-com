@@ -1,5 +1,5 @@
 <!-- <div slimScroll [options]="opts" [scrollEvents]="scrollEvents"></div> -->
-<div [ngClass]="{'dark-mode':theme.themeDark}" [class.dark-mcard]="theme.themeDark&&!isHome"  fxLayout="column" fxLayoutAlign="" >
+<div [ngClass]="{'dark-mode':theme.themeDark}" [class.dark-mcard]="theme.themeDark&&!isHome" [class.background]="!theme.themeDark&&!isHome" fxLayout="column" fxLayoutAlign="" >
   <app-header></app-header>
   <div class="home-card m-0">
       <router-outlet></router-outlet>

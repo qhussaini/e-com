@@ -6,6 +6,7 @@ const cartSchema = mongoose.Schema({
   creatorName: { type: String, ref: "User", required: true},
   creatorShop: { type: String, ref: "User", required: true},
   orderStatus: { type: String, required: true},
+  address: { type: Object, required: true},
 });
 
 module.exports = mongoose.model('Cart', cartSchema);

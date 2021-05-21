@@ -44,16 +44,13 @@
         <mat-option [value]="false">False</mat-option>
       </mat-select>
     </mat-form-field> -->
-    <mat-toolbar>
-      <div fxLayoutAlign="space-between center">
-        <button mat-icon-button *ngIf="theme.deviceXs" (click)="drawer.toggle()" >
+    <div class="p-0 pl-1 m-0" [class.dark-mcard]="theme.themeDark">
+      <div *ngIf="theme.deviceXs" fxLayoutAlign="space-between center">
+        <button mat-icon-button  (click)="drawer.toggle()" >
           <mat-icon>list</mat-icon>
         </button>
-        <form class="form-group mt-3">
-          <input class="form-control ml-2" placeholder="Sreach Product" type="text" [formControl]="filter">
-        </form>
       </div>
-    </mat-toolbar>
+    </div>
     <div *ngIf="filteredProducts.length===0" class="container-fluid d-flex flex-wrap mt-1 mb-1 min-vh-100" fxLayout="row" fxLayoutAlign="center center">
       no products in this category "{{this.getfilterTerm()}}"
     </div>

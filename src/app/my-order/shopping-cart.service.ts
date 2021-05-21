@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Product } from '../admin/product.model';
+import { Address, Product } from '../admin/product.model';
 import { AuthService } from '../auth/auth.service';
 
 @Injectable({
@@ -12,15 +12,16 @@ import { AuthService } from '../auth/auth.service';
 export class ShoppingCartService {
 
   cartShow:CartShow[] = [];
+  address:Address[];
   private cart:Cart[] = [];
   private myCart:Cart[] = [];
   private cartUpdate = new Subject<Cart[]>();
   private myCartUpdate = new Subject<Cart[]>();
   constructor(private http: HttpClient, private auth:AuthService, private route: Router) { }
 
-  createNewCart(productId, totalPrice){
+  createNewCart(productId, totalPrice, address){
     const orderStatus = "Panding"
-    const cart: Cart = { productId: {productId:productId, totalPrice:totalPrice}, orderStatus: orderStatus};
+    const cart: Cart = { productId: {productId:productId, totalPrice:totalPrice}, orderStatus: orderStatus, address:address};
     console.log(cart);
     return this.http.post<{ message: string, cart: any }>(
       'http://localhost:3000/api/cart',
@@ -93,6 +94,10 @@ export class ShoppingCartService {
       });
   }
 
+  getOrderPlaced(orderId){
+    return this.http.get<{message:string, order:any}>("http://localhost:3000/api/cart/order/"+orderId)
+  }
+
   // confirmOrder(cartId:string, ){
 
   //   this.http.put<{message: string}>("http://localhost:3000/api/cart/" + cartId,)
@@ -122,10 +127,10 @@ export class ShoppingCartService {
   }
 
 
-  addToCart(productId, totalPrice){
-    console.log(totalPrice);
-    this.createNewCart(productId, totalPrice);
-  }
+  // addToCart(productId, totalPrice){
+  //   console.log(totalPrice);
+  //   this.createNewCart(productId, totalPrice);
+  // }
 
 
 }
@@ -139,6 +144,7 @@ export interface Cart {
   productQty?: number;
   cartId?:string;
   orderStatus?: string;
+  address?:Address
 }
 export interface CartShow {
   product: Product;

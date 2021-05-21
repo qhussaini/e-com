@@ -2,14 +2,26 @@
   <mat-toolbar-row fxLayoutAlign="space-between center">
     <div fxLayout="row">
       <a class="navbar-brand" routerLink="/">
-        <img src="assets/images/logo/scoops-logo.png" alt="Azam Scoop" width="40" height="35">
+        <img [src]="theme.logo" [alt]="theme.comName" width="40" height="35">
       </a>
-      <div *ngIf="!theme.deviceXs">
+
+      <button class="btn pt-0 pb-0 align-middle" [class.btn-outline-dark]="!theme.themeDark" [class.btn-outline-info]="theme.themeDark" *ngIf="address">
+        <mat-icon>place</mat-icon>
+        {{address.name | slice:0:10}} <br>
+        <small>{{address.pincode}}</small>
+      </button>
+
+      <!-- <div *ngIf="!theme.deviceXs">
         <button mat-button routerLink="/" routerLinkActive="mat-primary">Home</button>
         <button mat-button *ngIf="userIsAuthenticated && authService.getUserType()==='wholesaler'" routerLink="/admin/dash" routerLinkActive="mat-primary">Dashboard</button>
         <button mat-button routerLink="/products" routerLinkActive="mat-primary">Products</button>
         <button mat-button routerLink="/about-us" routerLinkActive="mat-primary">About Us</button>
-      </div>
+      </div> -->
+    </div>
+    <div *ngIf="!theme.isLoginOrSignup">
+      <form class="form-group mt-3">
+        <input class="form-control ml-2" placeholder="Sreach Product" type="text" >
+      </form>
     </div>
     <div>
       <mat-slide-toggle color="primary" [(ngModel)]="theme.themeDark" (change)="theme.themeChange()">
@@ -31,10 +43,36 @@
     </div>
   </mat-toolbar-row>
 
-  <mat-toolbar-row *ngIf="theme.deviceXs" fxLayoutAlign="space-between end">
+  <!-- <mat-toolbar-row *ngIf="theme.deviceXs" fxLayoutAlign="space-between end">
     <button mat-button aria-current="page" routerLink="/" routerLinkActive="primary">Home</button>
     <button mat-button *ngIf="userIsAuthenticated && authService.getUserType()==='wholesaler'" routerLink="/admin/dash" routerLinkActive="primary">Dashboard</button>
     <button mat-button routerLink="/admin/products" routerLinkActive="primary">Products</button>
     <button mat-button routerLink="/about-us" routerLinkActive="primary">About Us</button>
-  </mat-toolbar-row>
+  </mat-toolbar-row> -->
 </mat-toolbar>
+<div *ngIf="!theme.isLoginOrSignup">
+  <div class="align-self-center text-right border-top border-bottom border-dark" [class.dark-mcard]="theme.themeDark">
+    <div class="p-0 pl-1 m-0 align-content-stretch" *ngIf="!theme.deviceXs" fxLayoutAlign="space-between center">
+      <div fxLayout="row">
+        <div *ngIf="!theme.deviceXs">
+        <button mat-button [matMenuTriggerFor]="tools"><mat-icon>expand_more</mat-icon> Categorys</button>
+        <mat-menu #tools="matMenu" style="min-width: 150px;" [class.dark-mcard]="theme.themeDark">
+          <button mat-menu-item *ngFor="let cat of category" [routerLink]="'/products/'+ cat.newCategory">{{cat.newCategory}}</button>
+        </mat-menu>
+        <!-- <button mat-button aria-current="page" routerLink="/" routerLinkActive="mat-primary">Home</button> -->
+        <button mat-button *ngIf="userIsAuthenticated && authService.getUserType()==='wholesaler'" routerLink="/admin/dash" routerLinkActive="mat-primary">Dashboard</button>
+        <button mat-button routerLink="/products" routerLinkActive="mat-primary">Products</button>
+        <button mat-button routerLink="/about-us" routerLinkActive="mat-primary">About Us</button>
+        <button mat-button *ngIf="!userIsAuthenticated" routerLinkActive="mat-primary">Register As Retailer</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="m-0" *ngIf="theme.deviceXs" fxLayoutAlign="space-between end">
+      <button mat-button aria-current="page" routerLink="/" routerLinkActive="primary">Home</button>
+      <button mat-button *ngIf="userIsAuthenticated && authService.getUserType()==='wholesaler'" routerLink="/admin/dash" routerLinkActive="primary">Dashboard</button>
+      <button mat-button routerLink="/admin/products" routerLinkActive="primary">Products</button>
+      <button mat-button routerLink="/about-us" routerLinkActive="primary">About Us</button>
+    </div>
+  </div>
+</div>

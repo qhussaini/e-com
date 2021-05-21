@@ -64,7 +64,7 @@ router.post("/login", (req, res, next) => {
         message: 'Unauthorised Check your email & password'
       });
     }
-    const token = jwt.sign({email: fetchedUser.email, userId: fetchedUser._id, userName: fetchedUser.userName, shopName: fetchedUser.shopName }, "secret_encrypt_doc_appointment", { expiresIn:"1h" });
+    const token = jwt.sign({email: fetchedUser.email, userId: fetchedUser._id, userName: fetchedUser.userName, shopName: fetchedUser.shopName }, process.env.JWT_KEY, { expiresIn:"1h" });
     res.status(200).json({
       id: fetchedUser._id,
       email: fetchedUser.email,
@@ -72,6 +72,7 @@ router.post("/login", (req, res, next) => {
       expiresIn: 3600,
       userType: fetchedUser.userType,
       userName: fetchedUser.userName,
+      address: fetchedUser.address,
     });
   })
   .catch(err => {
@@ -105,6 +106,21 @@ router.post("/checkAuth", checkAuth, (req, res, next) => {
         message: 'Unauthorised Check your password'
       });
     });
+})
+router.post("/address", checkAuth, (req, res, next) => {
+  addressData = {
+    name: req.body.name,
+    addressLine1: req.body.addressLine1,
+    addressLine2: req.body.addressLine2,
+    city: req.body.city,
+    pincode: req.body.pincode,
+  }
+  User.updateOne({_id: req.userData.userId}, {address: addressData}).then(document => {
+    console.log(addressData)
+    res.status(200).json({
+      message:"done"
+    })
+  });
 })
 
 module.exports = router;

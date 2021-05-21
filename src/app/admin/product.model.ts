@@ -27,3 +27,13 @@ export interface Flavor {
   flavorId?:string;
   newFlavors: string;
 }
+
+export interface Address {
+  name?: string;
+  addressLine1?: string;
+  addressLine2?: string;
+  city?: string;
+  country?: string;
+  pincode?: number;
+  phone?:number;
+}

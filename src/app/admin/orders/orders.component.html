@@ -9,6 +9,7 @@
       <th scope="col">Shop Name</th>
       <th scope="col">Name</th>
       <th scope="col">Product</th>
+      <!-- <th scope="col">Address</th> -->
       <th scope="col">Total Price</th>
       <th scope="col">Status</th>
     </tr>
@@ -41,6 +42,7 @@
           </tr>
         </tbody>
       </th>
+      <!-- <th scope="row">{{ productData.address |currency:"INR"}}</th> -->
       <th scope="row">{{ productData.totalPrice |currency:"INR"}}</th>
       <th scope="row">
         <span class="badge bg-success btn-block text-dark" [class.bg-warning]="productData.orderStatus==='Panding'" [class.bg-danger]="productData.orderStatus==='Canceled'">{{ productData.orderStatus }}</span>

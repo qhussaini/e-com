@@ -29,6 +29,7 @@ export class CartComponent implements OnInit, OnDestroy {
       this.totalPrice += value.totalPrice
       let itemId = value.product.itemId
       let productQty = value.productQty
+
       this.productId.push({itemId:itemId, productQty: productQty})
       console.log(this.productId)
       // this.productQty.push(value.productQty)
@@ -56,15 +57,16 @@ export class CartComponent implements OnInit, OnDestroy {
 
   addToCart() {
     if (this.userIsAuthenticated) {
-      this.cart.createNewCart(this.productId, this.totalPrice)
-      .subscribe(result => {
-        this.toastr.success("Order Placed successfully", "",{
-          timeOut:3000,
-          progressBar:true,
-        })
-        this.cart.cartShow = [];
-        localStorage.removeItem("cartItem")
-      });
+      this.route.navigate(["/check-out"])
+      // this.cart.createNewCart(this.productId, this.totalPrice)
+      // .subscribe(result => {
+      //   this.toastr.success("Order Placed successfully", "",{
+      //     timeOut:3000,
+      //     progressBar:true,
+      //   })
+      //   this.cart.cartShow = [];
+    //   localStorage.removeItem("cartItem")
+      // });
     }else {
       this.route.navigate(["/login"])
     }

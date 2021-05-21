@@ -1,0 +1,137 @@
+<h2 class="text-center">Check Out</h2>
+<app-ui-preloader [display]="isLoading"></app-ui-preloader>
+<div class="row m-1" *ngIf="!isLoading">
+  <div class="col-md-6 ml-3 mt-1 mr-3 card p-2"  [class.dark-card]="theme.themeDark">
+    <mat-card class="pt-1 pb-0 m-1" *ngFor="let address of cart.address; index as i" ngbRadioGroup [(ngModel)]="selected">
+      <div class="row">
+        <div class="col-10 selecter" mat-ripple for="flexRadioDefault1">
+          <mat-radio-group
+            aria-labelledby="example-radio-group-label"
+            class="example-radio-group"
+            [(ngModel)]="selected">
+            <mat-radio-button class="example-radio-button" (click)="getSelectedAddress(address)" [value]="i">
+              <h4>{{address.name}}</h4>
+              <h6>{{address.addressLine1 | slice:0:18}}..., {{address.city}}, {{address.country}}</h6>
+              <h6>{{address.pincode}}</h6>
+              <h6>{{address.phone}}</h6>
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <div class="col-1 align-self-center">
+          <button mat-mini-fab color="warn" (click)="deleteAddress(address)"><mat-icon>delete</mat-icon></button>
+        </div>
+      </div>
+    </mat-card>
+    <div class="m-2">
+      <!-- <button type="button" class="btn btn-outline-primary" (click)="collapse.toggle()" [attr.aria-expanded]="!isCollapsed"
+        aria-controls="collapseExample">
+        Toggle
+      </button> -->
+      <button mat-raised-button color="primary" (click)="collapse.toggle()" [attr.aria-expanded]="!addingAdreess" >Add address</button>
+    </div>
+    <div #collapse="ngbCollapse" [(ngbCollapse)]="addingAdreess">
+      <form #f="ngForm">
+        <div class="form-group">
+          <label for="">Name</label>
+          <input #name="ngModel" ngModel name="name" type="text" class="btn-light form-control is-valid"
+            [class.wa-valid]="name.valid"
+            [class.is-invalid.wa-invalid]="name.invalid && name.touched"
+            placeholder="Your Name"
+            required>
+          <div class="alert alert-danger" *ngIf="name.touched && name.invalid">
+            <div *ngIf="name.errors.required">Name is required.</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="">Address</label>
+          <input #addressLine1="ngModel" ngModel  name="addressLine1" type="text" class="btn-light form-control is-valid"
+            [class.wa-valid]="addressLine1.valid"
+            [class.is-invalid.wa-invalid]="addressLine1.invalid && addressLine1.touched"
+            placeholder="Line 1" required>
+          <div class="alert alert-danger" *ngIf="addressLine1.touched && addressLine1.invalid">
+            <div *ngIf="addressLine1.errors.required">Address Line 1 is required.</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for=""></label>
+          <input #addressLine2="ngModel" ngModel name="addressLine2" type="text" class="btn-light form-control"
+            placeholder="Line 2">
+          <!-- <div class="alert alert-danger" *ngIf="addressLine2.touched && addressLine2.invalid">
+            <div *ngIf="addressLine2.errors.required">Address Line 2 is required.</div>
+          </div> -->
+        </div>
+        <div class="form-group">
+          <label for="">City</label>
+          <input #city="ngModel" ngModel name="city" type="text" class="btn-light form-control is-valid"
+            [class.wa-valid]="city.valid"
+            [class.is-invalid.wa-invalid]="city.invalid && city.touched"
+            placeholder="city"
+            required>
+          <div class="alert alert-danger" *ngIf="city.touched && city.invalid">
+            <div *ngIf="city.errors.required">City is required.</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="country">Country</label>
+          <input #country="ngModel" ngModel name="country" type="text" class="btn-light form-control is-valid"
+            [class.wa-valid]="country.valid"
+            [class.is-invalid.wa-invalid]="country.invalid && country.touched"
+            placeholder="country"
+            required>
+          <div class="alert alert-danger" *ngIf="country.touched && country.invalid">
+            <div *ngIf="country.errors.required">Country is required.</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="">Pin Code</label>
+          <input #pincode="ngModel" ngModel name="pincode" type="text" class="btn-light form-control is-valid"
+            [class.wa-valid]="pincode.valid"
+            [class.is-invalid.wa-invalid]="pincode.invalid && pincode.touched"
+            placeholder="Pin Code"
+            required>
+          <div class="alert alert-danger" *ngIf="pincode.touched && pincode.invalid">
+            <div *ngIf="pincode.errors.required">pincode is required.</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone</label>
+          <input #phone="ngModel" ngModel name="phone" type="text" class="btn-light form-control is-valid"
+            [class.wa-valid]="phone.valid"
+            [class.is-invalid.wa-invalid]="phone.invalid && phone.touched"
+            placeholder="Phone"
+            required>
+          <div class="alert alert-danger" *ngIf="phone.touched && phone.invalid">
+            <div *ngIf="phone.errors.required">phone is required.</div>
+          </div>
+        </div>
+        <button
+          [disabled]="!f.valid"
+          (click)="setAddress(f)"
+          class="btn btn-primary">Add address</button>
+      </form>
+    </div>
+  </div>
+  <div class="col-md-5 mt-1">
+    <div class="card" [class.dark-card]="theme.themeDark">
+      <div class="card-body">
+        <h4 class="card-title">Order Summary</h4>
+        <p class="card-text">You have items in your shopping cart.</p>
+        <ul class="list-group list-group-flush">
+          <li *ngFor="let item of cart.cartShow" class="list-group-item" [class.dark-card]="theme.themeDark">
+            {{ item.productQty }} x {{ item.product.itemName }}
+            <div class="float-right">
+              {{ item.totalPrice | currency:'INR' }}
+            </div>
+          </li>
+          <li class="list-group-item font-weight-bold" [class.dark-card]="theme.themeDark">
+            Total
+            <div class="float-right">
+              {{ totalPrice | currency:'INR' }}
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <button mat-raised-button color="primary" (click)="addToCart()">place order</button>
+  </div>
+</div>

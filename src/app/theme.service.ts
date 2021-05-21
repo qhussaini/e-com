@@ -10,6 +10,9 @@ export class ThemeService {
   deviceXs: boolean;
   themeColor: string;
   sideBar:string;
+  logo:string;
+  isLoginOrSignup:boolean = false;
+  comName:string;
 constructor(private overlay:OverlayContainer) { }
 
   themeChange(){

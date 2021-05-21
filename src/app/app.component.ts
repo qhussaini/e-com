@@ -34,6 +34,12 @@ export class AppComponent implements OnInit, OnDestroy{
   ngOnInit(){
     this.route.events.subscribe((val) =>{
       this.isHome = this.route.url === "/";
+      if (this.auth.getIsAuth) {
+        // this.cart.address = JSON.parse(localStorage.getItem("address"));
+        this.auth.getAddress().subscribe((data) => {
+          this.cart.address = data
+        });
+      }
     })
     this.scrollEvents = new EventEmitter<SlimScrollEvent>();
     this.opts = {
@@ -41,6 +47,8 @@ export class AppComponent implements OnInit, OnDestroy{
       barOpacity: '0.8',
       barWidth: '10',
     }
+    this.theme.logo = "assets/images/logo/scoops-logo.png";
+    this.theme.comName = "Azam Scoops"
 
     this.play();
 

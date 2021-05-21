@@ -20,6 +20,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatRippleModule } from '@angular/material/core';
+import { MatRadioModule } from '@angular/material/radio';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { MatListModule } from '@angular/material/list';
@@ -55,9 +56,11 @@ import { ProductCardComponent } from './product-card/product-card.component';
 import { CartComponent } from './cart/cart.component';
 import { AboutUsComponent } from './about-us/about-us.component';
 import { ISlimScrollOptions, NgSlimScrollModule, SLIMSCROLL_DEFAULTS } from 'ngx-slimscroll';
+import { CheckOutComponent } from './check-out/check-out.component';
+import { OrderPlacedComponent } from './order-placed/order-placed.component';
 
 @NgModule({
-  declarations: [
+  declarations: [	
     AppComponent,
       HeaderComponent,
       MyOrderComponent,
@@ -74,7 +77,9 @@ import { ISlimScrollOptions, NgSlimScrollModule, SLIMSCROLL_DEFAULTS } from 'ngx
       CartComponent,
       NewCategory,
       NewFlavor,
-      AboutUsComponent
+      AboutUsComponent,
+      CheckOutComponent,
+      OrderPlacedComponent
    ],
   imports: [
     BrowserModule,
@@ -90,6 +95,7 @@ import { ISlimScrollOptions, NgSlimScrollModule, SLIMSCROLL_DEFAULTS } from 'ngx
     MatButtonModule,
     MatCardModule,
     MatRippleModule,
+    MatRadioModule,
     MatBadgeModule,
     MatBottomSheetModule,
     MatListModule,

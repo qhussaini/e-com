@@ -64,6 +64,26 @@ constructor(private http: HttpClient, private router: Router, private toastr: To
         this.userNameUpdate.next(this.userName);
       });
   }
+  setAddress(addressArray){
+    console.log(addressArray);
+    return this.http.post<{address:any, message:string}>('http://localhost:3000/api/address/add', addressArray).pipe(map(user => {
+      console.log(user.address)
+      return user.address;
+    }));
+  }
+
+  getAddress(){
+    return this.http
+      .get<{ message: string; address: any }>(
+        'http://localhost:3000/api/address/get'
+      ).pipe(map(adr => {
+        return adr.address
+      }))
+  }
+  deleteAddress(address) {
+    return this.http.delete("http://localhost:3000/api/address/delete/"+address)
+  }
+
   getClientData(id:string) {
     this.http
       .get<{ message: string; userName: string }>(
@@ -134,30 +154,30 @@ constructor(private http: HttpClient, private router: Router, private toastr: To
     }
   }
 
-  login(emailId: string, password: string) {
-    const authData: AuthData = {email: emailId, passWord: password}
-    console.log("reached")
-    return this.http.post<{token: string, expiresIn: number, userType:string, userName:string}>('http://localhost:3000/api/user/login', authData)
-      .subscribe(response => {
-        const token = response.token;
-        this.token = token;
-        if (this.token){
-          const userType = response.userType;
-          const userName = response.userName;
-          const expiresInDuration = response.expiresIn;
-          this.setAuthTimer(expiresInDuration);
-          this.userAuth = true;
-          this.authStatusListener.next(true);
-          const now = new Date();
-          const expirationDate = new Date(now.getTime() + expiresInDuration * 1000);
-          console.log("token userType : " + this.userType);
-          this.saveAuthData(token, expirationDate, userType, userName);
-          this.router.navigate(['/']);
-          this.getIsAuth()
-          return this.token
-        }
-      });
-  }
+  // login(emailId: string, password: string) {
+  //   const authData: AuthData = {email: emailId, passWord: password}
+  //   console.log("reached")
+  //   return this.http.post<{token: string, expiresIn: number, userType:string, userName:string}>('http://localhost:3000/api/user/login', authData)
+  //     .subscribe(response => {
+  //       const token = response.token;
+  //       this.token = token;
+  //       if (this.token){
+  //         const userType = response.userType;
+  //         const userName = response.userName;
+  //         const expiresInDuration = response.expiresIn;
+  //         this.setAuthTimer(expiresInDuration);
+  //         this.userAuth = true;
+  //         this.authStatusListener.next(true);
+  //         const now = new Date();
+  //         const expirationDate = new Date(now.getTime() + expiresInDuration * 1000);
+  //         console.log("token userType : " + this.userType);
+  //         this.saveAuthData(token, expirationDate, userType, userName);
+  //         this.router.navigate(['/']);
+  //         this.getIsAuth()
+  //         return this.token
+  //       }
+  //     });
+  // }
 
   login_cb(email: string, password: string) {
     const authData: AuthData = {email: email, passWord: password}
@@ -172,12 +192,15 @@ constructor(private http: HttpClient, private router: Router, private toastr: To
               const userType = user.userType;
               const userName = user.userName;
               const expiresInDuration = user.expiresIn;
+
+              const address = user.address;
               this.setAuthTimer(expiresInDuration);
               this.userAuth = true;
               this.authStatusListener.next(true);
               const now = new Date();
               const expirationDate = new Date(now.getTime() + expiresInDuration * 1000);
               console.log("token userType : " + this.userType);
+              console.log("token address : " + address);
               this.saveAuthData(this.token, expirationDate, userType, userName);
               this.router.navigate(['/']);
               this.getIsAuth()
@@ -191,28 +214,6 @@ constructor(private http: HttpClient, private router: Router, private toastr: To
     const authData = {passWord: password}
     return this.http.post<any>('http://localhost:3000/api/user/checkAuth', authData)
       .pipe(map(user => {
-        console.log(user);
-        // login successful if there's a jwt token in the response
-        // if (user && user.token) {
-        //     this.user = user;
-        //     // store user details and jwt in cookie
-        //     this.token = user.token
-        //     if (this.token){
-        //       const userType = user.userType;
-        //       const userName = user.userName;
-        //       const expiresInDuration = user.expiresIn;
-        //       this.setAuthTimer(expiresInDuration);
-        //       this.userAuth = true;
-        //       this.authStatusListener.next(true);
-        //       const now = new Date();
-        //       const expirationDate = new Date(now.getTime() + expiresInDuration * 1000);
-        //       console.log("token userType : " + this.userType);
-        //       this.saveAuthData(this.token, expirationDate, userType, userName);
-        //       this.router.navigate(['/']);
-        //       this.getIsAuth()
-        //       return this.token
-        //     }
-        //   }
           return user;
       }));
   }
@@ -237,6 +238,7 @@ constructor(private http: HttpClient, private router: Router, private toastr: To
     localStorage.setItem("token", token);
     localStorage.setItem("userType", userType);
     localStorage.setItem("userName", userName);
+    // localStorage.setItem("address", JSON.stringify(address));
     localStorage.setItem("expirationDate", expirationDate.toISOString());
     this.userType = localStorage.getItem("userType");
   }
@@ -245,6 +247,7 @@ constructor(private http: HttpClient, private router: Router, private toastr: To
     localStorage.removeItem("expirationDate");
     localStorage.removeItem("userType");
     localStorage.removeItem("userName");
+    localStorage.removeItem("address");
   }
   private getAuthData() {
     const token = localStorage.getItem("token");

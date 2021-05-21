@@ -1,6 +1,6 @@
 <div class="container" [ngClass]="{'custom-dark-theme':theme.themeDark}">
   <div class="text-center" *ngIf="cart.cartShow.length===0">
-    <span>Your Scoops Basket is empty</span>
+    <span>Your {{theme.comName}} Basket is empty</span>
   </div>
   <div class="card" *ngIf="cart.cartShow.length>0" [class.dark-mcard]='theme.themeDark' [class.text-white]='theme.themeDark'>
     <div class="full-width m-1" *ngFor="let cart of cart.cartShow" [class.dark-card]='theme.themeDark' [class.card]='!theme.themeDark' >

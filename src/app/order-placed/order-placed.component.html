@@ -1,0 +1,58 @@
+<div class="row">
+  <div class="col-9 align-self-center text-center" >
+    <h5>{{theme.comName}}</h5>
+  </div>
+  <div class="col-3 text-center">
+    <img [src]="theme.logo" [alt]="theme.comName" style="height: 80px;">
+  </div>
+</div>
+<app-ui-preloader [display]="isLoading"></app-ui-preloader>
+<div class="row ml-2 mr-2" *ngIf="!isLoading" [class.dark-card]="theme.themeDark">
+  <div class="col-6 ml-3 mt-1 mr-3 p-2"  >
+    <h6>{{placedOrder.address.name}}</h6>
+    <h6>{{placedOrder.address.addressLine1}}</h6>
+    <h6>{{placedOrder.address.city}}, {{placedOrder.address.country}}, {{placedOrder.address.pincode}}</h6>
+    <h6>{{placedOrder.address.phone}}</h6>
+  </div>
+  <div class="col-5 mt-1 p-2">
+    <div class="text-right">
+      <div class="card-body">
+        <h4 class="card-title">Order bill</h4>
+        <p class="card-text">Total Bill : {{placedOrder.product.totalPrice}}</p>
+
+      </div>
+    </div>
+  </div>
+</div>
+<div class="m-2 mt-0">
+  <table class="table table-striped" [class.dark-card]="theme.themeDark">
+    <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Item Name</th>
+      <th scope="col">Category</th>
+      <th scope="col">Flavors</th>
+      <th scope="col">MRP</th>
+      <th scope="col">Quantity</th>
+      <th scope="col">Total Price</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let product of orderedProduct; index as i">
+      <th scope="row">{{ i + 1 }}</th>
+      <td>
+        <img [src]="product.itemImgUrl" class="mr-2" style="width: 20px">
+        {{ product.itemName }}
+      </td>
+      <td>{{ product.itemCategory }}</td>
+      <td>{{ product.itemFlavors }}</td>
+      <td>{{ product.itemMRP | currency:'INR'}}</td>
+      <td>{{ qty[i]}}</td>
+      <td>{{ product.itemMRP*qty[i] | currency:'INR'}}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<div class="text-center">
+  <button class="btn btn-primary" routerLink="/products">continue shopping</button>
+</div>
