@@ -5,11 +5,13 @@
         <img [src]="theme.logo" [alt]="theme.comName" width="40" height="35">
       </a>
 
-      <button class="btn pt-0 pb-0 align-middle" [class.btn-outline-dark]="!theme.themeDark" [class.btn-outline-info]="theme.themeDark" *ngIf="address">
-        <mat-icon>place</mat-icon>
-        {{address.name | slice:0:10}} <br>
-        <small>{{address.pincode}}</small>
-      </button>
+      <div *ngIf="isAddress">
+        <button class="btn pt-0 pb-0 align-middle" [class.btn-outline-dark]="!theme.themeDark" [class.btn-outline-info]="theme.themeDark">
+          <mat-icon>place</mat-icon>
+          {{address.name | slice:0:10}} <br>
+          <small>{{address.pincode}}</small>
+        </button>
+      </div>
 
       <!-- <div *ngIf="!theme.deviceXs">
         <button mat-button routerLink="/" routerLinkActive="mat-primary">Home</button>
@@ -18,17 +20,25 @@
         <button mat-button routerLink="/about-us" routerLinkActive="mat-primary">About Us</button>
       </div> -->
     </div>
-    <div *ngIf="!theme.isLoginOrSignup">
+    <div class="col-6" *ngIf="!theme.isLoginOrSignup&&theme.isProductList">
       <form class="form-group mt-3">
-        <input class="form-control ml-2" placeholder="Sreach Product" type="text" >
+        <input class="form-control ml-2" [matAutocomplete]="auto" placeholder="Sreach Product" type="text" ngModel name="search" (ngModelChange)="setfilterTerm($event)">
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option *ngFor="let product of productService.filteredProducts" [value]="product.itemName">
+            <span>
+              <img [src]="product.itemImage" [alt]="product.itemName" style="height: 30px;">
+            </span>
+            <small>
+              {{product.itemName}}
+            </small>
+          </mat-option>
+        </mat-autocomplete>
       </form>
     </div>
-    <div>
-      <mat-slide-toggle color="primary" [(ngModel)]="theme.themeDark" (change)="theme.themeChange()">
-        <mat-icon>bedtime</mat-icon>
-      </mat-slide-toggle>
-      <button mat-icon-button routerLink="/cart" *ngIf="cart.cartShow.length===0"><mat-icon>shopping_basket</mat-icon></button>
-      <button mat-icon-button routerLink="/cart" *ngIf="cart.cartShow.length>0"><mat-icon [matBadge]="cart.cartShow.length" MatBadgeSize = 'small' matBadgeColor="warn">shopping_basket</mat-icon></button>
+    <div class="menu">
+      <button mat-icon-button ngbTooltip="Theme" (click)="theme.themeChange()"><mat-icon>{{theme.changeButton}}</mat-icon></button>
+      <button mat-icon-button ngbTooltip="Cart" routerLink="/cart" *ngIf="cart.cartShow.length===0"><mat-icon>shopping_basket</mat-icon></button>
+      <button mat-icon-button ngbTooltip="Cart" routerLink="/cart" *ngIf="cart.cartShow.length>0"><mat-icon [matBadge]="cart.cartShow.length" MatBadgeSize = 'small' matBadgeColor="warn">shopping_basket</mat-icon></button>
       <button *ngIf="!userIsAuthenticated" mat-icon-button ngbTooltip="Login" routerLink="/login">
         <mat-icon matBadgeColor="warn" >login</mat-icon>
       </button>
@@ -63,7 +73,7 @@
         <button mat-button *ngIf="userIsAuthenticated && authService.getUserType()==='wholesaler'" routerLink="/admin/dash" routerLinkActive="mat-primary">Dashboard</button>
         <button mat-button routerLink="/products" routerLinkActive="mat-primary">Products</button>
         <button mat-button routerLink="/about-us" routerLinkActive="mat-primary">About Us</button>
-        <button mat-button *ngIf="!userIsAuthenticated" routerLinkActive="mat-primary">Register As Retailer</button>
+        <button mat-button routerLink="/signup" *ngIf="!userIsAuthenticated" routerLinkActive="mat-primary">Register As Retailer</button>
         </div>
       </div>
     </div>

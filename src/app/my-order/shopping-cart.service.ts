@@ -19,12 +19,22 @@ export class ShoppingCartService {
   private myCartUpdate = new Subject<Cart[]>();
   constructor(private http: HttpClient, private auth:AuthService, private route: Router) { }
 
-  createNewCart(productId, totalPrice, address){
+  createNewOrder(productId, totalPrice, address){
     const orderStatus = "Panding"
     const cart: Cart = { productId: {productId:productId, totalPrice:totalPrice}, orderStatus: orderStatus, address:address};
     console.log(cart);
     return this.http.post<{ message: string, cart: any }>(
-      'http://localhost:3000/api/cart',
+      'http://localhost:3000/api/orders',
+      cart
+    )
+  }
+  createNewCart() {
+    let totalPrice
+    let cartItem:any[] = []
+    const cart: Cart = { productId: {productId:cartItem, totalPrice:totalPrice}};
+    console.log(cart);
+    return this.http.post<{ message: string, cart: any }>(
+      'http://localhost:3000/api/cart/create',
       cart
     )
   }
@@ -36,9 +46,32 @@ export class ShoppingCartService {
       return 0;
     })
   }
+  getCartId(){
+    return this.http.get<{cart:Cart, message:string}>('http://localhost:3000/api/cart');
+  }
+  updateCart(cartId){
+    let totalPrice = 0
+    let cartItem:any[] = []
+    this.cartShow.forEach((value) => {
+      totalPrice += value.totalPrice
+      console.log(value.product)
+      let itemId = value.product.itemId
+      let productQty = value.productQty
+      cartItem.push({itemId:itemId, productQty: productQty})
+      console.log(cartItem)
+      // this.productQty.push(value.productQty)
+    });
+    const cart: Cart = { productId: {productId:cartItem, totalPrice:totalPrice}};
+    console.log(cart);
+    return this.http.put<{ message: string, cart: any }>(
+      'http://localhost:3000/api/cart/update/'+cartId,
+      cart
+    )
+  }
+
   getCartItem(){
     this.http
-      .get<{ message: string; cart: any }>("http://localhost:3000/api/cart")
+      .get<{ message: string; cart: any }>("http://localhost:3000/api/orders")
       .pipe(
         map((cartData) => {
           console.log(cartData)
@@ -67,7 +100,7 @@ export class ShoppingCartService {
   }
   getMyCartItem(){
     this.http
-      .get<{ message: string; cart: any }>("http://localhost:3000/api/cart/client")
+      .get<{ message: string; cart: any }>("http://localhost:3000/api/orders/client")
       .pipe(
         map((cartData) => {
           return cartData.cart.map((cart) => {
@@ -95,12 +128,12 @@ export class ShoppingCartService {
   }
 
   getOrderPlaced(orderId){
-    return this.http.get<{message:string, order:any}>("http://localhost:3000/api/cart/order/"+orderId)
+    return this.http.get<{message:string, order:any}>("http://localhost:3000/api/orders/order/"+orderId)
   }
 
   // confirmOrder(cartId:string, ){
 
-  //   this.http.put<{message: string}>("http://localhost:3000/api/cart/" + cartId,)
+  //   this.http.put<{message: string}>("http://localhost:3000/api/orders/" + cartId,)
   // }
 
   getUpdatedCart(){
@@ -123,7 +156,7 @@ export class ShoppingCartService {
   ) {
     const confirmOrder = {cartId:cartId, creatorId:creatorId, orderStatus: status};
     console.log(confirmOrder)
-    return this.http.put<{ message:string, orderStatus:string }>("http://localhost:3000/api/cart/update/"+cartId, confirmOrder)
+    return this.http.put<{ message:string, orderStatus:string }>("http://localhost:3000/api/orders/update/"+cartId, confirmOrder)
   }
 
 
@@ -144,10 +177,15 @@ export interface Cart {
   productQty?: number;
   cartId?:string;
   orderStatus?: string;
-  address?:Address
+  address?:Address;
+  _id?:string;
+  creatorName?:string;
+  creatorShop?:string;
+  product?:any;
 }
 export interface CartShow {
   product: Product;
   productQty: number;
   totalPrice: number;
+  cartId?: string;
 }

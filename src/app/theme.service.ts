@@ -12,16 +12,32 @@ export class ThemeService {
   sideBar:string;
   logo:string;
   isLoginOrSignup:boolean = false;
+  isProductList: boolean = false;
   comName:string;
+  changeButton: string = "dark_mode";
+
 constructor(private overlay:OverlayContainer) { }
 
   themeChange(){
-    if(this.themeDark){
+    if(!this.themeDark){
       this.overlay.getContainerElement().classList.add('dark-mode');
       this.setThemeColor(true);
+      this.changeButton = "light_mode";
     }else {
       this.overlay.getContainerElement().classList.remove('dark-mode');
       this.setThemeColor(false);
+      this.changeButton = "dark_mode";
+    }
+  }
+  getThemeChange(){
+    if(this.themeDark){
+      this.overlay.getContainerElement().classList.add('dark-mode');
+      this.setThemeColor(true);
+      this.changeButton = "light_mode";
+    }else {
+      this.overlay.getContainerElement().classList.remove('dark-mode');
+      this.setThemeColor(false);
+      this.changeButton = "dark_mode";
     }
   }
   private setThemeColor(theme:boolean){

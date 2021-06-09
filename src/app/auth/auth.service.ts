@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 import { AuthData } from './auth-data.model';
 import { ToastrService } from 'ngx-toastr';
 import { map } from 'rxjs/operators';
+import { ShoppingCartService } from '../my-order/shopping-cart.service';
 
 
 @Injectable({
@@ -143,7 +144,6 @@ constructor(private http: HttpClient, private router: Router, private toastr: To
     }
     const now = new Date();
     const expiresIn = authInformation.expirationDate.getTime() - now.getTime();
-    console.log("sdkfjs : "+expiresIn);
     if (expiresIn > 0) {
       this.token = authInformation.token;
       this.userAuth = true;
@@ -185,28 +185,28 @@ constructor(private http: HttpClient, private router: Router, private toastr: To
       .pipe(map(user => {
         // login successful if there's a jwt token in the response
         if (user && user.token) {
-            this.user = user;
-            // store user details and jwt in cookie
-            this.token = user.token
-            if (this.token){
-              const userType = user.userType;
-              const userName = user.userName;
-              const expiresInDuration = user.expiresIn;
+          this.user = user;
+          // store user details and jwt in cookie
+          this.token = user.token
+          if (this.token){
+            const userType = user.userType;
+            const userName = user.userName;
+            const expiresInDuration = user.expiresIn;
 
-              const address = user.address;
-              this.setAuthTimer(expiresInDuration);
-              this.userAuth = true;
-              this.authStatusListener.next(true);
-              const now = new Date();
-              const expirationDate = new Date(now.getTime() + expiresInDuration * 1000);
-              console.log("token userType : " + this.userType);
-              console.log("token address : " + address);
-              this.saveAuthData(this.token, expirationDate, userType, userName);
-              this.router.navigate(['/']);
-              this.getIsAuth()
-              return this.token
-            }
+            const address = user.address;
+            this.setAuthTimer(expiresInDuration);
+            this.userAuth = true;
+            this.authStatusListener.next(true);
+            const now = new Date();
+            const expirationDate = new Date(now.getTime() + expiresInDuration * 1000);
+            console.log("token userType : " + this.userType);
+            console.log("token address : " + address);
+            this.saveAuthData(this.token, expirationDate, userType, userName);
+            this.router.navigate(['/']);
+            this.getIsAuth()
+            return userType
           }
+        }
           return user;
       }));
   }

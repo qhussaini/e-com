@@ -51,18 +51,21 @@
         </button>
       </div>
     </div>
-    <div *ngIf="filteredProducts.length===0" class="container-fluid d-flex flex-wrap mt-1 mb-1 min-vh-100" fxLayout="row" fxLayoutAlign="center center">
+    <div *ngIf="productService.filteredProducts.length===0" class="container-fluid d-flex flex-wrap mt-1 mb-1 min-vh-100" fxLayout="row" fxLayoutAlign="center center">
       no products in this category "{{this.getfilterTerm()}}"
     </div>
-    <div *ngIf="!isLoading || filteredProducts.length>0" class="container-fluid d-flex flex-wrap mt-1 mb-1 min-vh-100" fxLayout="row" fxLayoutAlign="start start"  >
-      <div class="card sa-card m-1" *ngFor="let product of filteredProducts" ngbTooltip="Category: {{product.itemCategory}}" [class.dark-card]='theme.themeDark'>
+    <div *ngIf="!isLoading || productService.filteredProducts.length>0" class="container-fluid d-flex flex-wrap mt-1 mb-1 min-vh-100" fxLayout="row" fxLayoutAlign="start start"  >
+      <div class="card sa-card m-1" *ngFor="let product of productService.filteredProducts" ngbTooltip="Category: {{product.itemCategory}}" placement="bottom" [class.dark-card]='theme.themeDark'>
         <img [src]="product.itemImage" class="sa-img rounded mx-auto d-block">
         <div class="card-body pt-0">
           <h1 class="card-title product-title mb-1">{{ product.itemName | titlecase }}</h1>
           <h4 class="card-text">{{ product.itemMRP  | currency:"INR" }}</h4>
         </div>
         <div class="card-footer p-0" [class.dark-mcard]='theme.themeDark' matRipple>
-          <button (click)="addToCart(product)" class="btn btn-primary btn-block"> Add to Cart</button>
+          <button (click)="addToCart(product)" class="btn btn-primary btn-block">
+            <label *ngIf="!isbtnLoading">Add to Cart</label>
+            <app-ui-preloader [display]="isbtnLoading"></app-ui-preloader>
+          </button>
         </div>
       </div>
     </div>

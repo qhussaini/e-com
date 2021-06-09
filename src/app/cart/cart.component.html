@@ -1,9 +1,10 @@
-<div class="container" [ngClass]="{'custom-dark-theme':theme.themeDark}">
+<app-ui-preloader [display]="isLoading"></app-ui-preloader>
+<div class="container" [ngClass]="{'custom-dark-theme':theme.themeDark}" *ngIf="!isLoading">
   <div class="text-center" *ngIf="cart.cartShow.length===0">
     <span>Your {{theme.comName}} Basket is empty</span>
   </div>
   <div class="card" *ngIf="cart.cartShow.length>0" [class.dark-mcard]='theme.themeDark' [class.text-white]='theme.themeDark'>
-    <div class="full-width m-1" *ngFor="let cart of cart.cartShow" [class.dark-card]='theme.themeDark' [class.card]='!theme.themeDark' >
+    <div class="full-width m-1" *ngFor="let cart of cart.cartShow; index as i" [class.dark-card]='theme.themeDark' [class.card]='!theme.themeDark' >
       <div class="card-body d-flex justify-content-between" >
         <div>
           <span>
@@ -20,16 +21,34 @@
             <span id="mrp"> {{cart.product.itemMRP |currency: "INR"}}</span>
           </div>
           <div class="d-flex justify-content-between">
-              <label for="qty">Quantity :</label>
-              <input list="qtyOptions" id="qty" name="qty" [(ngModel)]="cart.productQty" max="100">
-              <datalist id="qtyOptions">
+              <div class="row">
+                <div class="col-4">
+                  <label for="qty">Quantity : </label>
+                </div>
+                <div class="col-7">
+                  <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-outline-primary" (click)="increment(qtys,i,cart.cartId)">
+                      <mat-icon>add</mat-icon>
+                    </button>
+                    <input #qtys type="number" class="text-center btn btn-outline-light inputqty" id="qty{{i}}" name="qty{{i}}" (change)="updateTotal(i, $event,cart.cartId)" [(ngModel)]="cart.productQty" max="100">
+                    <button type="button" class="btn btn-outline-warning" (click)="decrement(qtys,i,cart.cartId)">
+                      <mat-icon *ngIf="cart.productQty>1">remove</mat-icon>
+                      <mat-icon *ngIf="cart.productQty<=1">delete_forever</mat-icon>
+                    </button>
+                  </div>
+                </div>
+                <!-- <div class="col-2">
+                  <button class="btn btn-primary" (click)="decrement(qtys,i,cart.cartId)">-</button>
+                </div> -->
+              </div>
+              <!-- <datalist id="qtyOptions">
                 <option value="1">
                 <option value="5">
                 <option value="10">
                 <option value="15">
                 <option value="20">
-              </datalist>
-            <span id="qty"> {{cart.productQty }}</span>
+              </datalist> -->
+            <!-- <span> {{cart.productQty }}</span> -->
           </div>
           <div>
             <div class="d-flex justify-content-between">
@@ -50,7 +69,7 @@
           </small>
         </div>
         <div>
-          <button class="btn-sm btn btn-danger" mat-ripple>delete</button>
+          <button class="btn-sm btn btn-danger" mat-ripple (click)="deleteItem(i,cart.cartId)">delete</button>
         </div>
       </div>
     </div>

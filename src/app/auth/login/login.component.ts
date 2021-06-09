@@ -2,6 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { first } from 'rxjs/operators';
+import { Product } from 'src/app/admin/product.model';
+import { ProductsService } from 'src/app/admin/products.service';
+import { ShoppingCartService } from 'src/app/my-order/shopping-cart.service';
 import { ThemeService } from 'src/app/theme.service';
 import { AuthService } from '../auth.service';
 
@@ -21,7 +24,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   showPass:boolean = false;
   passtype:string = "password";
 
-  constructor(private router:Router, private route: ActivatedRoute, private auth: AuthService, public theme:ThemeService) { }
+  constructor(private router:Router,private cart:ShoppingCartService, private productService:ProductsService, private route: ActivatedRoute, private auth: AuthService, public theme:ThemeService) { }
 
   ngOnInit() {
     this.auth.isSigning = true;
@@ -64,7 +67,13 @@ export class LoginComponent implements OnInit, OnDestroy {
       .pipe(first())
       .subscribe(
         (data) => {
-          this.router.navigate([this.returnUrl]);
+          console.log(data)
+          if (data === "wholesaler") {
+            this.router.navigate(["/admin/dash"]);
+          }else {
+            this.router.navigate([this.returnUrl]);
+            this.setCart();
+          }
           this.isLoading = false;
         },
         (error) => {
@@ -82,5 +91,36 @@ export class LoginComponent implements OnInit, OnDestroy {
   //     alert("Invalid credentials");
   //   }
   // }
+  setCart(){
+    this.cart.getCartId().subscribe((cartData) => {
+      if (cartData.cart) {
+        cartData.cart.product.productId.forEach(async cartItem => {
+          console.log(cartItem.itemId);
+          let products:Product[]=[];
+          this.cart.cartShow = []
+          if(cartItem.itemId){
+            await this.productService.getProduct(cartItem.itemId).subscribe((productData) => {
+              this.cart.cartShow.push({
+                product:{
+                  itemId: productData._id,
+                  itemName: productData.itemName,
+                  itemMRP: productData.itemMRP,
+                  itemCategory: productData.itemCategory,
+                  itemFlavors: productData.itemFlavors,
+                  itemImage: productData.itemImgUrl,
+                },
+                productQty:cartItem.productQty,
+                totalPrice:cartItem.productQty*productData.itemMRP,
+                cartId:cartData.cart._id
+              })
+            })
+          } else {
+            alert('internal error')
+          }
+          console.log(this.cart.cartShow);
+        })
+      }
+    })
+  }
 
 }

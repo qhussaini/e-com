@@ -1,5 +1,6 @@
 import { Component, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { OverlayContainer } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { Address, Category } from '../admin/product.model';
 import { ProductsService } from '../admin/products.service';
@@ -22,15 +23,31 @@ export class HeaderComponent implements OnInit, OnDestroy {
   cartCount: any=0;
   category: Category[];
   public innerWidth: number;
-  address:Address = {};
+  address:Address={};
+  isAddress:boolean = false;
   isLoading = false;
+  private _filterTerm: string;
+  changeButton: string = "dark_mode";
 
   @HostListener('window:resize', ['$event'])
   onResize(event) {
     this.innerWidth = window.innerWidth;
   }
 
-  constructor(public theme:ThemeService, public productService:ProductsService, public authService: AuthService, public cart: ShoppingCartService, private route: Router) { }
+  constructor(private overlay:OverlayContainer, public theme:ThemeService, public productService:ProductsService, public authService: AuthService, public cart: ShoppingCartService, private route: Router) { }
+
+  getfilterTerm():string {
+    return this._filterTerm;
+  }
+  setfilterTerm(value){
+    this._filterTerm = value
+    this.productService.filteredProducts = this.filterProducts(value);
+  }
+
+  filterProducts(searchString: string){
+    return this.productService.products.filter(product =>
+      product.itemName.toLocaleLowerCase().indexOf(searchString.toLocaleLowerCase())!==-1);
+  }
 
   ngOnInit() {
     this.isLoading = true;
@@ -38,21 +55,25 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.authListenerSub = this.authService.getUserAuthStatus().subscribe(isAuthenticated => {
       this.userIsAuthenticated = isAuthenticated
     });
-    this.innerWidth = window.innerWidth;
-    this.route.events.subscribe((val) => {
-      if (this.userIsAuthenticated) {
-        // this.cart.address = JSON.parse(localStorage.getItem("address"));
-        this.authService.getAddress().subscribe((data) => {
-          this.cart.address = data
-          this.address = this.cart.address[0];
-        });
-      }
-    });
     this.productService.getCategory()
     this.productService.getUpdateCategory().subscribe(category => {
       this.category = category;
       this.isLoading = false;
     })
+    this.innerWidth = window.innerWidth;
+    this.route.events.subscribe((val) => {
+      if (this.authService.getIsAuth()) {
+        // this.cart.address = JSON.parse(localStorage.getItem("address"));
+        this.authService.getAddress().subscribe((data) => {
+          this.cart.address = data
+          if (this.cart.address.length>0) {
+            this.isAddress = true
+            this.address = this.cart.address[0];
+          }
+        });
+        this.theme.getThemeColor();
+      }
+    });
   }
 
   ngOnDestroy() {

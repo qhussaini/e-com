@@ -12,6 +12,7 @@ import { Category, Flavor, Product } from './product.model';
 export class ProductsService implements OnInit {
 
   public products: Product[] = [];
+  public filteredProducts: Product[] = [];
   private productsUpdate = new Subject<{product: Product[], productCount: number }>();
   public categorys: Category[];
   private categorysUpdate = new Subject<Category[]>();

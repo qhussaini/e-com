@@ -13,6 +13,7 @@ import { ThemeService } from '../theme.service';
 })
 export class CartComponent implements OnInit, OnDestroy {
 
+  isLoading: boolean = false;
   totalPrice:number = 0;
   productId: Object[] = [];
   productQty:any[] = [];
@@ -25,34 +26,68 @@ export class CartComponent implements OnInit, OnDestroy {
     this.authListenerSub = this.authService.getUserAuthStatus().subscribe(isAuthenticated => {
       this.userIsAuthenticated = isAuthenticated
     });
-    this.cart.cartShow.forEach((value) => {
+    this.getTotal();
+  }
+
+  ngOnDestroy() {
+    this.authListenerSub.unsubscribe();
+    console.log(1)
+  }
+  async getTotal(){
+    this.totalPrice = 0
+     await this.cart.cartShow.forEach((value) => {
       this.totalPrice += value.totalPrice
       let itemId = value.product.itemId
       let productQty = value.productQty
-
-      this.productId.push({itemId:itemId, productQty: productQty})
-      console.log(this.productId)
-      // this.productQty.push(value.productQty)
+      // this.productId.push({itemId:itemId, productQty: productQty})
     })
-    const minusButton = document.getElementById('minus');
-    const plusButton = document.getElementById('plus');
-    const inputField = document.getElementById('input');
-    console.log(inputField)
-
-    // minusButton.addEventListener('click', event => {
-    //   event.preventDefault();
-    //   const currentValue = Number(inputField) || 0;
-    //   inputField = currentValue - 1;
-    // });
-
-    // plusButton.addEventListener('click', event => {
-    //   event.preventDefault();
-    //   const currentValue = Number(inputField.value) || 0;
-    //   inputField.value = currentValue + 1;
-    // });
   }
-  ngOnDestroy() {
-    this.authListenerSub.unsubscribe();
+
+  updateTotal(i:number, event,cartId){
+    let change = event.target.value
+    this.cart.cartShow[i].totalPrice = change * this.cart.cartShow[i].product.itemMRP
+    this.getTotal();
+    this.cart.updateCart(cartId).subscribe((updatedData) => {
+      this.getTotal();
+      console.log(updatedData.cart);
+    })
+    // localStorage.setItem("cartItem", JSON.stringify(this.cart.cartShow));
+  }
+
+  increment(qty,i,cartId) {
+    qty.value++
+    let change = qty.value
+    this.cart.cartShow[i].productQty = change
+    this.cart.cartShow[i].totalPrice = change * this.cart.cartShow[i].product.itemMRP
+    this.getTotal();
+    this.cart.updateCart(cartId).subscribe((updatedData) => {
+      this.getTotal();
+      console.log(updatedData.cart);
+    })
+  }
+  decrement(qty,i,cartId) {
+    if (qty.value>1){
+      qty.value--
+      let change = qty.value
+      this.cart.cartShow[i].productQty = change
+      this.cart.cartShow[i].totalPrice = change * this.cart.cartShow[i].product.itemMRP
+      this.getTotal();
+      this.cart.updateCart(cartId).subscribe((updatedData) => {
+        this.getTotal();
+        console.log(updatedData.cart);
+      })
+    }else {
+      this.deleteItem(i,cartId);
+    }
+  }
+  deleteItem(deleteItem,cartId){
+    this.isLoading = true;
+    this.cart.cartShow.splice(deleteItem,1);
+    this.cart.updateCart(cartId).subscribe((updatedData) => {
+      this.isLoading = false;
+      this.getTotal();
+      console.log(updatedData.cart);
+    })
   }
 
   addToCart() {

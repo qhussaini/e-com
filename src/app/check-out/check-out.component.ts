@@ -95,7 +95,7 @@ export class CheckOutComponent implements OnInit{
         pincode: this.selectedAddress.pincode,
         phone: this.selectedAddress.phone
       }
-      this.cart.createNewCart(this.cartItem, this.totalPrice, address)
+      this.cart.createNewOrder(this.cartItem, this.totalPrice, address)
       .subscribe(result => {
         this.toastr.success("Order Placed successfully", "",{
           timeOut:3000,
