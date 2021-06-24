@@ -123,4 +123,14 @@ router.post("/address", checkAuth, (req, res, next) => {
   });
 })
 
+router.put("/usertheme", checkAuth, (req, res, next) => {
+  User.updateOne({_id: req.userData.userId}, {userTheme: req.body.themeMode}).then(document => {
+    console.log(req.body.themeMode)
+    res.status(200).json({
+      message:"done",
+      userTheme:document.userTheme
+    })
+  });
+})
+
 module.exports = router;

@@ -10,13 +10,15 @@ export interface Product {
   orderStatus?:string;
 }
 export interface OrederProduct {
-  cartId: string;
+  orderId: string;
   userName: string;
   userShop: string;
   userId: string;
   products:Product[];
   totalPrice:number;
   orderStatus:string;
+  orderDate:number;
+  payInfo:any;
 }
 export interface Category {
   categoryId?:string;

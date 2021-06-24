@@ -17,17 +17,27 @@ export class ShoppingCartService {
   private myCart:Cart[] = [];
   private cartUpdate = new Subject<Cart[]>();
   private myCartUpdate = new Subject<Cart[]>();
+
   constructor(private http: HttpClient, private auth:AuthService, private route: Router) { }
 
-  createNewOrder(productId, totalPrice, address){
-    const orderStatus = "Panding"
-    const cart: Cart = { productId: {productId:productId, totalPrice:totalPrice}, orderStatus: orderStatus, address:address};
-    console.log(cart);
-    return this.http.post<{ message: string, cart: any }>(
+  createNewOrder(productId, totalPrice, date, address, payInfo?:any ){
+    const orderStatus = "Pending"
+    let payment = payInfo? payInfo : "pod";
+    const order: Cart = { productId: {productId:productId, totalPrice:totalPrice}, orderStatus: orderStatus, payInfo:payment, orderDate: date, address:address};
+    console.log(order);
+    return this.http.post<{ message: string, order: any }>(
       'http://localhost:3000/api/orders',
-      cart
+      order
     )
   }
+
+  getMyOrderDetails(orderId){
+    return this.http.get<{message: string, order:any}>('http://localhost:3000/api/orders/myOrder/'+orderId)
+  }
+  getOrderDetailsAd(orderId, userId){
+    return this.http.get<{message: string, order:any}>('http://localhost:3000/api/orders/orderAd/'+orderId+'/'+userId)
+  }
+
   createNewCart() {
     let totalPrice
     let cartItem:any[] = []
@@ -48,6 +58,9 @@ export class ShoppingCartService {
   }
   getCartId(){
     return this.http.get<{cart:Cart, message:string}>('http://localhost:3000/api/cart');
+  }
+  deleteCart(id){
+    return this.http.delete<{message:string}>('http://localhost:3000/api/cart/myCart/'+id);
   }
   updateCart(cartId){
     let totalPrice = 0
@@ -82,8 +95,10 @@ export class ShoppingCartService {
                 userId: cart.creatorId,
                 userName: cart.creatorName,
                 userShop: cart.creatorShop,
-                cartId: cart._id,
+                orderId: cart._id,
                 orderStatus:cart.orderStatus,
+                orderDate: cart.orderDate,
+                payInfo: cart.payInfo
               };
             }else {
               return {
@@ -175,13 +190,15 @@ export interface Cart {
   userShop?:string;
   allOrderId?: string;
   productQty?: number;
-  cartId?:string;
+  orderId?:string;
   orderStatus?: string;
   address?:Address;
   _id?:string;
   creatorName?:string;
   creatorShop?:string;
   product?:any;
+  orderDate?: any;
+  payInfo?:any;
 }
 export interface CartShow {
   product: Product;

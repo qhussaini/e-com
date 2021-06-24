@@ -34,6 +34,7 @@ const routes: Routes = [
   {path:"cart" , component: CartComponent },
   {path:"check-out" , component: CheckOutComponent,canActivate: [AuthGuard] },
   {path:"order-placed/:orderId" , component: OrderPlacedComponent },
+  {path:"order-placed/:orderId/:userId/:userName" , component: OrderPlacedComponent },
 ];
 
 @NgModule({

@@ -9,6 +9,7 @@ const userSchema = mongoose.Schema({
   userType: { type: String, required:true },
   userName: { type: String, required:true },
   address: { type: Object},
+  userTheme: { type: Boolean},
 });
 
 userSchema.plugin(uniqueValidator);

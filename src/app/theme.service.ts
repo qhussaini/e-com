@@ -1,5 +1,6 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Injectable } from '@angular/core';
+import { AuthService } from './auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class ThemeService {
   comName:string;
   changeButton: string = "dark_mode";
 
-constructor(private overlay:OverlayContainer) { }
+constructor(private overlay:OverlayContainer, private auth:AuthService) { }
 
   themeChange(){
     if(!this.themeDark){

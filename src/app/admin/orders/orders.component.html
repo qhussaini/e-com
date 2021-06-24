@@ -2,24 +2,29 @@
 <div class="text-center" *ngIf="product.length===0">
   <span>No orders To show</span>
 </div>
-<div *ngIf="product.length>0">
+<div *ngIf="product.length>0" class="table-size">
   <table class="table table-striped table-hover" [class.table-dark]="theme.themeDark" *ngIf="!isLoading">
     <thead>
     <tr>
-      <th scope="col">Shop Name</th>
       <th scope="col">Name</th>
+      <th scope="col">Order Date</th>
       <th scope="col">Product</th>
       <!-- <th scope="col">Address</th> -->
       <th scope="col">Total Price</th>
+      <th scope="col">Payment Type</th>
       <th scope="col">Status</th>
     </tr>
     </thead>
     <tbody>
     <tr *ngFor="let productData of product; index as i">
-      <th scope="row">{{ productData.userShop }}</th>
       <th scope="row">{{ productData.userName }}</th>
-      <th scope="row" class="pt-0">
-        <thead>
+      <th scope="row">
+        <label ngbTooltip="{{productData.orderDate|date: 'hh:mm:ss a'}}">
+          {{ productData.orderDate | date: 'dd/MM/yyyy'}}
+        </label>
+      </th>
+      <th scope="row" class="pt-0" [routerLink]="'/order-placed/'+productData.orderId + '/' + productData.userId+'/'+productData.userName">
+        <thead ngbTooltip="click to see order details">
           <tr>
             <th scope="col" class=" w-100">Product Name</th>
             <th scope="col">Category</th>
@@ -29,24 +34,28 @@
             <th scope="col">Total Price</th>
           </tr>
         </thead>
-        <tbody>
-          <tr *ngFor="let pt of productData.products">
-            <th scope="row">
+        <tbody ngbTooltip="click to see order details">
+          <tr *ngFor="let pt of productData.products; index as j">
+            <th scope="row" *ngIf="j<1">
               <img [src]="pt.itemImage" class="mr-2" style="width: 30px" [alt]="pt.itemName">{{ pt.itemName }}
             </th>
-            <th scope="row">{{ pt.itemCategory }}</th>
-            <th scope="row">{{ pt.itemFlavors }}</th>
-            <th scope="row">{{ pt.itemMRP |currency:"INR" }}</th>
-            <th scope="row">{{ pt.quantity }}</th>
-            <th scope="row">{{ pt.totalPrice |currency:"INR"}}</th>
+            <th scope="row" *ngIf="j<1">{{ pt.itemCategory }}</th>
+            <th scope="row" *ngIf="j<1">{{ pt.itemFlavors }}</th>
+            <th scope="row" *ngIf="j<1">{{ pt.itemMRP |currency:"INR" }}</th>
+            <th scope="row" *ngIf="j<1">{{ pt.quantity }}</th>
+            <th scope="row" *ngIf="j<1">{{ pt.totalPrice |currency:"INR"}}</th>
+            <th colspan="6" class="text-center" *ngIf="j===1" >More items.................</th>
           </tr>
         </tbody>
       </th>
+
       <!-- <th scope="row">{{ productData.address |currency:"INR"}}</th> -->
       <th scope="row">{{ productData.totalPrice |currency:"INR"}}</th>
+      <th scope="row" *ngIf="productData.payInfo==='pod'">{{ productData.payInfo |uppercase}}</th>
+      <th scope="row" *ngIf="productData.payInfo!=='pod'">Card</th>
       <th scope="row">
-        <span class="badge bg-success btn-block text-dark" [class.bg-warning]="productData.orderStatus==='Panding'" [class.bg-danger]="productData.orderStatus==='Canceled'">{{ productData.orderStatus }}</span>
-        <button class="btn-block" ngbTooltip="Confirm/Cancel Order" mat-raised-button color="primary" (click)="onConfirmOrder(productData)">Change Order Status<mat-icon>task</mat-icon></button>
+        <span class="badge bg-success btn-block text-dark" [class.bg-warning]="productData.orderStatus==='Pending'" [class.bg-danger]="productData.orderStatus==='Cancelled'">{{ productData.orderStatus }}</span>
+        <button class="btn-block" ngbTooltip="Order Details" mat-raised-button color="primary" [routerLink]="'/order-placed/'+productData.orderId + '/' + productData.userId+'/'+productData.userName">Order Details<mat-icon>task</mat-icon></button>
       </th>
     </tr>
     </tbody>

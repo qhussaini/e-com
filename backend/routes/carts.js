@@ -74,4 +74,20 @@ router.put("/update/:cartId", checkAuth, (req, res, next) => {
   });
 })
 
+router.delete("/myCart/:id", checkAuth, (req, res, next) => {
+  console.log(req.params.id)
+  Cart.deleteOne({ _id: req.params.id, creatorId:req.userData.userId }).then((result) => {
+    console.log(result)
+    if(result.n > 0){
+      res.status(200).json({
+         message: "Deletion Successful!",
+      });
+    }else {
+      res.status(401).json({
+         message: "Not authorized To delete this product!",
+      });
+    }
+  });
+})
+
 module.exports = router;

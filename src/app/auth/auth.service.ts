@@ -5,8 +5,10 @@ import { Subject } from 'rxjs';
 import { AuthData } from './auth-data.model';
 import { ToastrService } from 'ngx-toastr';
 import { map } from 'rxjs/operators';
-import { ShoppingCartService } from '../my-order/shopping-cart.service';
 
+function _window() :any {
+  return window;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +27,10 @@ export class AuthService {
   user: AuthData;
 
 constructor(private http: HttpClient, private router: Router, private toastr: ToastrService) { }
+
+  get nativeWindow(){
+    return _window();
+  }
 
   getToken(){
     return this.token;
@@ -71,6 +77,10 @@ constructor(private http: HttpClient, private router: Router, private toastr: To
       console.log(user.address)
       return user.address;
     }));
+  }
+  setTheme(themeMode:boolean){
+    console.log(themeMode);
+    return this.http.put<{userTheme:any, message:string}>('http://localhost:3000/api/user/usertheme', themeMode)
   }
 
   getAddress(){
@@ -218,11 +228,15 @@ constructor(private http: HttpClient, private router: Router, private toastr: To
       }));
   }
 
-  logout(){
+  logout(link?:string){
     this.token = undefined;
     this.userAuth = false;
     this.authStatusListener.next(false);
-    this.router.navigate(['/']);
+    if(link){
+      this.router.navigate(['/'+link]);
+    }else {
+      this.router.navigate(['/']);
+    }
     clearTimeout(this.tokenTimer);
     this.clearAuthData();
   }
@@ -230,7 +244,8 @@ constructor(private http: HttpClient, private router: Router, private toastr: To
   private setAuthTimer(duration: number) {
     console.log("Starting time : " + duration);
     this.tokenTimer = setTimeout(() => {
-      this.logout();
+      alert("session expired please login again");
+      this.logout("login");
     }, duration * 1000);
   }
 

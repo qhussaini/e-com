@@ -7,7 +7,10 @@
   </div>
 </div>
 <app-ui-preloader [display]="isLoading"></app-ui-preloader>
-<div class="row ml-2 mr-2" *ngIf="!isLoading" [class.dark-card]="theme.themeDark">
+<div class="text-center ml-2 mr-2" [class.dark-card]="theme.themeDark" *ngIf="adMode">
+  {{userName |uppercase}}
+</div>
+<div id="order" class="row ml-2 mr-2" *ngIf="!isLoading" [class.dark-card]="theme.themeDark">
   <div class="col-6 ml-3 mt-1 mr-3 p-2"  >
     <h6>{{placedOrder.address.name}}</h6>
     <h6>{{placedOrder.address.addressLine1}}</h6>
@@ -17,14 +20,27 @@
   <div class="col-5 mt-1 p-2">
     <div class="text-right">
       <div class="card-body">
-        <h4 class="card-title">Order bill</h4>
+        <h4 class="card-title">Order bill#:00000</h4>
+        <span class="card-title" *ngIf="date">Order Date : <small>{{date |date: 'dd/MM/yyyy hh:mm:ss a'}}</small></span>
         <p class="card-text">Total Bill : {{placedOrder.product.totalPrice}}</p>
 
       </div>
     </div>
   </div>
 </div>
-<div class="m-2 mt-0">
+<div class="row p-2 m-2 text-center" *ngIf="!isLoading" [class.dark-card]="theme.themeDark">
+  Order Status:
+  <ngb-progressbar
+    [type]="statusColor"
+    class="btn-block"
+    height="25px"
+    [striped]="true"
+    [animated]="statusAnm"
+    [value]="statusBar">
+    {{orderStatus}}
+  </ngb-progressbar>
+</div>
+<div id="orderTable" class="m-2 mt-0" *ngIf="!isLoading">
   <table class="table table-striped" [class.dark-card]="theme.themeDark">
     <thead>
     <tr>
@@ -41,7 +57,7 @@
     <tr *ngFor="let product of orderedProduct; index as i">
       <th scope="row">{{ i + 1 }}</th>
       <td>
-        <img [src]="product.itemImgUrl" class="mr-2" style="width: 20px">
+        <img [src]="product.itemImgUrl" *ngIf="!adMode" class="mr-2" style="width: 20px">
         {{ product.itemName }}
       </td>
       <td>{{ product.itemCategory }}</td>
@@ -53,6 +69,16 @@
     </tbody>
   </table>
 </div>
-<div class="text-center">
+<div class="text-center" *ngIf="!adMode">
   <button class="btn btn-primary" routerLink="/products">continue shopping</button>
+</div>
+<div class="text-right m-2" *ngIf="adMode">
+  <!-- <button class="btn btn-primary mr-1" (click)="print(placedOrder.address.name)">Print</button>
+  <button class="btn btn-primary" (click)="print(placedOrder.address.name)">Print and deliver</button> -->
+  <div class="btn-group" role="group">
+    <button type="button" class="btn btn-secondary" (click)="print()">Print</button>
+    <button type="button" class="btn btn-success" [disabled]="orderStatus==='ofd'" [ngbTooltip]="orderStatus==='ofd'? 'order is out for delivery' : 'print & start delivery'"  (click)="print('ofd')">Print and deliver</button>
+    <button type="button" class="btn btn-primary" [disabled]="orderStatus==='Delivered'" (click)="orderDelivered()">order is Delivered</button>
+    <button type="button" class="btn btn-danger" [disabled]="orderStatus==='Cancelled'" (click)="orderCancel()">cancel order</button>
+  </div>
 </div>

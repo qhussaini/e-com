@@ -1,5 +1,10 @@
 <h2 class="text-center">Check Out</h2>
 <app-ui-preloader [display]="isLoading"></app-ui-preloader>
+<div  fxLayout="row" fxLayoutAlign="center center" >
+  <ngb-alert class="text-center w-50" [dismissible]="false" *ngIf="!selectedAddress">
+    <strong>Alart!</strong> please select a shipping address first.
+  </ngb-alert>
+</div>
 <div class="row m-1" *ngIf="!isLoading">
   <div class="col-md-6 ml-3 mt-1 mr-3 card p-2"  [class.dark-card]="theme.themeDark">
     <mat-card class="pt-1 pb-0 m-1" *ngFor="let address of cart.address; index as i" ngbRadioGroup [(ngModel)]="selected">
@@ -117,7 +122,7 @@
         <h4 class="card-title">Order Summary</h4>
         <p class="card-text">You have items in your shopping cart.</p>
         <ul class="list-group list-group-flush">
-          <li *ngFor="let item of cart.cartShow" class="list-group-item" [class.dark-card]="theme.themeDark">
+          <li class="list-group-item" *ngFor="let item of cart.cartShow" [class.dark-card]="theme.themeDark">
             {{ item.productQty }} x {{ item.product.itemName }}
             <div class="float-right">
               {{ item.totalPrice | currency:'INR' }}
@@ -132,6 +137,31 @@
         </ul>
       </div>
     </div>
-    <button mat-raised-button color="primary" (click)="addToCart()">place order</button>
+    <google-pay-button
+      *ngIf="selectedAddress"
+      environment="TEST"
+      [buttonType]="'buy'"
+      [buttonColor]="theme.themeDark? 'black' : 'white'"
+      [buttonLocale]="buttonLocale"
+      [existingPaymentMethodRequired]="existingPaymentMethodRequired"
+      [paymentRequest]="{
+        apiVersion: paymentRequest.apiVersion,
+        apiVersionMinor: paymentRequest.apiVersionMinor,
+        allowedPaymentMethods: paymentRequest.allowedPaymentMethods,
+        merchantInfo: paymentRequest.merchantInfo,
+        transactionInfo: {
+          totalPriceStatus: 'FINAL',
+          totalPriceLabel: 'Total',
+          totalPrice: gTotalPrice,
+          currencyCode: 'INR',
+          countryCode: 'IN'
+        },
+        callbackIntents: ['PAYMENT_AUTHORIZATION']
+      }"
+      [paymentAuthorizedCallback]="onPaymentDataAuthorized"
+      (loadpaymentdata)="onLoadPaymentData($event)"
+      (error)="onError($event)"
+    ></google-pay-button>
+    <button mat-raised-button color="primary" [disabled]="!selectedAddress" (click)="addToCart()">place order Pay on delivery</button>
   </div>
 </div>

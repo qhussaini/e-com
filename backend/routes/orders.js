@@ -13,12 +13,14 @@ router.post("", checkAuth, (req, res, next) => {
     creatorName: req.userData.userName,
     creatorShop: req.userData.shopName,
     orderStatus: req.body.orderStatus,
-    address: req.body.address
+    orderDate: req.body.orderDate,
+    address: req.body.address,
+    payInfo: req.body.payInfo
   });
-  order.save().then(cart => {
+  order.save().then(order => {
     res.status(201).json({
-      message: "cart add successfully",
-      cart:cart
+      message: "order successfull",
+      order:order
     })
   })
 });
@@ -36,6 +38,27 @@ router.get("/client", checkAuth, (req, res, next) => {
     res.status(200).json({
       message: "Cart fetched succesfully!",
       cart: document
+    });
+  });
+})
+
+router.get("/myOrder/:orderId", checkAuth, (req, res, next) => {
+  Oreder.findOne({creatorId: req.userData.userId, _id: req.params.orderId}).then(document => {
+    console.log(document)
+    res.status(200).json({
+      message: "order fetched succesfully!",
+      order: document
+    });
+  });
+})
+
+router.get("/orderAd/:orderId/:userId", checkAuth, (req, res, next) => {
+  console.log(req.params.userId)
+  Oreder.findOne({creatorId: req.params.userId, _id: req.params.orderId}).then(document => {
+    console.log(document)
+    res.status(200).json({
+      message: "order fetched succesfully!",
+      order: document
     });
   });
 })

@@ -44,7 +44,7 @@
       </button>
       <button *ngIf="userIsAuthenticated" mat-button [matMenuTriggerFor]="tools">{{authService.getUserType()|titlecase}} Tools <mat-icon>expand_more</mat-icon></button>
       <mat-menu #tools="matMenu" style="min-width: 150px;">
-        <button routerLink="/my-order" mat-menu-item>My Order</button>
+        <button routerLink="/my-order" *ngIf="authService.getUserType()!=='wholesaler'" mat-menu-item>My Order</button>
         <button routerLink="/admin/products" *ngIf="authService.getUserType()==='wholesaler'" mat-menu-item>Manager Porduct</button>
         <button routerLink="/admin/order" *ngIf="authService.getUserType()==='wholesaler'" mat-menu-item>Manager Orders</button>
         <hr class="dropdown-divider">

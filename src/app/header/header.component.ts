@@ -94,9 +94,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
   themeSelecter(){
     if (this.theme.themeDark === true) {
-      this.theme.themeDark = false;
+      this.authService.setTheme(false).subscribe(theme => {
+        this.theme.themeDark = false;
+      })
     }else {
-      this.theme.themeDark = true;
+      this.authService.setTheme(true).subscribe(theme => {
+        this.theme.themeDark = true;
+      })
     }
   }
 

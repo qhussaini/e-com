@@ -54,8 +54,8 @@ export class AppComponent implements OnInit, OnDestroy{
       barOpacity: '0.8',
       barWidth: '10',
     }
-    this.theme.logo = "assets/images/logo/scoops-logo.png";
-    this.theme.comName = "Azam Scoops"
+    this.theme.logo = "assets/images/logo/wasinco-logo.png";
+    this.theme.comName = "Wasinco"
 
     // this.play();
 
@@ -65,7 +65,7 @@ export class AppComponent implements OnInit, OnDestroy{
       if(this.theme.deviceXs) {
         this.theme.sideBar = "over"
       }else {
-        this.theme.sideBar = "side"
+      this.theme.sideBar = "side"
       }
     })
     this.theme.getThemeColor();

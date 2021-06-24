@@ -30,7 +30,7 @@
                     <button type="button" class="btn btn-outline-primary" (click)="increment(qtys,i,cart.cartId)">
                       <mat-icon>add</mat-icon>
                     </button>
-                    <input #qtys type="number" class="text-center btn btn-outline-light inputqty" id="qty{{i}}" name="qty{{i}}" (change)="updateTotal(i, $event,cart.cartId)" [(ngModel)]="cart.productQty" max="100">
+                    <input #qtys type="number" class="text-center btn inputqty" [class.btn-outline-light]="theme.themeDark" [class.btn-outline-secondary]="!theme.themeDark" id="qty{{i}}" name="qty{{i}}" (change)="updateTotal(i, $event,cart.cartId)" [(ngModel)]="cart.productQty" max="100">
                     <button type="button" class="btn btn-outline-warning" (click)="decrement(qtys,i,cart.cartId)">
                       <mat-icon *ngIf="cart.productQty>1">remove</mat-icon>
                       <mat-icon *ngIf="cart.productQty<=1">delete_forever</mat-icon>
